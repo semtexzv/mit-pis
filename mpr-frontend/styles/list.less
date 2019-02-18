@@ -1,0 +1,78 @@
+.list {
+  background: rgba(255,255,255,0.1);
+  .toolbar {
+    &.highlight {
+      background: @mainColor;
+      color: black !important;
+      * {
+        color: black !important;
+      }
+    }
+    .title {
+      flex: 0 0 auto;
+      .name {}
+      .selection {}
+    }
+    .spacer {
+      flex: 1 1 0%;
+    }
+    .actions {
+      .filterIcon {
+        float: right;
+      }
+      .filterExpander {
+        transition: width 0.5s cubic-bezier(0,0.5,0,1) 0s;
+        width: 1px;
+        display: inline-block;
+        vertical-align: text-bottom;
+        &.expanded {
+          width: 200px;
+        }
+      }
+    }
+  }
+  .tableRow {
+    &:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    &.selected {
+      background: @mainColor;
+      color: black !important;
+      * {
+        color: black !important;
+      }
+    }
+    .tableCell {
+      &.data {
+        cursor: pointer;
+      }
+    }
+    .tableCell, .tableHeadCell {
+      border-color: rgba(255, 255, 255, 0.075);
+    }
+  }
+  .addButton {
+    position: fixed;
+    right: 50px;
+    bottom: 10px;
+    @media(max-width: 1024px) {
+      right: 30px;
+    }
+  }
+  .status {
+    .icon {
+    }
+    &.status-A {
+    }
+    &.status-D {
+      color: #888;
+    }
+  }
+  .tableFooterButtons {
+    .exportButton {
+      .icon {
+        margin-right: 8px;
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+@import (css) url('https://fonts.googleapis.com/css?family=Open+Sans|Roboto:300,400,500');
+
+@mainColor: #18ffff;
+@gridColor: #eee;
+@greenColor: #4caf50;
+@blackColor: #0a0a0a;
+@darkColor: #1e1e1e;
+@textColor: white;
+@redColor: #ff2020;
+@backgroundColor: @blackColor;
+@menuBarWidth: 200px;
+
+
+html {
+  height: 100%;
+  margin: 0px;
+  overflow-x: hidden;
+  body {
+    height: 100%;
+    margin: 0px;
+    background: #282828;
+    overflow-x: hidden;
+    #root {
+      height: 100%;
+    }
+  }
+}
+
+:local {
+  @import "utils.less";
+  .app {
+    margin: 0px;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    color: white;
+    font-family: 'Roboto', 'Open Sans', sans-serif;
+    background: transparent !important;
+    @import "header.less";
+    @import "menubar.less";
+    @import "page.less";
+    @import "list.less";
+    @import "login.less";
+  }
+  // dialogs (outside of app)
+  @import "detailDialogs.less";
+  @import "matrix.less";
+  @import "confirmationDialogs.less";
+  // others (mixed usage = outside of app)
+  @import "misc.less";
+  // helpers
+  @import "sortableItemPicker.less";
+}
+// fixes of 3rd party libs
+@import "globalFixes.less";

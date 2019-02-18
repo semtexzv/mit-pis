@@ -1,0 +1,50 @@
+.login {
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+  .title {
+    margin: 40px 0px 20px
+  }
+  .loginBox {
+    background: black;
+    color: white;
+    max-width: 240px;
+    text-align: center;
+    margin: 50px auto;
+    padding: 25px 40px;
+    .textField {
+      margin: 10px auto;
+      input {
+        text-align: center;
+        &:-webkit-autofill {
+          /* f*ck chrome */
+          box-shadow: 0px 1000px 0px black inset;
+          -webkit-text-fill-color: @mainColor !important;
+        }
+      }
+      > div {
+        &:after {
+          background-color: @mainColor;
+        }
+      }
+      .label {
+        line-height: 24px;
+        display: inline-block;
+        font-size: 17px;
+        svg {
+          vertical-align: top;
+        }
+      }
+    }
+    .checkBoxLabel {
+      margin: 20px 15px 0px 0px;
+      p {
+        vertical-align: super;
+        display: inline-block;
+      }
+    }
+    .loginButton {
+      margin-top: 20px;
+    }
+  }
+}

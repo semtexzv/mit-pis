@@ -1,0 +1,26 @@
+.sortableItemPicker {
+  text-align: center;
+  .sortableList {
+    text-align: left;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+  }
+}
+
+.sortableItem {
+  z-index: 1502;
+  .listItem {
+    background: @darkColor;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+    .sortIcon {
+      cursor: row-resize;
+    }
+    .text {
+      padding: 0px 40px;
+    }
+    .deleteIcon {
+      z-index: 1500;
+    }
+  }
+}

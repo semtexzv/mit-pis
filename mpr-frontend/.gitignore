@@ -1,0 +1,14 @@
+node_modules
+/node_modules
+npm-debug.log
+.DS_Store
+/nbproject/private
+/nbproject
+/out
+/dist
+!/deploy
+/deploy/dist
+/deploy/node_modules
+/deploy/index.html
+/docs
+.idea

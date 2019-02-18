@@ -1,0 +1,39 @@
+.matrixTab {
+  color: white;
+  .tableHeadRow {
+    .tableHeadCell {
+      background: #333;
+      color: white;
+    }
+  }
+  .tableRow {
+    .tableCell {
+
+    }
+  }
+  .tableLegendCell {
+    background: #333;
+    color: white;
+  }
+  .rasciLetter {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: 0px 4px 0px 0px;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    color: #aaa;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    text-align: center;
+    &.rasciLetterSet {
+      background: @mainColor;
+      border-color: @mainColor;
+      color: black;
+    }
+    &.rasciLetterUnset {
+      &:hover {
+        border-color: @mainColor;
+      }
+    }
+  }
+}

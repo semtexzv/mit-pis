@@ -1,0 +1,20 @@
+.menuBar {
+  > div {
+    margin-top: 64px;
+    @media (max-width: 599px) {
+      margin-top: 56px;
+    }
+    width: @menuBarWidth;
+    background: @blackColor !important;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    .menuItem {
+      padding: 12px 18px;
+      &.active {
+        background-color: rgba(255, 255, 255, 0.12);
+      }
+      .menuItemLabel {
+        padding: 0;
+      }
+    }
+  }
+}

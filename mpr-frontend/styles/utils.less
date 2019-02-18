@@ -1,0 +1,28 @@
+.accent, .secondary {
+  color: @mainColor;
+}
+
+.stripedBackground(@color1, @color2, @width: 10px) {
+  background: repeating-linear-gradient(
+    45deg,
+    @color1,
+    @color1  @width,
+    @color2  @width,
+    @color2  @width*2
+  );
+}
+
+.clearfix {
+  clear: both;
+  height: 1px;
+}
+
+.fullscreenWrapper {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  position: fixed !important;
+  top: 0px !important;
+  left: 0px !important;
+}
