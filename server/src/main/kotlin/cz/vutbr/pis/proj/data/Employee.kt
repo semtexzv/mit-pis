@@ -4,14 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
-
-class PersonResource(
+class Employee(
         @Column
         var username: String = "",
-
         var name: String = "",
         var surname: String = "",
 
+        /*
         var street: String = "",
         var houseNumber: String = "",
         var city: String = "",
@@ -21,6 +20,7 @@ class PersonResource(
         var phone: String = "",
         var email: String = "",
 
+*/
         @JsonIgnore
         var sysRole: SystemRole = SystemRole.USER,
 
@@ -31,10 +31,4 @@ class PersonResource(
 
 ) : BaseEntity() {
 
-}
-
-
-interface PersonSimpleView {
-    val id: String
-    val name: String
 }

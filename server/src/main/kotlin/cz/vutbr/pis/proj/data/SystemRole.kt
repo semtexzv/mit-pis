@@ -6,6 +6,7 @@ enum class SystemRole : GrantedAuthority {
     USER,
     ADMIN;
 
+
     override fun getAuthority(): String {
         return this.toString()
     }

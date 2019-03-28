@@ -1,7 +1,7 @@
 package cz.vutbr.pis.proj.auth
 
 import cz.vutbr.pis.proj.repo.AuthInfoRepo
-import cz.vutbr.pis.proj.repo.PersonRepo
+import cz.vutbr.pis.proj.repo.EmployeeRepo
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationProvider
@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 class AuthProvider : AuthenticationProvider {
 
     @Autowired
-    lateinit var personRepo: PersonRepo
+    lateinit var employeeRepo: EmployeeRepo
 
     @Autowired
     lateinit var authInfoRepo: AuthInfoRepo

@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import cz.vutbr.pis.proj.ProjApplication
 import cz.vutbr.pis.proj.data.AuthInfo
-import cz.vutbr.pis.proj.data.PersonResource
+import cz.vutbr.pis.proj.data.Employee
 import cz.vutbr.pis.proj.repo.AuthInfoRepo
-import cz.vutbr.pis.proj.repo.PersonRepo
+import cz.vutbr.pis.proj.repo.EmployeeRepo
 import cz.vutbr.pis.proj.rest.base.BaseController
 import cz.vutbr.pis.proj.util.BadReqException
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/api/person")
-class PersonController : BaseController<PersonResource, PersonResource, PersonRepo>() {
+@RequestMapping("/api/employee")
+class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
 
 
     @Autowired
@@ -26,14 +26,14 @@ class PersonController : BaseController<PersonResource, PersonResource, PersonRe
     lateinit var authRepo: AuthInfoRepo
 
     @PostMapping("/")
-    override fun createOne(@RequestBody data: PersonResource): PersonResource {
+    override fun createOne(@RequestBody data: Employee): Employee {
 
 
         var old = repo.findByUsername(data.username)
         if (old != null) {
             throw BadReqException("Login already exists")
         }
-        var p = PersonResource();
+        var p = Employee();
         p.username = data.username;
 
         try {
@@ -53,7 +53,7 @@ class PersonController : BaseController<PersonResource, PersonResource, PersonRe
 
 
     @GetMapping("/{id}")
-    override fun getOne(@PathVariable id: Int?): PersonResource? {
+    override fun getOne(@PathVariable id: Int?): Employee? {
         val x = super.getOne(id)
 
         return x;
@@ -61,7 +61,7 @@ class PersonController : BaseController<PersonResource, PersonResource, PersonRe
 
     @PostMapping("/{id}")
     @PreAuthorize("@secService.canModifyUser(#id)")
-    override fun modifyOne(@PathVariable id: Int?, @RequestBody data: String): PersonResource {
+    override fun modifyOne(@PathVariable id: Int?, @RequestBody data: String): Employee {
         val map: HashMap<String, Any> = objectMapper.readValue(data);
 
         return super.modifyOneInternal(id, data) {

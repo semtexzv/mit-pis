@@ -3,9 +3,9 @@ package cz.vutbr.pis.proj.rest
 import cz.vutbr.pis.proj.*
 import cz.vutbr.pis.proj.auth.AuthToken
 import cz.vutbr.pis.proj.data.AuthInfo
-import cz.vutbr.pis.proj.data.PersonResource
+import cz.vutbr.pis.proj.data.Employee
 import cz.vutbr.pis.proj.repo.AuthInfoRepo
-import cz.vutbr.pis.proj.repo.PersonRepo
+import cz.vutbr.pis.proj.repo.EmployeeRepo
 import cz.vutbr.pis.proj.rest.types.ErrorResponse
 import cz.vutbr.pis.proj.rest.types.LoginData
 import cz.vutbr.pis.proj.rest.types.LoginResponse
@@ -22,7 +22,7 @@ import java.time.LocalDateTime
 class LoginController {
 
     @Autowired
-    lateinit var personRepo: PersonRepo
+    lateinit var employeeRepo: EmployeeRepo
 
     @Autowired
     lateinit var authRepo: AuthInfoRepo
@@ -42,14 +42,14 @@ class LoginController {
             return badReq("Not password provided")
         }
 
-        val person = personRepo.findByUsername(data.username);
+        val person = employeeRepo.findByUsername(data.username);
         if (person == null) {
             return badReq("Login not found")
         }
         var auth = person.authInfo;
         if (auth == null) {
             auth = AuthInfo(person.id)
-            auth = authRepo.saveAndFlush(auth);
+            auth = authRepo.saveAndFlush(auth)!!
         }
 
         auth.lastLogin = LocalDateTime.now();
@@ -90,15 +90,15 @@ class LoginController {
             return badReq("Missing body");
         }
 
-        var old = personRepo.findByUsername(data.username)
+        var old = employeeRepo.findByUsername(data.username)
         if (old != null) {
             return badReq("Login already exists")
         }
-        var p = PersonResource();
+        var p = Employee();
         p.username = data.username
 
         try {
-            p = personRepo.saveAndFlush(p)
+            p = employeeRepo.saveAndFlush(p)
         } catch (e: Exception) {
             return badReq("Login already exists")
         }
@@ -106,9 +106,9 @@ class LoginController {
         var a = AuthInfo();
         a.passHash = ProjApplication.hash(data.password);
         a.person = p;
-        p = personRepo.getOne(p.id)
+        p = employeeRepo.getOne(p.id)
 
-        return ResponseEntity(personRepo.findById(p.id), HttpStatus.CREATED)
+        return ResponseEntity(employeeRepo.findById(p.id), HttpStatus.CREATED)
     }
 
 
