@@ -105,7 +105,7 @@ class LoginController {
 
         var a = AuthInfo();
         a.passHash = ProjApplication.hash(data.password);
-        a.person = p;
+        a.employee = p;
         p = employeeRepo.getOne(p.id)
 
         return ResponseEntity(employeeRepo.findById(p.id), HttpStatus.CREATED)

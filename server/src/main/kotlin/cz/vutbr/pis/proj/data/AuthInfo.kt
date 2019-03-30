@@ -6,12 +6,12 @@ import javax.persistence.*
 @Entity
 class AuthInfo(
         @Id
-        @Column(name = "person_id")
-        var personId: Int = 0,
+        @Column(name = "employee_id")
+        var employeeId: Int = 0,
 
         @OneToOne(cascade = arrayOf(CascadeType.PERSIST, CascadeType.MERGE), fetch = FetchType.EAGER)
-        @JoinColumn(name = "person_id", insertable = false, updatable = false)
-        var person: Employee? = null,
+        @JoinColumn(name = "employee_id", insertable = false, updatable = false)
+        var employee: Employee? = null,
 
 
         var passHash: String? = null,

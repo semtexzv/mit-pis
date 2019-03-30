@@ -46,7 +46,7 @@ class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
         if (a == null) {
             a = AuthInfo();
         }
-        a.personId = p.id
+        a.employeeId = p.id
         p = repo.getOne(p.id)
         return p;
     }
@@ -62,16 +62,7 @@ class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
     @PostMapping("/{id}")
     @PreAuthorize("@secService.canModifyUser(#id)")
     override fun modifyOne(@PathVariable id: Int?, @RequestBody data: String): Employee {
-        val map: HashMap<String, Any> = objectMapper.readValue(data);
-
-        return super.modifyOneInternal(id, data) {
-            if (map.containsKey("oldPassword") && map.containsKey("newPassword")) {
-                val auth = authRepo.findById(id!!).orElse(null);
-                if (auth != null && auth.passHash == ProjApplication.hash(map["oldPassword"] as String)) {
-                    auth.passHash = ProjApplication.hash(map["newPassword"] as String);
-                }
-            }
-        }
+        return super.modifyOne(id, data);
     }
 
 }

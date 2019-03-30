@@ -7,13 +7,19 @@ import javax.persistence.*
 open class Customer(
         var name: String = "",
         var surname: String = "",
-        var title : String = "",
-        var info : String = "",
+        var title: String = "",
+        var info: String = "",
+
+        @Column(name = "assoc_employee_id")
+        var assocEmployeeId: Int = 0,
+
+        @Column(name = "brand_id")
+        var brandId: Int = 0,
 
         @ManyToOne(cascade = arrayOf(CascadeType.MERGE, CascadeType.PERSIST))
         @JoinColumn(name = "assoc_employee_id", insertable = false, updatable = false)
         @JsonIgnore
-        var qualification: Employee? = null,
+        var employee: Employee? = null,
 
         @ManyToOne(cascade = arrayOf(CascadeType.MERGE, CascadeType.PERSIST))
         @JoinColumn(name = "brand_id", insertable = false, updatable = false)

@@ -33,7 +33,7 @@ class AuthProvider : AuthenticationProvider {
         if(info.validUntil == null || info.validUntil!!.isBefore(LocalDateTime.now())){
             throw BadCredentialsException("Token Expired")
         }
-        val person = info.person;
+        val person = info.employee;
         val res = AuthToken(token.token, person)
         return res;
     }

@@ -25,7 +25,7 @@ class Employee(
         var sysRole: SystemRole = SystemRole.USER,
 
         @JsonIgnore
-        @OneToOne(mappedBy = "person")
+        @OneToOne(mappedBy = "employee")
         var authInfo: AuthInfo? = null
 
 
