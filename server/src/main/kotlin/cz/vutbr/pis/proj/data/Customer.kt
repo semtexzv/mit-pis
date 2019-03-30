@@ -10,19 +10,19 @@ open class Customer(
         var title: String = "",
         var info: String = "",
 
-        @Column(name = "assoc_employee_id")
-        var assocEmployeeId: Int = 0,
+        @Column(name = "assoc_employee_id", nullable = false)
+        var assocEmployeeId: Int? = null,
 
-        @Column(name = "brand_id")
-        var brandId: Int = 0,
+        @Column(name = "brand_id", nullable = false)
+        var brandId: Int? = null,
 
         @ManyToOne(cascade = arrayOf(CascadeType.MERGE, CascadeType.PERSIST))
-        @JoinColumn(name = "assoc_employee_id", insertable = false, updatable = false)
+        @JoinColumn(name = "assoc_employee_id", referencedColumnName = "id", insertable = false, updatable = false)
         @JsonIgnore
         var employee: Employee? = null,
 
         @ManyToOne(cascade = arrayOf(CascadeType.MERGE, CascadeType.PERSIST))
-        @JoinColumn(name = "brand_id", insertable = false, updatable = false)
+        @JoinColumn(name = "brand_id", referencedColumnName = "id", insertable = false, updatable = false)
         @JsonIgnore
         var brand: Brand? = null
 ) : BaseEntity() {
