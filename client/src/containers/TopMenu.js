@@ -11,8 +11,14 @@ import {history} from "../routes/index"
 
 export const TopMenuLoginItems = [
   ["home", "/"],
-  ["item1", "/dataTable"],
-  ["item2", "/dataTable2"]
+  ["item1", "/dT"],
+  ["item2", "/pT"]
+]
+
+export const TopMenuSiteItems = [
+  ["SiteHome", "/site"],
+  ["SiteItem1", "/site/dT"],
+  ["SiteItem2", "/site/pT"]
 ]
 
 class TopMenu extends Component {
