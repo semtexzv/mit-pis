@@ -3,7 +3,10 @@ import { Router, Route, Switch } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 import styled from '@emotion/styled'
 import LoginContainer from "../containers/LoginContainer";
+import DataTableContainer from "../containers/DataTableContainer";
+import DataTable2Container from "../containers/DataTable2Container";
 import TopMenu from "../containers/TopMenu"
+import {TopMenuLoginItems} from "../containers/TopMenu"
 import "babel-polyfill";
 
 const Container = styled.div`
@@ -15,9 +18,11 @@ function Routes() {
   return (
     <Router history={history}>
       <Container>
-        <TopMenu/>
+        <Route path="" render={() => <TopMenu menu_items={TopMenuLoginItems} />}/>
         <Switch>
-          <Route path="/" component={LoginContainer} />
+          <Route exact path="/" component={LoginContainer} />
+          <Route path="/dataTable" component={DataTableContainer} />
+          <Route path="/dataTable2" component={DataTable2Container} />
         </Switch>
       </Container>
     </Router>
