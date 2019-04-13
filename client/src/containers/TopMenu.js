@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 
 import {TabMenu} from 'primereact/tabmenu';
+import {Menubar} from 'primereact/menubar';
 import {InputText} from 'primereact/inputtext';
 import {Button} from 'primereact/button';
 
@@ -9,21 +10,19 @@ import {getMenuItem, getWindow} from "../selectors/TopMenuSelector";
 import {updateWindow, updateMenuItem} from "../actions/TopMenuActions";
 import {history} from "../routes/index"
 
-export const TopMenuLoginItems = [
-  ["home", "/"],
-  ["item1", "/dT"],
-  ["item2", "/pT"]
-]
-
-export const TopMenuSiteItems = [
-  ["SiteHome", "/site"],
-  ["SiteItem1", "/site/dT"],
-  ["SiteItem2", "/site/pT"]
-]
-
 class TopMenu extends Component {
   constructor(props){
     super(props);
+    if(typeof this.props.menu_items === 'undefined') {
+      this.state = {items: []};
+      return;
+    }
+    else if (this.props.menu_items.length === 0){
+      this.state = {items: []};
+      return;
+    }
+    //expected menu_items as [["nameOfItem", "pathAfterClick"], ...]
+    // look at ../constants/TopMenuConstants.js
     var itemsParam = this.props.menu_items;
     var itemList = [];
     for(let i in itemsParam) {
@@ -35,6 +34,11 @@ class TopMenu extends Component {
         }
       });
     }
+    itemList.push({
+      label: 'Logout', icon: "pi pi-power-off", style: {left:40}, command: () => {
+        ; // TODO: no action for logout-click not implemented yet
+      }
+    })
     this.state = {items: itemList};
   }
 
@@ -42,12 +46,13 @@ class TopMenu extends Component {
     return(
     <div className="TopMenu">
       <TabMenu model={this.state.items}>
-        <InputText placeholder="Search" type="text"/>
-        <Button label="Logout" icon="pi pi-power-off" style={{marginLeft:4}}/>
       </TabMenu>
     </div>);
   }
 }
+//<TabMenu model={this.state.items}>
+//<InputText placeholder="Search" type="text"/>
+//<Button label="Logout" icon="pi pi-power-off" style={{marginLeft:4}}/>
 
 const mapStateToProps = (menu_state) => ({
   windowValue: getWindow(menu_state),

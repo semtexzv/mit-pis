@@ -6,7 +6,7 @@ import LoginContainer from "../containers/LoginContainer";
 import DataTableContainer from "../containers/DataTableContainer";
 import DataTable2Container from "../containers/DataTable2Container";
 import TopMenu from "../containers/TopMenu"
-import {TopMenuLoginItems, TopMenuSiteItems} from "../containers/TopMenu"
+import {TM_SITE1, TM_SITE2} from "../constants/TopMenuConstants"
 import "babel-polyfill";
 
 const Container = styled.div`
@@ -19,15 +19,16 @@ function Routes() {
     <Router history={history}>
       <Container>
         <Switch>
-          <Route exact path="/" render={() => <TopMenu menu_items={TopMenuLoginItems} />}/>
-          <Route path="/site" render={() => <TopMenu menu_items={TopMenuSiteItems} />}/>
+          <Route exact path="/" render={() => <TopMenu />}/>
+          <Route path="/site1" render={() => <TopMenu menu_items={TM_SITE1} />}/>
+          <Route path="/site2" render={() => <TopMenu menu_items={TM_SITE2} />}/>
         </Switch>
         <Switch>
           <Route exact path="/" component={LoginContainer} />
-          <Route path="/dT" component={DataTableContainer} />
-          <Route path="/pT" component={DataTable2Container} />
-          <Route path="/site/dT" component={DataTableContainer} />
-          <Route path="/site/pT" component={DataTable2Container} />
+          <Route path="/site1/dT" component={DataTableContainer} />
+          <Route path="/site1/pT" component={DataTable2Container} />
+          <Route path="/site2/dT" component={DataTableContainer} />
+          <Route path="/site2/pT" component={DataTable2Container} />
         </Switch>
       </Container>
     </Router>
