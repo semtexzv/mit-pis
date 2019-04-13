@@ -4,6 +4,7 @@ import { createBrowserHistory } from 'history'
 import styled from '@emotion/styled'
 import LoginContainer from "../containers/LoginContainer";
 import TopMenu from "../containers/TopMenu"
+import * as TM from "../constants/TopMenuConstants"
 import "babel-polyfill";
 
 const Container = styled.div`
@@ -15,7 +16,11 @@ function Routes() {
   return (
     <Router history={history}>
       <Container>
-        <TopMenu/>
+        <Switch>
+          <Route exact path="/" render={() => <TopMenu />}/>
+          <Route path="/siteA" render={() => <TopMenu menu_items={TM.SITE1} />}/>
+          <Route path="/siteB" render={() => <TopMenu menu_items={TM.SITE2} />}/>
+        </Switch>
         <Switch>
           <Route path="/" component={LoginContainer} />
         </Switch>
