@@ -3,14 +3,15 @@ import {connect} from "react-redux";
 import {InputText} from 'primereact/inputtext';
 import {Button} from 'primereact/button';
 import {getLogin, getPassword} from "../selectors/LoginSelector";
-import {login, updateLogin, updatePassword} from "../actions/LoginActions";
+import {logToSystem, updateLogin, updatePassword} from "../actions/LoginActions";
 import "../styles/Login.css"
 
 const Login = ({
   loginValue,
   passwordValue,
   updateLogin,
-  updatePassword
+  updatePassword,
+  login
 }) => {
   return (
     <div className="Login">
@@ -20,7 +21,7 @@ const Login = ({
         <h3 className="first">Password</h3>
         <InputText value={passwordValue} onChange={(e) => updatePassword(e.target.value)} type="password" />
         <div className="Login-Button">
-          <Button label="Login"/>
+          <Button label="Login" onClick={e => login(loginValue,passwordValue)}/>
         </div>
       </div>
 
@@ -35,7 +36,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   updateLogin: (value) => dispatch(updateLogin(value)),
   updatePassword: (value) => dispatch(updatePassword(value)),
-  login: () => dispatch(login()),
+  login: (loginValue, passwordValue) => dispatch(logToSystem(loginValue, passwordValue)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

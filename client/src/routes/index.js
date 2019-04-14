@@ -17,7 +17,7 @@ function Routes() {
       <Container>
         <TopMenu/>
         <Switch>
-          <Route path="/" component={LoginContainer} />
+          <Route exact path="/" component={LoginContainer} />
         </Switch>
       </Container>
     </Router>
