@@ -22,7 +22,7 @@ function Routes() {
           <Route path="/siteB" render={() => <TopMenu menu_items={TM.SITE2} />}/>
         </Switch>
         <Switch>
-          <Route path="/" component={LoginContainer} />
+          <Route exact path="/" component={LoginContainer} />
         </Switch>
       </Container>
     </Router>
