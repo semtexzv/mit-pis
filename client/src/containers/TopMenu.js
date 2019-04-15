@@ -5,6 +5,7 @@ import {TabMenu} from 'primereact/tabmenu';
 import {Menubar} from 'primereact/menubar';
 import {InputText} from 'primereact/inputtext';
 import {Button} from 'primereact/button';
+import DataTable1Container from "../containers/DataTableContainer";
 
 import {getMenuItem, getWindow} from "../selectors/TopMenuSelector";
 import {updateWindow, updateMenuItem} from "../actions/TopMenuActions";
@@ -45,11 +46,13 @@ class TopMenu extends Component {
   render(){
     return(
     <div className="TopMenu">
-      <TabMenu model={this.state.items}>
-      </TabMenu>
+      <DataTable1Container/>
     </div>);
   }
 }
+//<TabMenu model={this.state.items}>
+//</TabMenu>
+
 //<TabMenu model={this.state.items}>
 //<InputText placeholder="Search" type="text"/>
 //<Button label="Logout" icon="pi pi-power-off" style={{marginLeft:4}}/>
