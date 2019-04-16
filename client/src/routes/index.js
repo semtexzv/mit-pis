@@ -11,7 +11,7 @@ import "babel-polyfill";
 const Container = styled.div`
   text-align: center;
 `
-export const history = createBrowserHistory()
+export const history = createBrowserHistory();
 
 function Routes() {
   return (
@@ -24,13 +24,11 @@ function Routes() {
         </Switch>
         <Switch>
           <Route exact path="/" component={LoginContainer} />
-          <Route exact path="/meeting" component={MeetingContainer}/>
+          <Route path="/meeting" component={MeetingContainer}/>
         </Switch>
       </Container>
     </Router>
   )
 }
-
-//<Route exact path="/" component={LoginContainer} />
 
 export default Routes

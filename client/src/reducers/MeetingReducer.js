@@ -4,12 +4,15 @@ import * as A from "../actions/MeetingActions";
 
 const initialState = fromJS({
   meetingData: [
-    {id: "1", date: "date1", name: "name1", surname: "surname1", title: "title1", brand: "brand1",
+    {id: "1", date: "date1", name: "Al", surname: "Koholik", title: "title1", brand: "brand1",
       customerInfo: "ci1", meetingInfo: "mi1"},
-    {id: "2", date: "date2", name: "name2", surname: "surname2", title: "title2", brand: "brand2",
+    {id: "2", date: "date2", name: "Lojza", surname: "Dozdichcal", title: "title2", brand: "brand2",
       customerInfo: "ci2", meetingInfo: "mi2"},
   ],
-  selectedRow: [{}],
+  allCustomers: [
+    {label: "Al Koholik", value: "Al Koholik"},
+    {label: "Lojza Dozdichcal", value: "Lojza Dozdichcal"}
+  ],
   displayDialog: false,
   id: "",
   date: "",
@@ -90,7 +93,7 @@ const MeetingReducer = (state = initialState, action) => {
     }
     case A.UPDATE_SELECTED_ROW: {
       let data = action.value;
-      let newState = state.set("selectedRow", data);
+      let newState = state;
       newState = newState.set("id", data.id);
       newState = newState.set("date", data.date);
       newState = newState.set("name", data.name);
