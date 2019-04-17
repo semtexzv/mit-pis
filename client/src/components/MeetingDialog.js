@@ -7,6 +7,8 @@ import {InputText} from 'primereact/inputtext';
 import {InputTextarea} from 'primereact/inputtextarea';
 import {Dropdown} from "primereact/dropdown";
 import {Button} from 'primereact/button';
+import {Growl} from 'primereact/growl';
+import raiseGrowl from "../utils/growl"
 
 const MeetingDialog =
 ({
@@ -33,6 +35,17 @@ const MeetingDialog =
    updateMeetingInfo
 }) => {
 
+  //local variables
+  var mygrowl; // use for error handling, contains Growl instance
+  function setGrowl(el){
+    // setting Growl instance to local variable
+    if(el != null) {
+      mygrowl = el;
+    }
+  }
+
+  //---------------------------------------
+  // JSX snippets
   function showDeleteButton(condition) {
     if(condition)
       return(<span> </span>);
@@ -41,28 +54,54 @@ const MeetingDialog =
         <Button label="Delete" icon="pi pi-times" onClick={e => deleteRow()}/>
       );
   }
-
   const dialogFooter =
     <div className="ui-dialog-buttonpane p-clearfix">
-      {showDeleteButton(addButton)}
-      <Button label="Save" icon="pi pi-check" onClick={e => saveRow()}/>
+      {  /*it depends - don't show Delete Button if user adding new row*/
+        showDeleteButton(addButton)
+      }
+      <Button label="Save" icon="pi pi-check"
+        onClick={e => saveButtonValidator(surname, mygrowl)}/>
     </div>;
 
+  //---------------------------------------
+  // Validations
+
+  function checkDropDown(surname, errorHandler){
+    if(surname.length === 0){
+      raiseGrowl("You must choose some name", errorHandler);
+      return false;
+    }
+    return true;
+  }
+
+  function saveButtonValidator(surname, errorHandler){
+    // user must choose some name form list
+    if(checkDropDown(surname, errorHandler)){
+      saveRow();
+    }
+  }
+
+  //---------------------------------------
+  // Return
+
   return(
-    <Dialog
-      visible={displayDialog} modal={true} footer={dialogFooter} onHide={() => {toggleDisplayDialog(); unsetAddButton();}}
-      style={{width: '50vw'}}
-    >
-      <InputText id="date" onChange={(e) => updateDate(e.target.value)} value={date}/>
-      <Dropdown placeholder="Select a name"
-                value={name.concat(" ", surname)} options={allCustomers.toJS()}
-                onChange={(e) => {let arr = e.value.split(" "); updateName(arr[0]); updateSurname(arr[1])}}
-      />
-      <InputText id="title" onChange={(e) => updateTitle(e.target.value)} value={title}/>
-      <InputText id="brand" onChange={(e) => updateBrand(e.target.value)} value={brand}/>
-      <InputTextarea id="customerInfo" onChange={(e) => updateCustomerInfo(e.target.value)} value={customerInfo}/>
-      <InputTextarea id="meetingInfo" onChange={(e) => updateMeetingInfo(e.target.value)} value={meetingInfo}/>
-    </Dialog>
+    <div>
+      <Growl ref={(el) => {setGrowl(el)}}> </Growl>
+      <Dialog
+        visible={displayDialog} modal={true} footer={dialogFooter} onHide={() => {toggleDisplayDialog(); unsetAddButton();}}
+        style={{width: '50vw'}}
+      >
+        <InputText id="date" onChange={(e) => updateDate(e.target.value)} value={date}/>
+        <Dropdown placeholder="Select a name"
+                  value={name.concat(" ", surname)} options={allCustomers.toJS()}
+                  onChange={(e) => {let arr = e.value.split(" "); updateName(arr[0]); updateSurname(arr[1])}}
+        />
+        <InputText id="title" onChange={(e) => updateTitle(e.target.value)} value={title}/>
+        <InputText id="brand" onChange={(e) => updateBrand(e.target.value)} value={brand}/>
+        <InputTextarea id="customerInfo" onChange={(e) => updateCustomerInfo(e.target.value)} value={customerInfo}/>
+        <InputTextarea id="meetingInfo" onChange={(e) => updateMeetingInfo(e.target.value)} value={meetingInfo}/>
+      </Dialog>
+    </div>
   )
 };
 
