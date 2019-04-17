@@ -6,6 +6,7 @@ import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
 import {Button} from 'primereact/button';
 import MeetingDialog from "../components/MeetingDialog"
+import {recursiveConvert_ISO_date} from "../utils/dateTimeConvert"
 
 const Meeting =
 ({
@@ -21,7 +22,7 @@ const Meeting =
 
   return(
     <div className="Meeting">
-      <DataTable value={meetingData.toJS()} editable={true} footer={addButton}
+      <DataTable value={recursiveConvert_ISO_date(meetingData.toJS())} editable={true} footer={addButton}
         selectionMode="single" onSelectionChange={e => updateSelectedRow(e.value)}
       >
         <Column field="date" header="Date" sortable={true}/>
