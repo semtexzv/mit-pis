@@ -1,7 +1,7 @@
-import React, {Component} from "react";
+import React from "react";
 import {connect} from "react-redux";
 import {getMeetingData} from "../selectors/MeetingSelector";
-import {updateSelectedRow, addRow} from "../actions/MeetingActions";
+import {updateSelectedRow, setAddButton} from "../actions/MeetingActions";
 import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
 import {Button} from 'primereact/button';
@@ -10,13 +10,13 @@ import MeetingDialog from "../components/MeetingDialog"
 const Meeting =
 ({
   meetingData,
-  addRow,
+  setAddButton,
   updateSelectedRow,
 }) => {
 
   const addButton =
     <div className="p-clearfix" style={{width:'100%'}}>
-      <Button style={{float:'left'}} label="Add" icon="pi pi-plus" onClick={e => addRow()}/>
+      <Button style={{float:'left'}} label="Add" icon="pi pi-plus" onClick={e => setAddButton()}/>
     </div>;
 
   return(
@@ -41,7 +41,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   updateSelectedRow: (value) => dispatch(updateSelectedRow(value)),
-  addRow: () => dispatch(addRow()),
+  setAddButton: () => dispatch(setAddButton()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Meeting);

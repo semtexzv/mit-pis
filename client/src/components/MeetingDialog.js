@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import {connect} from "react-redux";
 import * as S from "../selectors/MeetingSelector";
 import * as A from "../actions/MeetingActions";
@@ -19,8 +19,10 @@ const MeetingDialog =
    customerInfo,
    meetingInfo,
    displayDialog,
+   addButton,
    deleteRow,
    saveRow,
+   unsetAddButton,
    toggleDisplayDialog,
    updateDate,
    updateName,
@@ -31,15 +33,24 @@ const MeetingDialog =
    updateMeetingInfo
 }) => {
 
+  function showDeleteButton(condition) {
+    if(condition)
+      return(<span> </span>);
+    else
+      return(
+        <Button label="Delete" icon="pi pi-times" onClick={e => deleteRow()}/>
+      );
+  }
+
   const dialogFooter =
     <div className="ui-dialog-buttonpane p-clearfix">
-      <Button label="Delete" icon="pi pi-times" onClick={e => deleteRow()} />
+      {showDeleteButton(addButton)}
       <Button label="Save" icon="pi pi-check" onClick={e => saveRow()}/>
     </div>;
 
   return(
     <Dialog
-      visible={displayDialog} modal={true} footer={dialogFooter} onHide={() => toggleDisplayDialog()}
+      visible={displayDialog} modal={true} footer={dialogFooter} onHide={() => {toggleDisplayDialog(); unsetAddButton();}}
       style={{width: '50vw'}}
     >
       <InputText id="date" onChange={(e) => updateDate(e.target.value)} value={date}/>
@@ -58,6 +69,7 @@ const MeetingDialog =
 const mapStateToProps = (state) => ({
   allCustomers: S.getAllCustomers(state),
   displayDialog: S.getDisplayDialog(state),
+  addButton: S.getAddButton(state),
   date: S.getDate(state),
   name: S.getName(state),
   surname: S.getSurname(state),
@@ -71,6 +83,7 @@ const mapDispatchToProps = (dispatch) => ({
   deleteRow: () => dispatch(A.deleteRow()),
   saveRow: () => dispatch(A.saveRow()),
   toggleDisplayDialog: () => dispatch(A.toggleDisplayDialog()),
+  unsetAddButton: () => dispatch(A.unsetAddButton()),
   updateDate: (value) => dispatch(A.updateDate(value)),
   updateName: (value) => dispatch(A.updateName(value)),
   updateSurname: (value) => dispatch(A.updateSurname(value)),
