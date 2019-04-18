@@ -5,6 +5,7 @@ import styled from '@emotion/styled'
 import LoginContainer from "../containers/LoginContainer";
 import TopMenu from "../containers/TopMenu"
 import MeetingContainer from "../containers/MeetingContainer"
+import SpecializationContainer from "../containers/SpecializationContainer"
 import * as TM from "../constants/TopMenuConstants"
 import "babel-polyfill";
 
@@ -25,6 +26,7 @@ function Routes() {
         <Switch>
           <Route exact path="/" component={LoginContainer} />
           <Route path="/meeting" component={MeetingContainer}/>
+          <Route path="/specialization" component={SpecializationContainer}/>
         </Switch>
       </Container>
     </Router>
