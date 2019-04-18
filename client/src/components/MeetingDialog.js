@@ -86,18 +86,11 @@ const MeetingDialog =
   }
 
   //---------------------------------------
-  // Convertions
-  function convertDate(date){
-    let newDate = convert_FE_date(date);
-    updateDate(newDate);
-  }
-
-  //---------------------------------------
   // Return
   return(
     <div>
       <Growl ref={(el) => {setGrowl(el)}}> </Growl>
-      <Dialog className="MeetingDialog" header="Adding information"
+      <Dialog className="MeetingDialog" header="Add meeting"
         visible={displayDialog} modal={true} footer={dialogFooter} onHide={() => {toggleDisplayDialog(); unsetAddButton();}}
       >
         <div>
@@ -116,16 +109,17 @@ const MeetingDialog =
         </div>
 
         <div>
-        <InputTextarea placeholder="Info about customer" onChange={(e) => updateCustomerInfo(e.target.value)} value={customerInfo}/>
+        <InputTextarea rows={5} cols={50} placeholder="Info about customer" onChange={(e) => updateCustomerInfo(e.target.value)} value={customerInfo}/>
         </div>
 
         <div>
-        <InputTextarea placeholder="Info about meeting" onChange={(e) => updateMeetingInfo(e.target.value)} value={meetingInfo}/>
+        <InputTextarea rows={5} cols={50} placeholder="Info about meeting" onChange={(e) => updateMeetingInfo(e.target.value)} value={meetingInfo}/>
         </div>
 
         <div className="p-col-12 p-md-4">
           <Calendar placeholder="Date"
-                    value={convert_ISO_date(date)} onChange={(e) => convertDate(e.target.value)}
+                    value={convert_ISO_date(date)}
+                    onChange={(e) => updateDate(convert_FE_date(e.target.value))}
                     readOnlyInput={true} showTime={true} className="Calendar" hideOnDateTimeSelect={true}
           />
         </div>
