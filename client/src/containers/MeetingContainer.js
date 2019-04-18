@@ -18,7 +18,8 @@ const Meeting =
   const addButton =
     <div className="p-clearfix" style={{width:'100%'}}>
       <Button tooltip="Add a new record"
-        style={{float:'left'}} label="Add" icon="pi pi-plus" onClick={e => setAddButton()}/>
+        style={{float:'left'}} label="Add" icon="pi pi-plus"
+        onClick={e => setAddButton()}/>
     </div>;
 
   return(

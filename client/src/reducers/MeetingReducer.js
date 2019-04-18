@@ -15,6 +15,7 @@ const initialState = fromJS({
   ],
   displayDialog: false,
   addButton: false,
+  dialogHeader: "Edit meeting",
   id: "",
   date: "",
   name: "",
@@ -81,10 +82,14 @@ const MeetingReducer = (state = initialState, action) => {
       newState = newState.set("meetingInfo", "");
       newState = newState.set("displayDialog", true);
       newState = newState.set("addButton", true);
+      newState = newState.set("dialogHeader", "Add meeting");
       return newState;
     }
     case A.UNSET_ADD_BUTTON:{
-      return state.set("addButton", false);
+      let newState = state;
+      newState = newState.set("dialogHeader", "Edit meeting");
+      newState = newState.set("addButton", false);
+      return newState;
     }
     case A.TOGGLE_DISPLAY_DIALOG: {
       return state.get("displayDialog") ? state.set("displayDialog", false) :  state.set("displayDialog", true);
