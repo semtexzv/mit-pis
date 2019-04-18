@@ -4,7 +4,7 @@ import * as A from "../actions/MeetingActions";
 
 const initialState = fromJS({
   meetingData: [
-    {id: "1", date: "2019-04-17T18:57:16.000Z", name: "Al", surname: "Koholik", title: "title1", brand: "brand1",
+    {id: "1", date: "2019-04-17T18:45:00.000Z", name: "Al", surname: "Koholik", title: "title1", brand: "brand1",
       customerInfo: "ci1", meetingInfo: "mi1"},
     {id: "2", date: "2019-04-17T12:00:00.000Z", name: "Lojza", surname: "Dozdichcal", title: "title2", brand: "brand2",
       customerInfo: "ci2", meetingInfo: "mi2"},

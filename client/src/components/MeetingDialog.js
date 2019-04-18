@@ -10,7 +10,7 @@ import {Button} from 'primereact/button';
 import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
 import {Calendar} from 'primereact/calendar';
-import {convert_FE_date, convert_ISO_date} from "../utils/dateTimeConvert"
+import {convert_FE_date, convert_ISO_date, todayDate} from "../utils/dateTimeConvert"
 import "../styles/MeetingDialog.css"
 
 
@@ -121,6 +121,7 @@ const MeetingDialog =
                     value={convert_ISO_date(date)}
                     onChange={(e) => updateDate(convert_FE_date(e.target.value))}
                     readOnlyInput={true} showTime={true} className="Calendar" hideOnDateTimeSelect={true}
+                    stepMinute={15} dateFormat={"mm/dd/y"} viewDate={todayDate()}
           />
         </div>
 
