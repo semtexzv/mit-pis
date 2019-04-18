@@ -9,6 +9,10 @@ import {Dropdown} from "primereact/dropdown";
 import {Button} from 'primereact/button';
 import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
+import {Calendar} from 'primereact/calendar';
+import {convert_FE_date, convert_ISO_date, todayDate} from "../utils/dateTimeConvert"
+import "../styles/MeetingDialog.css"
+
 
 const MeetingDialog =
 ({
@@ -60,7 +64,7 @@ const MeetingDialog =
         showDeleteButton(addButton)
       }
       <Button label="Save" icon="pi pi-check"
-        onClick={e => saveButtonValidator(surname, mygrowl)}/>
+        onClick={e => {saveButtonValidator(surname, mygrowl)}}/>
     </div>;
 
   //---------------------------------------
@@ -83,23 +87,44 @@ const MeetingDialog =
 
   //---------------------------------------
   // Return
-
   return(
     <div>
       <Growl ref={(el) => {setGrowl(el)}}> </Growl>
-      <Dialog
+      <Dialog className="MeetingDialog" header="Add meeting"
         visible={displayDialog} modal={true} footer={dialogFooter} onHide={() => {toggleDisplayDialog(); unsetAddButton();}}
-        style={{width: '50vw'}}
       >
-        <InputText id="date" onChange={(e) => updateDate(e.target.value)} value={date}/>
+        <div>
         <Dropdown placeholder="Select a name"
                   value={name.concat(" ", surname)} options={allCustomers.toJS()}
                   onChange={(e) => {let arr = e.value.split(" "); updateName(arr[0]); updateSurname(arr[1])}}
         />
-        <InputText id="title" onChange={(e) => updateTitle(e.target.value)} value={title}/>
-        <InputText id="brand" onChange={(e) => updateBrand(e.target.value)} value={brand}/>
-        <InputTextarea id="customerInfo" onChange={(e) => updateCustomerInfo(e.target.value)} value={customerInfo}/>
-        <InputTextarea id="meetingInfo" onChange={(e) => updateMeetingInfo(e.target.value)} value={meetingInfo}/>
+        </div>
+
+        <div>
+        <InputText placeholder="Title" onChange={(e) => updateTitle(e.target.value)} value={title}/>
+        </div>
+
+        <div>
+        <InputText placeholder="Brand" onChange={(e) => updateBrand(e.target.value)} value={brand}/>
+        </div>
+
+        <div>
+        <InputTextarea rows={5} cols={50} placeholder="Info about customer" onChange={(e) => updateCustomerInfo(e.target.value)} value={customerInfo}/>
+        </div>
+
+        <div>
+        <InputTextarea rows={5} cols={50} placeholder="Info about meeting" onChange={(e) => updateMeetingInfo(e.target.value)} value={meetingInfo}/>
+        </div>
+
+        <div className="p-col-12 p-md-4">
+          <Calendar placeholder="Date"
+                    value={convert_ISO_date(date)}
+                    onChange={(e) => updateDate(convert_FE_date(e.target.value))}
+                    readOnlyInput={true} showTime={true} className="Calendar" hideOnDateTimeSelect={true}
+                    stepMinute={15} dateFormat={"mm/dd/y"} viewDate={todayDate()}
+          />
+        </div>
+
       </Dialog>
     </div>
   )
