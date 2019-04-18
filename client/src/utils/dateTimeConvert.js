@@ -70,4 +70,16 @@ function todayDate(){
   return date;
 }
 
-export {recursiveConvert_ISO_date, convert_ISO_date, convert_FE_date, todayDate};
+function checkMinutes(oneDate){
+  if(oneDate instanceof Date) {
+    let m = oneDate.getMinutes();
+    if((m !== 0) && (m !== 15) && (m !== 30) && (m !== 45))
+      oneDate.setMinutes(0);
+  }
+  return oneDate;
+}
+
+export {
+  recursiveConvert_ISO_date, convert_ISO_date, convert_FE_date,
+  todayDate, checkMinutes
+};

@@ -10,7 +10,8 @@ import {Button} from 'primereact/button';
 import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
 import {Calendar} from 'primereact/calendar';
-import {convert_FE_date, convert_ISO_date, todayDate} from "../utils/dateTimeConvert"
+import {convert_FE_date, convert_ISO_date,
+  todayDate, checkMinutes} from "../utils/dateTimeConvert"
 import "../styles/MeetingDialog.css"
 
 
@@ -24,6 +25,7 @@ const MeetingDialog =
    brand,
    customerInfo,
    meetingInfo,
+   dialogHeader,
    displayDialog,
    addButton,
    deleteRow,
@@ -90,8 +92,9 @@ const MeetingDialog =
   return(
     <div>
       <Growl ref={(el) => {setGrowl(el)}}> </Growl>
-      <Dialog className="MeetingDialog" header="Add meeting"
-        visible={displayDialog} modal={true} footer={dialogFooter} onHide={() => {toggleDisplayDialog(); unsetAddButton();}}
+      <Dialog className="MeetingDialog" header={dialogHeader}
+        visible={displayDialog} modal={true} footer={dialogFooter}
+        onHide={() => {toggleDisplayDialog(); unsetAddButton();}}
       >
         <div>
         <Dropdown placeholder="Select a name"
@@ -118,10 +121,11 @@ const MeetingDialog =
 
         <div className="p-col-12 p-md-4">
           <Calendar placeholder="Date"
+                    viewDate={todayDate()}
                     value={convert_ISO_date(date)}
-                    onChange={(e) => updateDate(convert_FE_date(e.target.value))}
+                    onChange={(e) => updateDate(convert_FE_date(checkMinutes(e.target.value)))}
                     readOnlyInput={true} showTime={true} className="Calendar" hideOnDateTimeSelect={true}
-                    stepMinute={15} dateFormat={"mm/dd/y"} viewDate={todayDate()}
+                    stepMinute={15} dateFormat={"mm/dd/y"}
           />
         </div>
 
@@ -132,6 +136,7 @@ const MeetingDialog =
 
 const mapStateToProps = (state) => ({
   allCustomers: S.getAllCustomers(state),
+  dialogHeader: S.getDialogHeader(state),
   displayDialog: S.getDisplayDialog(state),
   addButton: S.getAddButton(state),
   date: S.getDate(state),
