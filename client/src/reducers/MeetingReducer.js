@@ -4,13 +4,18 @@ import * as A from "../actions/MeetingActions";
 
 const initialState = fromJS({
   meetingData: [
-    {id: "1", date: "date1", name: "name1", surname: "surname1", title: "title1", brand: "brand1",
+    {id: "1", date: "2019-04-17T18:45:00.000Z", name: "Al", surname: "Koholik", title: "title1", brand: "brand1",
       customerInfo: "ci1", meetingInfo: "mi1"},
-    {id: "2", date: "date2", name: "name2", surname: "surname2", title: "title2", brand: "brand2",
+    {id: "2", date: "2019-04-17T12:00:00.000Z", name: "Lojza", surname: "Dozdichcal", title: "title2", brand: "brand2",
       customerInfo: "ci2", meetingInfo: "mi2"},
   ],
-  selectedRow: [{}],
+  allCustomers: [
+    {label: "Al Koholik", value: "Al Koholik"},
+    {label: "Lojza Dozdichcal", value: "Lojza Dozdichcal"}
+  ],
   displayDialog: false,
+  addButton: false,
+  dialogHeader: "Edit meeting",
   id: "",
   date: "",
   name: "",
@@ -32,14 +37,25 @@ const MeetingReducer = (state = initialState, action) => {
       return newState;
     }
     case A.SAVE_ROW: {
-      // deleting row
-      let mData = state.get("meetingData");
-      const row_id = state.get("id");
-      let newMeetingData = mData.delete(mData.findIndex(i => i.get("id") === row_id));
-      let newState = state.set("meetingData", newMeetingData);
+      var newState = state;
+      if(state.get("addButton") === false) {
+        // editing row => delete old record
+        let mData = state.get("meetingData");
+        const row_id = state.get("id");
+        let newMeetingData = mData.delete(mData.findIndex(i => i.get("id") === row_id));
+        newState = state.set("meetingData", newMeetingData);
+      }
+      else{
+        // add new row => for this example it must be create new ID number
+        //TODO: edit after saga will be added
+        let randomID = Math.floor(Math.random() * 1000);
+        newState = newState.set("id", randomID.toString());
+        //!!!
+        newState = newState.set("addButton", false);
+      }
       // dialog shut
       newState = newState.set("displayDialog", false);
-      // add new row
+      // create new row
       const row = Map({
         id: state.get("id"),
         date: state.get("date"),
@@ -50,18 +66,13 @@ const MeetingReducer = (state = initialState, action) => {
         customerInfo: state.get("customerInfo"),
         meetingInfo: state.get("meetingInfo"),
       });
-      newMeetingData = newState.get("meetingData").push(row);
+      // add new row to dataTable
+      let newMeetingData = newState.get("meetingData").push(row);
       newState = newState.set("meetingData", newMeetingData);
       return newState;
     }
-    case A.ADD_ROW: {
+    case A.SET_ADD_BUTTON: {
       let newState = state;
-
-      //TODO: edit after saga will be added
-      let randomID = Math.floor(Math.random() * 1000);
-      newState = newState.set("id", randomID.toString());
-      //!!!!
-
       newState = newState.set("date", "");
       newState = newState.set("name", "");
       newState = newState.set("surname", "");
@@ -70,19 +81,14 @@ const MeetingReducer = (state = initialState, action) => {
       newState = newState.set("customerInfo", "");
       newState = newState.set("meetingInfo", "");
       newState = newState.set("displayDialog", true);
-
-      const row = Map({
-        id: newState.get("id"),
-        date: "",
-        name: "",
-        surname: "",
-        title: "",
-        brand: "",
-        customerInfo: "",
-        meetingInfo: "",
-      });
-      let newMeetingData = state.get("meetingData").push(row);
-      newState = newState.set("meetingData", newMeetingData);
+      newState = newState.set("addButton", true);
+      newState = newState.set("dialogHeader", "Add meeting");
+      return newState;
+    }
+    case A.UNSET_ADD_BUTTON:{
+      let newState = state;
+      newState = newState.set("dialogHeader", "Edit meeting");
+      newState = newState.set("addButton", false);
       return newState;
     }
     case A.TOGGLE_DISPLAY_DIALOG: {
@@ -90,7 +96,7 @@ const MeetingReducer = (state = initialState, action) => {
     }
     case A.UPDATE_SELECTED_ROW: {
       let data = action.value;
-      let newState = state.set("selectedRow", data);
+      let newState = state;
       newState = newState.set("id", data.id);
       newState = newState.set("date", data.date);
       newState = newState.set("name", data.name);
