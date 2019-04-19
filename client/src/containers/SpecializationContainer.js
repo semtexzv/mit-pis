@@ -17,6 +17,7 @@ const Specialization =
   employeeName,
   employeeSurname,
   chosenBrands,
+  fillSpec,
   updateSpec,
   updateEmployeeName,
   updateEmployeeSurname,
@@ -55,7 +56,8 @@ const Specialization =
     if (value !== null) {
       let arr = value.split(" ");
       updateEmployeeName(arr[0]);
-      updateEmployeeSurname(arr[1])
+      updateEmployeeSurname(arr[1]);
+      fillSpec();
     }
   }
 
@@ -71,7 +73,6 @@ const Specialization =
   }
 
   function checkMultiSelect(brands, errorHandler){
-    console.log(brands);
     if(brands.size === 0) {
       showWarning();
       return false;
@@ -106,7 +107,7 @@ const Specialization =
 
       <div>
       <MultiSelect
-        value={chosenBrands} options={allBrands.toJS()}
+        value={chosenBrands.toJS()} options={allBrands.toJS()}
         onChange={(e) => updateSpec(e.value)}
         style={{minWidth:'40em'}} filter={true} placeholder="Choose specializations"
       />
@@ -128,8 +129,6 @@ const Specialization =
   );
 };
 
-//<div style={{marginTop: '.5em'}}>{this.state.car2 ? 'Selected Car: ' + this.state.car2 : 'No car selected'}</div>
-
 const mapStateToProps = (state) => ({
   allBrands: S.getAllBrands(state),
   allEmployees: S.getAllEmployees(state),
@@ -140,6 +139,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  fillSpec: (value) => dispatch(A.fillSpec()),
   updateSpec: (value) => dispatch(A.updateSpec(value)),
   updateEmployeeName: (value) => dispatch(A.updateEmployeeName(value)),
   updateEmployeeSurname: (value) => dispatch(A.updateEmployeeSurname(value)),
