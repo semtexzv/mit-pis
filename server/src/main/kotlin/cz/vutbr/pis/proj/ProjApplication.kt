@@ -42,15 +42,16 @@ class Seeder : ApplicationListener<ApplicationReadyEvent> {
 
     override fun onApplicationEvent(event: ApplicationReadyEvent) {
         val admin = Employee("admin", "admin", "admin", SystemRole.ADMIN)
-        admin.id = 1
+        employyeRepo.save(admin)
+
 
         val ai = AuthInfo(1, admin, ProjApplication.hash("admin"), null, null, null)
         admin.authInfo = ai
-
-        employyeRepo.save(admin)
         authInfoRepo.save(ai)
+        employyeRepo.save(admin)
     }
 }
+
 
 @Configuration
 @SpringBootApplication(exclude = arrayOf(RepositoryRestMvcAutoConfiguration::class))

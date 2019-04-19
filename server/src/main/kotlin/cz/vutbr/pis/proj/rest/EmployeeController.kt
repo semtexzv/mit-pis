@@ -86,8 +86,9 @@ class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
 
     @GetMapping("/{id}/meetings")
     fun getMeetings(@PathVariable id: Int?): List<Meeting>? {
-        val user = getOne(id);
-        return user!!.customers?.map{ it?.meetings ?: listOf() }?.flatten() ?: listOf()
+        val user = getOne(id)
+        return listOf()
+        //return user!!.customers?.map{ it?.meetings ?: listOf() }?.flatten() ?: listOf()
     }
 
 }

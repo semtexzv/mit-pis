@@ -16,8 +16,8 @@ open class Customer(
         @Column(name = "brand_id", nullable = false)
         var brandId: Int? = null,
 
-        @ManyToOne(cascade = arrayOf(CascadeType.MERGE, CascadeType.PERSIST))
-        @JoinColumn(name = "assoc_employee_id", referencedColumnName = "id", insertable = false, updatable = false)
+        @ManyToOne(cascade = [CascadeType.MERGE, CascadeType.PERSIST])
+        @JoinColumn(name = "assoc_employee_id", insertable = false, updatable = false)
         @JsonIgnore
         var employee: Employee? = null,
 
@@ -28,7 +28,7 @@ open class Customer(
 
 
         @JsonIgnore
-        @OneToMany(mappedBy = "customer_id")
+        @OneToMany(mappedBy = "id")
         var meetings : List<Meeting>? = null
 ) : BaseEntity() {
 
