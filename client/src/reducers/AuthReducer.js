@@ -1,9 +1,10 @@
 import {fromJS} from "immutable";
-import {SET_AUTH} from "../actions/AuthActions";
+import {SET_AUTH, SET_USER} from "../actions/AuthActions";
 
 const initialState = fromJS({
   token: "",
-  logged: false
+  logged: false,
+  user: null,
 });
 
 export const authReducer = (state = initialState, action) => {
@@ -12,6 +13,9 @@ export const authReducer = (state = initialState, action) => {
       return state
         .set("token", action.payload)
         .set("logged", true);
+    case SET_USER:
+      return state
+        .set("user", action.payload);
     default:
       return state;
   }

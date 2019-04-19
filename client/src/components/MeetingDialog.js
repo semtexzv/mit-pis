@@ -3,7 +3,6 @@ import {connect} from "react-redux";
 import * as S from "../selectors/MeetingSelector";
 import * as A from "../actions/MeetingActions";
 import {Dialog} from 'primereact/dialog';
-import {InputText} from 'primereact/inputtext';
 import {InputTextarea} from 'primereact/inputtextarea';
 import {Dropdown} from "primereact/dropdown";
 import {Button} from 'primereact/button';
@@ -18,11 +17,8 @@ import "../styles/MeetingDialog.css"
 const MeetingDialog =
 ({
    allCustomers,
+   customerId,
    date,
-   name,
-   surname,
-   title,
-   brand,
    customerInfo,
    meetingInfo,
    dialogHeader,
@@ -33,10 +29,7 @@ const MeetingDialog =
    unsetAddButton,
    toggleDisplayDialog,
    updateDate,
-   updateName,
-   updateSurname,
-   updateTitle,
-   updateBrand,
+   updateDropdown,
    updateCustomerInfo,
    updateMeetingInfo
 }) => {
@@ -66,24 +59,34 @@ const MeetingDialog =
         showDeleteButton(addButton)
       }
       <Button label="Save" icon="pi pi-check"
-        onClick={e => {saveButtonValidator(surname, mygrowl)}}/>
+        onClick={e => {saveButtonValidator(customerId, date, mygrowl)}}/>
     </div>;
 
   //---------------------------------------
   // Validations
 
-  function checkDropDown(surname, errorHandler){
-    if(surname.length === 0){
+  function checkDropDown(item, errorHandler){
+    if(item.length === 0){
       raiseGrowl("You must choose some name", errorHandler);
       return false;
     }
     return true;
   }
 
-  function saveButtonValidator(surname, errorHandler){
+  function checkCalendar(item, errorHandler){
+    if(item.length === 0){
+      raiseGrowl("You must choose some date", errorHandler);
+      return false;
+    }
+    return true;
+  }
+
+  function saveButtonValidator(id, date, errorHandler){
     // user must choose some name form list
-    if(checkDropDown(surname, errorHandler)){
-      saveRow();
+    if(checkDropDown(id, errorHandler)){
+      if(checkCalendar(date, errorHandler)){
+        saveRow();
+      }
     }
   }
 
@@ -98,17 +101,9 @@ const MeetingDialog =
       >
         <div>
         <Dropdown placeholder="Select a name"
-                  value={name.concat(" ", surname)} options={allCustomers.toJS()}
-                  onChange={(e) => {let arr = e.value.split(" "); updateName(arr[0]); updateSurname(arr[1])}}
+                  value={customerId} options={allCustomers.toJS()}
+                  onChange={(e) => updateDropdown(e.value)}
         />
-        </div>
-
-        <div>
-        <InputText placeholder="Title" onChange={(e) => updateTitle(e.target.value)} value={title}/>
-        </div>
-
-        <div>
-        <InputText placeholder="Brand" onChange={(e) => updateBrand(e.target.value)} value={brand}/>
         </div>
 
         <div>
@@ -139,11 +134,8 @@ const mapStateToProps = (state) => ({
   dialogHeader: S.getDialogHeader(state),
   displayDialog: S.getDisplayDialog(state),
   addButton: S.getAddButton(state),
+  customerId: S.getCustomerId(state),
   date: S.getDate(state),
-  name: S.getName(state),
-  surname: S.getSurname(state),
-  title: S.getTitle(state),
-  brand: S.getBrand(state),
   customerInfo: S.getCustomerInfo(state),
   meetingInfo: S.getMeetingInfo(state)
 });
@@ -154,10 +146,7 @@ const mapDispatchToProps = (dispatch) => ({
   toggleDisplayDialog: () => dispatch(A.toggleDisplayDialog()),
   unsetAddButton: () => dispatch(A.unsetAddButton()),
   updateDate: (value) => dispatch(A.updateDate(value)),
-  updateName: (value) => dispatch(A.updateName(value)),
-  updateSurname: (value) => dispatch(A.updateSurname(value)),
-  updateTitle: (value) => dispatch(A.updateTitle(value)),
-  updateBrand: (value) => dispatch(A.updateBrand(value)),
+  updateDropdown: (value) => dispatch(A.updateDropdown(value)),
   updateCustomerInfo: (value) => dispatch(A.updateCustomerInfo(value)),
   updateMeetingInfo: (value) => dispatch(A.updateMeetingInfo(value)),
 });
