@@ -60,7 +60,7 @@ const Meeting =
 
       <Dialog
         visible={displayDialog} modal={true} footer={dialogFooter} onHide={() => toggleDisplayDialog()}
-        style={{width: '50vw'}}
+        style={{width: '50vw'} } header="Edit record"
       >
           <InputText id="date" onChange={(e) => updateDate(e.target.value)} value={date}/>
           <InputText id="name" onChange={(e) => updateName(e.target.value)} value={name}/>

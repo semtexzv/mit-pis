@@ -4,6 +4,7 @@ import * as superagent from "superagent/dist/superagent";
 import {getAuthToken} from "../selectors/AuthSelector";
 import {LOGIN_URL} from "../restapi/ServerApi";
 import {setAuth} from "../actions/AuthActions";
+import history from '../utils/history'
 
 
 export default function* mainSaga () {
@@ -23,6 +24,7 @@ function* loginSaga(action) {
     const data = yield call(callAuthPostJSON, LOGIN_URL, body);
     yield all([
       put(setAuth(data.token)),
+      call(history.push, '/meeting')
     ]);
   }catch (e) {
     console.log(e);
