@@ -25,7 +25,12 @@ class Employee(
 
         @JsonIgnore
         @OneToOne(mappedBy = "employee")
-        var authInfo: AuthInfo? = null
+        var authInfo: AuthInfo? = null,
+
+
+        @JsonIgnore
+        @OneToMany(mappedBy = "assoc_employee_id")
+        var customers : List<Customer>? = null
 
 
 ) : BaseEntity() {
