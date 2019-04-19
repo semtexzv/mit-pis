@@ -5,7 +5,6 @@ import * as A from "../actions/ConnectEmployeeActions";
 import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
 import {Dropdown} from "primereact/dropdown";
-import {InputText} from 'primereact/inputtext';
 import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
 
@@ -19,6 +18,7 @@ const ConnectEmployeeDialog =
   potentialEmployee,
   employeeId,
   updateDropdown,
+  saveRow,
 }) => {
 
   //local variables
@@ -32,7 +32,7 @@ const ConnectEmployeeDialog =
 
   const dialogFooter =
     <div className="ui-dialog-buttonpane p-clearfix">
-      <Button label="Assign" icon="pi pi-check"
+      <Button label="Confirm" icon="pi pi-check"
               onClick={e => {saveButtonValidator(employeeId, mygrowl)}}/>
     </div>;
 
@@ -50,7 +50,8 @@ const ConnectEmployeeDialog =
   function saveButtonValidator(surname, errorHandler){
     // user must choose some name form list
     if(checkDropDown(surname, errorHandler)){
-      //saveRow();
+      raiseGrowl("Employee was assigned to customer", errorHandler, "success");
+      saveRow();
     }
   }
 
@@ -63,7 +64,8 @@ const ConnectEmployeeDialog =
       >
         <div>
           <p>
-            Customer <b>{customerName} {customerSurname}</b> with his favourite brand <b>{customerBrand}</b>
+            Customer <b>{customerName} {customerSurname}</b> with his favourite brand <b>{customerBrand}</b><br/>
+            will be assigned to employee:
           </p>
         </div>
 
@@ -90,7 +92,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   toggleDisplayDialog: () => dispatch(A.toggleDisplayDialog()),
-  updateDropdown: (value) => dispatch(A.updateDropdown(value))
+  updateDropdown: (value) => dispatch(A.updateDropdown(value)),
+  saveRow: () => dispatch(A.saveRow())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectEmployeeDialog);

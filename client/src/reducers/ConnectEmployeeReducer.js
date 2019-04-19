@@ -1,5 +1,4 @@
 import {fromJS} from "immutable";
-import { List } from 'immutable';
 import * as A from "../actions/ConnectEmployeeActions";
 
 const initialState = fromJS({
@@ -31,20 +30,22 @@ const ConnectEmployeeReducer = (state = initialState, action) => {
       let data = action.value;
       let newState = state;
       newState = newState.set("customerId", data.id);
+      newState = newState.set("employeeId", "");
       newState = newState.set("customerName", data.name);
       newState = newState.set("customerSurname", data.surname);
       newState = newState.set("customerBrand", data.brand);
       newState = newState.set("displayDialog", true);
       return newState;
+      //TODO: after this return, set employeeId to appropriate id by customerId
     }
     case A.UPDATE_DROPDOWN: {
-      let id = action.value;
+      return state.set("employeeId", action.value);
+    }
+    case A.SAVE_ROW: {
       let newState = state;
-      let potentialEmployee = newState.get("potentialEmployee");
-      let row = potentialEmployee.find(function(obj){return obj.get('value') === id;});
-      let name = row.get("label").split(" ");
-      newState = newState.set("employeeId", id);
+      newState = newState.set("displayDialog", false);
       return newState;
+      //TODO: after this return, it must be reload customerData variable with corresponding Assigned column (probably yes value)
     }
     default:
       return state;
