@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import Routes from './routes'
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/themes/nova-colored/theme.css';
 import * as serviceWorker from './utils/serviceWorker'
 import configureStore from './store/store';
 

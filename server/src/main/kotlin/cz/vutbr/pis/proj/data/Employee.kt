@@ -21,7 +21,6 @@ class Employee(
         var email: String = "",
 
 */
-        @JsonIgnore
         var sysRole: SystemRole = SystemRole.USER,
 
         @JsonIgnore

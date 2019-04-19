@@ -3,7 +3,8 @@ import {NAME} from "../constants/MeetingConstants";
 export const TOGGLE_DISPLAY_DIALOG = `${NAME}/TOGGLE_DISPLAY_DIALOG`;
 export const DELETE_ROW = `${NAME}/DELETE_ROW`;
 export const SAVE_ROW = `${NAME}/SAVE_ROW`;
-export const ADD_ROW = `${NAME}/ADD_ROW`;
+export const SET_ADD_BUTTON = `${NAME}/SET_ADD_BUTTON`;
+export const UNSET_ADD_BUTTON = `${NAME}/UNSET_ADD_BUTTON`;
 export const UPDATE_SELECTED_ROW = `${NAME}/UPDATE_SELECTED_ROW`;
 export const UPDATE_DATE = `${NAME}/UPDATE_DATE`;
 export const UPDATE_NAME = `${NAME}/UPDATE_NAME`;
@@ -21,8 +22,12 @@ export const saveRow = () => ({
   type: SAVE_ROW,
 });
 
-export const addRow = () => ({
-  type: ADD_ROW,
+export const setAddButton = () => ({
+  type: SET_ADD_BUTTON,
+});
+
+export const unsetAddButton = () => ({
+  type: UNSET_ADD_BUTTON,
 });
 
 export const toggleDisplayDialog = () => ({
