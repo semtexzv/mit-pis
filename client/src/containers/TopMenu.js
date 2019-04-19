@@ -1,17 +1,16 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 
-import {TabMenu} from 'primereact/tabmenu';
+import {TabMenu} from "primereact/tabmenu"
 import history from '../utils/history'
 
 class TopMenu extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    if(typeof this.props.menu_items === 'undefined') {
+    if (typeof this.props.menu_items === 'undefined') {
       this.state = {items: []};
       return;
-    }
-    else if (this.props.menu_items.length === 0){
+    } else if (this.props.menu_items.length === 0) {
       this.state = {items: []};
       return;
     }
@@ -19,36 +18,40 @@ class TopMenu extends Component {
     // look at ../constants/TopMenuConstants.js
     var itemsParam = this.props.menu_items;
     var itemList = [];
-    for(let i in itemsParam) {
+    for (let i in itemsParam) {
       let name = itemsParam[i][0];
       let path = itemsParam[i][1];
+      let iconText = itemsParam[i][2];
+
       itemList.push({
-        label: name, icon: 'fa-compass', command: () => {
+        label: name, icon: iconText, command: () => {
           history.push(path)
+
         }
       });
     }
+
     itemList.push({
-      label: 'Logout', icon: "pi pi-power-off", style: {left:40}, command: () => {
+      label: 'Logout', icon: "pi pi-power-off", style: {left: 40}, command: () => {
         ; // TODO: no action for logout-click not implemented yet
       }
-    })
+    });
     this.state = {items: itemList};
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div className="TopMenu">
-        <TabMenu model={this.state.items}>
-        </TabMenu>
-      </div>);
+          <TabMenu model={this.state.items}/>
+      </div>
+    );
   }
 }
 
-const mapStateToProps = (menu_state) => ({
-});
 
-const mapDispatchToProps = (dispatch) => ({
-});
+
+const mapStateToProps = (menu_state) => ({});
+
+const mapDispatchToProps = (dispatch) => ({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopMenu);

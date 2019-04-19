@@ -6,29 +6,27 @@ import {getAuthToken} from "../selectors/AuthSelector";
 import {getUsersUrl, LOGIN_URL, ME_URL, REGISTER_URL} from "../restapi/ServerApi";
 import {setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
-import {setAuth} from "../actions/AuthActions";
 
-export default function* mainSaga () {
+export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
   yield takeEvery(REGISTER, registerSaga)
 }
 
 function* registerSaga(action) {
- const login = action.login ;
- const password = action.password;
+  const login = action.login;
+  const password = action.password;
 
   const body = {
     username: login,
     password: password
   };
 
-  try{
+  try {
     const data = yield call(callRegisterPostJSON, REGISTER_URL, body);
-    // TODO: catch response
-    // yield all([
-    //   put(setAuth(data.)),
-    // ]);
-  }catch (e) {
+
+
+    console.log(data)
+  } catch (e) {
     console.log(e);
   }
 
@@ -43,14 +41,14 @@ function* loginSaga(action) {
     password: password
   };
 
-  try{
+  try {
     const data = yield call(callAuthPostJSON, LOGIN_URL, body);
     yield  put(setAuth(data.token));
-    const userId  = yield call(callAuthGetJSON, ME_URL);
+    const userId = yield call(callAuthGetJSON, ME_URL);
     const user = yield call(callAuthGetJSON, getUsersUrl(userId.id));
     yield  put(setUser(user));
     yield call(history.push, '/meeting')
-  }catch (e) {
+  } catch (e) {
     console.log(e);
   }
 }
@@ -71,7 +69,6 @@ export function* callRegisterPostJSON(url, data) {
   return yield call(postRegisterUrl, url, data);
 
 }
-
 
 function getUrl(url, token) {
   return new Promise((resolve, reject) => {
