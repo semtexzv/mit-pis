@@ -7,8 +7,7 @@ export const SET_ADD_BUTTON = `${NAME}/SET_ADD_BUTTON`;
 export const UNSET_ADD_BUTTON = `${NAME}/UNSET_ADD_BUTTON`;
 export const UPDATE_SELECTED_ROW = `${NAME}/UPDATE_SELECTED_ROW`;
 export const UPDATE_DATE = `${NAME}/UPDATE_DATE`;
-export const UPDATE_NAME = `${NAME}/UPDATE_NAME`;
-export const UPDATE_SURNAME = `${NAME}/UPDATE_SURNAME`;
+export const UPDATE_DROPDOWN = `${NAME}/UPDATE_DROPDOWN`;
 export const UPDATE_TITLE = `${NAME}/UPDATE_TITLE`;
 export const UPDATE_BRAND = `${NAME}/UPDATE_BRAND`;
 export const UPDATE_CUSTOMER_INFO = `${NAME}/UPDATE_CUSTOMER_INFO`;
@@ -44,23 +43,8 @@ export const updateDate = (data) => ({
   value: data,
 });
 
-export const updateName = (data) => ({
-  type: UPDATE_NAME,
-  value: data,
-});
-
-export const updateSurname = (data) => ({
-  type: UPDATE_SURNAME,
-  value: data,
-});
-
-export const updateTitle = (data) => ({
-  type: UPDATE_TITLE,
-  value: data,
-});
-
-export const updateBrand = (data) => ({
-  type: UPDATE_BRAND,
+export const updateDropdown = (data) => ({
+  type: UPDATE_DROPDOWN,
   value: data,
 });
 

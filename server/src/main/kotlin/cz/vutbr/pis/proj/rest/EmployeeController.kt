@@ -6,8 +6,10 @@ import cz.vutbr.pis.proj.ProjApplication
 import cz.vutbr.pis.proj.auth.CustomSecurityService
 import cz.vutbr.pis.proj.data.AuthInfo
 import cz.vutbr.pis.proj.data.Employee
+import cz.vutbr.pis.proj.data.Meeting
 import cz.vutbr.pis.proj.repo.AuthInfoRepo
 import cz.vutbr.pis.proj.repo.EmployeeRepo
+import cz.vutbr.pis.proj.repo.MeetingRepo
 import cz.vutbr.pis.proj.rest.base.BaseController
 import cz.vutbr.pis.proj.unauthorized
 import cz.vutbr.pis.proj.util.BadReqException
@@ -29,6 +31,9 @@ class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
 
     @Autowired
     lateinit var authRepo: AuthInfoRepo
+
+    @Autowired
+    lateinit var meetingRepo : MeetingRepo
 
     @PostMapping("/")
     override fun createOne(@RequestBody data: Employee): Employee {
@@ -77,6 +82,12 @@ class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
             throw BadReqException("Cant change role to higher than current user")
         }
         return changed
+    }
+
+    @GetMapping("/{id}/meetings")
+    fun getMeetings(@PathVariable id: Int?): List<Meeting>? {
+        val user = getOne(id);
+        return user!!.customers?.map{ it?.meetings ?: listOf() }?.flatten() ?: listOf()
     }
 
 }

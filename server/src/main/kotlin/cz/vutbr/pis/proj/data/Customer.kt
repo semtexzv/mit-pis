@@ -24,7 +24,12 @@ open class Customer(
         @ManyToOne(cascade = arrayOf(CascadeType.MERGE, CascadeType.PERSIST))
         @JoinColumn(name = "brand_id", referencedColumnName = "id", insertable = false, updatable = false)
         @JsonIgnore
-        var brand: Brand? = null
+        var brand: Brand? = null,
+
+
+        @JsonIgnore
+        @OneToMany(mappedBy = "customer_id")
+        var meetings : List<Meeting>? = null
 ) : BaseEntity() {
 
 }
