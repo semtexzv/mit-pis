@@ -2,8 +2,9 @@ import {all, call, put, takeEvery, select} from "redux-saga/effects";
 import {LOGIN} from "../actions/LoginActions";
 import * as superagent from "superagent/dist/superagent";
 import {getAuthToken} from "../selectors/AuthSelector";
-import {LOGIN_URL} from "../restapi/ServerApi";
-import {setAuth} from "../actions/AuthActions";
+import {getUsersUrl, LOGIN_URL, ME_URL} from "../restapi/ServerApi";
+import {setAuth, setUser} from "../actions/AuthActions";
+import history from '../utils/history'
 
 
 export default function* mainSaga () {
@@ -21,9 +22,11 @@ function* loginSaga(action) {
 
   try{
     const data = yield call(callAuthPostJSON, LOGIN_URL, body);
-    yield all([
-      put(setAuth(data.token)),
-    ]);
+    yield  put(setAuth(data.token));
+    const userId  = yield call(callAuthGetJSON, ME_URL);
+    const user = yield call(callAuthGetJSON, getUsersUrl(userId.id));
+    yield  put(setUser(user));
+    yield call(history.push, '/meeting')
   }catch (e) {
     console.log(e);
   }

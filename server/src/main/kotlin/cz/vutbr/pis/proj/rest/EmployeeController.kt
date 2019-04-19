@@ -3,11 +3,13 @@ package cz.vutbr.pis.proj.rest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import cz.vutbr.pis.proj.ProjApplication
+import cz.vutbr.pis.proj.auth.CustomSecurityService
 import cz.vutbr.pis.proj.data.AuthInfo
 import cz.vutbr.pis.proj.data.Employee
 import cz.vutbr.pis.proj.repo.AuthInfoRepo
 import cz.vutbr.pis.proj.repo.EmployeeRepo
 import cz.vutbr.pis.proj.rest.base.BaseController
+import cz.vutbr.pis.proj.unauthorized
 import cz.vutbr.pis.proj.util.BadReqException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/employee")
 class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
 
+
+    @Autowired
+    lateinit var secService : CustomSecurityService
 
     @Autowired
     lateinit var objectMapper: ObjectMapper
@@ -62,7 +67,16 @@ class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
     @PostMapping("/{id}")
     @PreAuthorize("@secService.canModifyUser(#id)")
     override fun modifyOne(@PathVariable id: Int?, @RequestBody data: String): Employee {
-        return super.modifyOne(id, data);
+        val currentRole = secService.currentToken().user?.sysRole!!;
+
+        val changed = super.modifyOne(id, data)
+        val new = repo.getOne(id!!)
+
+        if(new.sysRole.ordinal > currentRole.ordinal) {
+
+            throw BadReqException("Cant change role to higher than current user")
+        }
+        return changed
     }
 
 }

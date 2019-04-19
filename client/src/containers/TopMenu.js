@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 
 import {TabMenu} from 'primereact/tabmenu';
-import {history} from "../routes/index"
+import history from '../utils/history'
 
 class TopMenu extends Component {
   constructor(props){

@@ -8,6 +8,7 @@
     "@emotion/styled": "^10.0.9",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.6",
+    "history": "^4.9.0",
     "immutable": "^4.0.0-rc.12",
     "primeicons": "^1.0.0",
     "primereact": "^3.1.2",
