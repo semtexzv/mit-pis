@@ -3,20 +3,22 @@ import { List } from 'immutable';
 import * as A from "../actions/SpecializationActions";
 
 const initialState = fromJS({
-  employeeName: "",
-  employeeSurname: "",
-  chosenBrands: [], // aka specialization
+
+  employeeId: "", // chosen employee
+  chosenBrands: [], // aka specializations
+  // value represent brand id
   allBrands:[
-    {id: "1", label: "Audi", value: "Audi"},
-    {id: "2", label: "Lamborghini", value: "Lamborghini"},
-    {id: "3", label: "Viper", value: "Viper"},
+    {label: "Audi", value: "1"},
+    {label: "Lamborghini", value: "2"},
+    {label: "Viper", value: "3"},
   ],
+  // value represent employee id
   allEmployees:[
-    {id: "1", label: "Dezo Dorant", value: "Dezo Dorant"},
-    {id: "2", label: "Rani Srani", value: "Rani Srani"},
-    {id: "3", label: "Frank Enstein", value: "Frank Enstein"},
+    {label: "Dezo Dorant", value: "10"},
+    {label: "Rani Srani", value: "11"},
+    {label: "Frank Enstein", value: "12"},
   ],
-  warning: false,
+  warning: false, // show warning
 });
 
 function getRandomInt(min, max) {
@@ -34,6 +36,7 @@ const SpecializationReducer = (state = initialState, action) => {
 
       // this is only example. It doesn't truly reflect database
       //TODO: edit after saga will be added
+      // simulate that employee has some specializations
       let randomID = getRandomInt(0, 3).toString();
       // simulate that employee haven't any specialization
       if(randomID === "0")
@@ -42,7 +45,7 @@ const SpecializationReducer = (state = initialState, action) => {
 
       let allBrands = newState.get("allBrands");
       // find brand with id === randomID
-      let brand = allBrands.find(function(obj){return obj.get('id') === randomID;});
+      let brand = allBrands.find(function(obj){return obj.get('value') === randomID;});
       // update chosenBrands
       let chosenBrands = newState.get("chosenBrands");
       chosenBrands = chosenBrands.push(brand.get("value"));
@@ -52,17 +55,13 @@ const SpecializationReducer = (state = initialState, action) => {
     case A.SPEC_CHANGE: {
       return state.set("chosenBrands", List(action.value));
     }
-    case A.UPDATE_EMPLOYEE_NAME: {
-      return state.set("employeeName", action.value);
-    }
-    case A.UPDATE_EMPLOYEE_SURNAME: {
-      return state.set("employeeSurname", action.value);
+    case A.UPDATE_DROPDOWN: {
+      return state.set("employeeId", action.value);
     }
     case A.SAVE_SPEC: {
       let newState = state;
       newState = newState.set("chosenBrands", List([]));
-      newState = newState.set("employeeName", "");
-      newState = newState.set("employeeSurname", "");
+      newState = newState.set("employeeId", "");
       return newState;
     }
     case A.SHOW_WARNING: {

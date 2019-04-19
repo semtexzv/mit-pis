@@ -14,13 +14,11 @@ const Specialization =
 ({
   allBrands,
   allEmployees,
-  employeeName,
-  employeeSurname,
+  employeeId,
   chosenBrands,
   fillSpec,
   updateSpec,
-  updateEmployeeName,
-  updateEmployeeSurname,
+  updateDropdown,
   saveSpec,
   warning,
   hideWarning,
@@ -54,9 +52,7 @@ const Specialization =
   // onChanges
   function onChangeDropDown(value) {
     if (value !== null) {
-      let arr = value.split(" ");
-      updateEmployeeName(arr[0]);
-      updateEmployeeSurname(arr[1]);
+      updateDropdown(value);
       fillSpec();
     }
   }
@@ -97,7 +93,7 @@ const Specialization =
     <div>
       <Growl ref={(el) => {setGrowl(el)}}> </Growl>
       <div>
-        <Dropdown value={employeeName.concat(" ", employeeSurname)}
+        <Dropdown value={employeeId}
                   options={allEmployees.toJS()}
                   onChange={(e) => onChangeDropDown(e.value)}
                   filter={true} filterPlaceholder="employee filter"
@@ -115,7 +111,7 @@ const Specialization =
 
       <div>
         <Button label="Save" icon="pi pi-check"
-                onClick={e => {saveButtonValidator(employeeSurname, chosenBrands, mygrowl)}}/>
+                onClick={e => {saveButtonValidator(employeeId, chosenBrands, mygrowl)}}/>
       </div>
 
       <div>
@@ -132,8 +128,7 @@ const Specialization =
 const mapStateToProps = (state) => ({
   allBrands: S.getAllBrands(state),
   allEmployees: S.getAllEmployees(state),
-  employeeName: S.getEmployeeName(state),
-  employeeSurname: S.getEmployeeSurname(state),
+  employeeId: S.getEmployeeId(state),
   chosenBrands: S.getChosenBrands(state),
   warning: S.getWarning(state),
 });
@@ -141,8 +136,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fillSpec: (value) => dispatch(A.fillSpec()),
   updateSpec: (value) => dispatch(A.updateSpec(value)),
-  updateEmployeeName: (value) => dispatch(A.updateEmployeeName(value)),
-  updateEmployeeSurname: (value) => dispatch(A.updateEmployeeSurname(value)),
+  updateDropdown: (value) => dispatch(A.updateDropdown(value)),
   saveSpec: () => dispatch(A.saveSpec()),
   showWarning: () => dispatch(A.showWarning()),
   hideWarning: () => dispatch(A.hideWarning())
