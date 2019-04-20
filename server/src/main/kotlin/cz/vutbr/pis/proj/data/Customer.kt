@@ -17,12 +17,12 @@ open class Customer(
         @Column(name = "brand_id", nullable = false)
         var brandId: Int? = null,
 
-        @ManyToOne(cascade = [CascadeType.MERGE, CascadeType.PERSIST])
+        @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
         @JoinColumn(name = "assoc_employee_id", referencedColumnName = "id", insertable = false, updatable = false)
         @JsonIgnore
         var employee: Employee? = null,
 
-        @ManyToOne(cascade = arrayOf(CascadeType.MERGE, CascadeType.PERSIST))
+        @ManyToOne(cascade = [CascadeType.MERGE])
         @JoinColumn(name = "brand_id", referencedColumnName = "id", insertable = false, updatable = false)
         @JsonIgnore
         var brand: Brand? = null,
