@@ -98,8 +98,6 @@ class Seeder : ApplicationListener<ApplicationReadyEvent> {
         test.customers = listOf(customer1)
         employyeRepo.save(test)
 
-        val aa = employyeRepo.getOne(1)
-
     }
 
 }
