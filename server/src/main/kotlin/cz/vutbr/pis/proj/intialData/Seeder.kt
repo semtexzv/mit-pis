@@ -1,10 +1,10 @@
 package cz.vutbr.pis.proj.intialData
 
 import cz.vutbr.pis.proj.ProjApplication
-import cz.vutbr.pis.proj.data.AuthInfo
-import cz.vutbr.pis.proj.data.Employee
-import cz.vutbr.pis.proj.data.SystemRole
+import cz.vutbr.pis.proj.data.*
 import cz.vutbr.pis.proj.repo.AuthInfoRepo
+import cz.vutbr.pis.proj.repo.BrandRepo
+import cz.vutbr.pis.proj.repo.CustomerRepo
 import cz.vutbr.pis.proj.repo.EmployeeRepo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.event.ApplicationReadyEvent
@@ -20,13 +20,19 @@ class Seeder : ApplicationListener<ApplicationReadyEvent> {
     @Autowired
     lateinit var authInfoRepo: AuthInfoRepo
 
+    @Autowired
+    lateinit var brandRepo: BrandRepo
+
+    @Autowired
+    lateinit var customerRepo: CustomerRepo
+
     override fun onApplicationEvent(event: ApplicationReadyEvent) {
-       setEmployee()
-
-
+        setEmployee()
+        setBrand()
+        setCustomers()
     }
 
-    private fun setEmployee(){
+    private fun setEmployee() {
         val admin = Employee("admin", "admin", "admin", SystemRole.ADMIN)
         employyeRepo.save(admin)
 
@@ -60,6 +66,39 @@ class Seeder : ApplicationListener<ApplicationReadyEvent> {
         user.authInfo = aiUser
         authInfoRepo.save(aiUser)
         employyeRepo.save(user)
+
+    }
+
+    private fun setBrand() {
+        brandRepo.save(Brand("Audi"))
+        brandRepo.save(Brand("BMW"))
+        brandRepo.save(Brand("Seat"))
+        brandRepo.save(Brand("Jaguar"))
+        brandRepo.save(Brand("Škoda"))
+        brandRepo.save(Brand("Ferrari"))
+        brandRepo.save(Brand("Lexus"))
+        brandRepo.save(Brand("Mercedes"))
+        brandRepo.save(Brand("Hyundai"))
+        brandRepo.save(Brand("Honda"))
+        brandRepo.save(Brand("Peugeot"))
+        brandRepo.save(Brand("Fiat"))
+        brandRepo.save(Brand("Renault"))
+        brandRepo.save(Brand("Volkswagen"))
+        brandRepo.save(Brand("Opel"))
+    }
+
+    private fun setCustomers() {
+        val customer1 = Customer("test", "customer1", "", "", 1, 5, employyeRepo.getOne(1),brandRepo.getOne(5) )
+
+        customerRepo.save(
+         customer1
+        )
+
+        val test = employyeRepo.getOne(1)
+        test.customers = listOf(customer1)
+        employyeRepo.save(test)
+
+        val aa = employyeRepo.getOne(1)
 
     }
 
