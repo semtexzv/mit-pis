@@ -28,7 +28,7 @@ class Employee(
         @OneToOne(mappedBy = "employee")
         var authInfo: AuthInfo? = null,
 
-
+        @JsonIgnore
         @OneToMany(targetEntity=Customer::class, mappedBy = "employee", fetch = FetchType.EAGER)
         var customers : List<Customer>? = null
 
