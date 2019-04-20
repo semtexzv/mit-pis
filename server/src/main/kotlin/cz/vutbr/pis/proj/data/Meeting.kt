@@ -5,18 +5,17 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
+@Table(name = "meeting")
 class Meeting(
         @JsonIgnore
         var date: LocalDateTime? = LocalDateTime.now(),
-        var report : String = "",
+        var report: String = "",
 
         @Column(name = "customer_id")
-        var customerId : Int? = null,
+        var customerId: Int? = null,
 
-        @ManyToOne(cascade = arrayOf(CascadeType.MERGE, CascadeType.PERSIST))
+        @ManyToOne(cascade = [CascadeType.MERGE, CascadeType.PERSIST])
         @JoinColumn(name = "customer_id", insertable = false, updatable = false)
         @JsonIgnore
-        var customer : Customer? = null
-) : BaseEntity() {
-
-}
+        var customer: Customer? = null
+) : BaseEntity()
