@@ -7,18 +7,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import cz.vutbr.pis.proj.auth.AuthProvider
 import cz.vutbr.pis.proj.auth.CustomSecurityService
-import cz.vutbr.pis.proj.data.AuthInfo
-import cz.vutbr.pis.proj.data.Employee
-import cz.vutbr.pis.proj.data.SystemRole
-import cz.vutbr.pis.proj.repo.AuthInfoRepo
-import cz.vutbr.pis.proj.repo.EmployeeRepo
 import cz.vutbr.pis.proj.rest.types.ErrorResponse
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration
-import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.boot.runApplication
-import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
@@ -28,33 +20,11 @@ import org.springframework.security.authentication.AuthenticationProvider
 import java.util.*
 import org.springframework.context.annotation.Primary
 import org.springframework.context.event.ContextRefreshedEvent
-import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-@Component
-class Seeder : ApplicationListener<ApplicationReadyEvent> {
-    @Autowired
-    lateinit var employyeRepo: EmployeeRepo
-
-    @Autowired
-    lateinit var authInfoRepo: AuthInfoRepo
-
-    override fun onApplicationEvent(event: ApplicationReadyEvent) {
-        val admin = Employee("admin", "admin", "admin", SystemRole.ADMIN)
-        employyeRepo.save(admin)
-
-
-        val ai = AuthInfo(1, admin, ProjApplication.hash("admin"), null, null, null)
-        admin.authInfo = ai
-        authInfoRepo.save(ai)
-        employyeRepo.save(admin)
-    }
-}
-
-
 @Configuration
-@SpringBootApplication(exclude = arrayOf(RepositoryRestMvcAutoConfiguration::class))
+@SpringBootApplication(exclude = [RepositoryRestMvcAutoConfiguration::class])
 class ProjApplication {
 
     @Bean
@@ -67,8 +37,8 @@ class ProjApplication {
     @Primary
     fun objectMapper(): ObjectMapper {
 
-        val builder = Jackson2ObjectMapperBuilder();
-        val mod = JavaTimeModule();
+        val builder = Jackson2ObjectMapperBuilder()
+        val mod = JavaTimeModule()
         val ser = object : JsonSerializer<LocalDateTime>() {
             override fun serialize(value: LocalDateTime?, gen: JsonGenerator?, serializers: SerializerProvider?) {
                 gen!!.writeString(value!!.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
