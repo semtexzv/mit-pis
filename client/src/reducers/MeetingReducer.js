@@ -1,20 +1,10 @@
 import {fromJS} from "immutable";
-import { Map } from 'immutable';
 import * as A from "../actions/MeetingActions";
 
 const initialState = fromJS({
-  meetingData: [
-    {meetingId: "1", customerId: "10", date: "2019-04-17T18:45:00.000Z", name: "Al", surname: "Koholik", title: "title1", brand: "brand1",
-      customerInfo: "ci1", meetingInfo: "mi1"},
-    {meetingId: "2", customerId: "11", date: "2019-04-17T12:00:00.000Z", name: "Lojza", surname: "Dozdichcal", title: "title2", brand: "brand2",
-      customerInfo: "ci2", meetingInfo: "mi2"},
-  ],
-
+  meetingData: [],
   // value represents id of customer
-  allCustomers: [
-    {label: "Al Koholik", value: "10", title: "title1", brand: "brand1"},
-    {label: "Lojza Dozdichcal", value: "11", title: "title2", brand: "brand2"}
-  ],
+  allCustomers: [],
   displayDialog: false,
   addButton: false,
   dialogHeader: "Edit meeting",
@@ -27,6 +17,8 @@ const initialState = fromJS({
   title: "",
   customerInfo: "",
   meetingInfo: "",
+  row: null,
+  create: false,
 });
 
 const MeetingReducer = (state = initialState, action) => {
@@ -39,41 +31,35 @@ const MeetingReducer = (state = initialState, action) => {
       newState = newState.set("displayDialog", false);
       return newState;
     }
+    case A.SET_MEETINGS:{
+      return state.set("meetingData", fromJS(action.payload));
+    }
+    case A.SET_CUSTOMERS:{
+      return state.set("allCustomers", fromJS(action.payload));
+    }
     case A.SAVE_ROW: {
-      var newState = state;
+      const row = {
+        date: state.get("date"),
+        customerId: state.get("customerId"),
+        report: state.get("meetingInfo")
+      };
+
+      let created = false;
+
       if(state.get("addButton") === false) {
         // editing row => delete old record
-        let mData = state.get("meetingData");
-        const row_id = state.get("meetingId");
-        let newMeetingData = mData.delete(mData.findIndex(i => i.get("meetingId") === row_id));
-        newState = state.set("meetingData", newMeetingData);
+        created = false;
       }
       else{
         // add new row => for this example it must be create new ID number
-        //TODO: edit after saga will be added
-        let randomID = Math.floor(Math.random() * 1000);
-        newState = newState.set("meetingId", randomID.toString());
-        //!!!
-        newState = newState.set("addButton", false);
+        created = true;
       }
-      // dialog shut
-      newState = newState.set("displayDialog", false);
-      // create new row
-      const row = Map({
-        meetingId: state.get("meetingId"),
-        customerId: state.get("customerId"),
-        date: state.get("date"),
-        name: state.get("name"),
-        surname: state.get("surname"),
-        title: state.get("title"),
-        brand: state.get("brand"),
-        customerInfo: state.get("customerInfo"),
-        meetingInfo: state.get("meetingInfo"),
-      });
-      // add new row to dataTable
-      let newMeetingData = newState.get("meetingData").push(row);
-      newState = newState.set("meetingData", newMeetingData);
-      return newState;
+
+      return state
+        .set("displayDialog", false)
+        .set("row", row)
+        .set("create", created);
+
     }
     case A.SET_ADD_BUTTON: {
       let newState = state;

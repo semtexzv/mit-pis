@@ -1,17 +1,24 @@
-import {all, call, put, takeEvery, select, takeLatest} from "redux-saga/effects";
+import {call, put, takeEvery, select, takeLatest} from "redux-saga/effects";
 import {LOGIN} from "../actions/LoginActions";
 import {REGISTER} from "../actions/RegisterActions";
 import * as superagent from "superagent/dist/superagent";
-import {getAuthToken} from "../selectors/AuthSelector";
-import {CUSTOMERS_URL, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL, ME_URL, REGISTER_URL} from "../restapi/ServerApi";
+import {getAuthToken, getLoggedUserId, getMyCustomers} from "../selectors/AuthSelector";
+import {
+  CREATE_MEETING_URL, CUSTOMERS_URL, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL, ME_URL, REGISTER_URL
+} from "../restapi/ServerApi";
 import {setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
-import {INIT_DATA, initData, setMeetings} from "../actions/MeetingActions";
+import { DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} from "../actions/MeetingActions";
+import {transformCustomers, transformMeetings} from "../utils/meetingsUtil";
+import {getCreateStatus, getMeetingId, getRow} from "../selectors/MeetingSelector";
 
 export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
   yield takeEvery(REGISTER, registerSaga);
-  yield takeLatest(INIT_DATA, meetingsSaga)
+  yield takeEvery(SAVE_ROW, meetingSaga);
+  yield takeEvery(REGISTER, registerSaga);
+  yield takeEvery(DELETE_ROW, deleteMeetingSaga);
+  yield takeLatest(INIT_DATA, meetingsSaga);
 }
 
 function* registerSaga(action) {
@@ -48,7 +55,6 @@ function* loginSaga(action) {
     yield put(setAuth(data.token));
     const userId = yield call(callAuthGetJSON, ME_URL);
     const user = yield call(callAuthGetJSON, getUsersUrl(userId.id));
-    const meetings = yield call(callAuthGetJSON, getUsersMeetingsUrl(userId.id));
     yield put(setUser(user));
     yield put(initData(userId.id));
     yield call(history.push, '/meeting')
@@ -68,10 +74,39 @@ export function* initSaga(action) {
 
 export function* meetingsSaga(action) {
   try {
-    const allCustomers = yield call(callAuthGetJSON, CUSTOMERS_URL);
-    console.log(allCustomers);
     const meetings = yield call(callAuthGetJSON, getUsersMeetingsUrl(action.payload));
-    yield put(setMeetings(meetings));
+    const customers = yield select(getMyCustomers);
+    yield put(setMeetings(transformMeetings(meetings, customers)));
+    yield put(setCustomers(transformCustomers(customers)));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* meetingSaga(action) {
+  try {
+    const row = yield select(getRow);
+    const create = yield select(getCreateStatus);
+    if(create){
+      yield call(callAuthPostJSON,CREATE_MEETING_URL, row);
+    }else{
+      const id = yield select(getMeetingId);
+      yield call(callAuthPostJSON,getUpdateMeetingUrl(id), row);
+    }
+    const userId = yield select(getLoggedUserId);
+    yield put(initData(userId));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* deleteMeetingSaga(){
+  try {
+    const id = yield select(getMeetingId);
+    yield call(callAuthDel,getUpdateMeetingUrl(id), {});
+
+    const userId = yield select(getLoggedUserId);
+    yield put(initData(userId));
   } catch (e) {
     console.log(e);
   }
@@ -80,6 +115,12 @@ export function* meetingsSaga(action) {
 export function* callAuthGetJSON(url) {
   const token = yield select(getAuthToken);
   const response = yield call(getUrl, url, token);
+  return response;
+}
+
+export function* callAuthDel(url) {
+  const token = yield select(getAuthToken);
+  const response = yield call(delUrl, url, token);
   return response;
 }
 
@@ -122,6 +163,19 @@ function postUrl(url, token, data) {
   return new Promise((resolve, reject) => {
     superagent
       .post(url)
+      .set('Authorization', 'Bearer ' + token)
+      .set('Accept', 'application/json')
+      .send(data)
+      .end((error, res) => {
+        error ? reject(error) : resolve(res.body);
+      });
+  });
+}
+
+function delUrl(url, token, data) {
+  return new Promise((resolve, reject) => {
+    superagent
+      .del(url)
       .set('Authorization', 'Bearer ' + token)
       .set('Accept', 'application/json')
       .send(data)

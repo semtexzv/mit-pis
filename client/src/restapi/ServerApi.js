@@ -9,3 +9,7 @@ export const getUsersUrl = (id) => EMPLOYEES_URL + "/" + id;
 export const getUsersMeetingsUrl = (id) => getUsersUrl(id) + "/meetings";
 
 export const REGISTER_URL = BASE_URL + "/register";
+
+export const CREATE_MEETING_URL = BASE_URL + "/meeting";
+export const getUpdateMeetingUrl = (id) => CREATE_MEETING_URL + "/" + id;
+
