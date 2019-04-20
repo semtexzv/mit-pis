@@ -30,7 +30,7 @@ class Employee(
 
 
         @OneToMany(targetEntity=Customer::class, mappedBy = "employee", fetch = FetchType.EAGER)
-        var customers : List<Customer> = listOf()
+        var customers : List<Customer>? = null
 
 
 ) : BaseEntity()
