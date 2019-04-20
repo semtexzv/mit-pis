@@ -4,6 +4,7 @@ import * as meetingConstants from "./MeetingConstants";
 import * as registerConstants from "./RegisterConstants"
 import * as specializationConstants from "./SpecializationConstants";
 import * as connectEmployeeConstants from "./ConnectEmployeeConstants";
+import * as overviewConstants from "./OverviewConstants";
 
 export {
   loginConstants,
@@ -12,4 +13,5 @@ export {
   registerConstants,
   specializationConstants,
   connectEmployeeConstants,
+  overviewConstants,
 };
