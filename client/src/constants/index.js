@@ -7,6 +7,7 @@ import * as connectEmployeeConstants from "./ConnectEmployeeConstants";
 import * as overviewConstants from "./OverviewConstants";
 import * as customerConstants from "./CustomerConstants";
 import * as profileConstants from "./ProfileConstants";
+import * as employeeConstants from "./EmployeeConstants";
 
 export {
   loginConstants,
@@ -18,4 +19,5 @@ export {
   overviewConstants,
   customerConstants,
   profileConstants,
+  employeeConstants,
 };

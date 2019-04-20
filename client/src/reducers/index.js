@@ -7,6 +7,7 @@ import ConnectEmployeeReducer from "./ConnectEmployeeReducer";
 import OverviewReducer from "./OverviewReducer";
 import CustomerReducer from "./CustomerReducer";
 import ProfileReducer from "./ProfileReducer";
+import EmployeeReducer from "./EmployeeReducer";
 import {combineReducers} from "redux-immutable";
 import RegisterReducer from "./RegisterReducer";
 
@@ -20,4 +21,5 @@ export const rootReducer = combineReducers({
   [C.overviewConstants.NAME]: OverviewReducer,
   [C.customerConstants.NAME]: CustomerReducer,
   [C.profileConstants.NAME]: ProfileReducer,
+  [C.employeeConstants.NAME]: EmployeeReducer,
 });
