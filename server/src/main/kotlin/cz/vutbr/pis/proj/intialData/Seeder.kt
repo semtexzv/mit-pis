@@ -28,11 +28,15 @@ class Seeder : ApplicationListener<ApplicationReadyEvent> {
     @Autowired
     lateinit var meetingRepo: MeetingRepo
 
+    @Autowired
+    lateinit var specializationRepo: SpecializationRepo
+
     override fun onApplicationEvent(event: ApplicationReadyEvent) {
         setEmployee()
         setBrand()
         setCustomers()
         setMeetings()
+        setSepcialization()
     }
 
     private fun setEmployee() {
@@ -112,6 +116,20 @@ class Seeder : ApplicationListener<ApplicationReadyEvent> {
         meetingRepo.save(Meeting(report = "test chbfwerfqef c knerjgeklfjnelk ", customerId = 20, customer = customer ))
         meetingRepo.save(Meeting(report = "Loren ipsum", customerId = 20, customer = customer ))
 
+    }
+
+    private fun  setSepcialization(){
+        val employee1 = employyeRepo.getOne(1)
+        val employee2 = employyeRepo.getOne(2)
+        val employee3 = employyeRepo.getOne(3)
+
+        val brand1 = brandRepo.getOne(5)
+        val brand2 = brandRepo.getOne(6)
+        val brand3 = brandRepo.getOne(7)
+
+        specializationRepo.save(Specialization(SpecializationId(1,5), employee1, brand1))
+        specializationRepo.save(Specialization(SpecializationId(2,6), employee2, brand2))
+        specializationRepo.save(Specialization(SpecializationId(3,7), employee3, brand3))
 
     }
 
