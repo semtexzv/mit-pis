@@ -7,6 +7,7 @@ import TopMenu from "../containers/TopMenu"
 import MeetingContainer from "../containers/MeetingContainer"
 import SpecializationContainer from "../containers/SpecializationContainer"
 import ConnectEmployeeContainer from "../containers/ConnectEmployeeContainer";
+import OverviewContainer from "../containers/OverviewContainer";
 import * as TM from "../constants/TopMenuConstants"
 import "babel-polyfill";
 import RegisterContainer from "../containers/RegisterContainer";
@@ -26,6 +27,7 @@ function Routes() {
           <Route path="/specialization" component={SpecializationContainer}/>
           <Route path="/connectEmployee" component={ConnectEmployeeContainer}/>
           <Route path="/register" component={RegisterContainer}/>
+          <Route path="/overview" component={OverviewContainer}/>
         </Switch>
       </Container>
     </Router>
