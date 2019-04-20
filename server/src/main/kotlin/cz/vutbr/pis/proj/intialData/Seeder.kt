@@ -2,14 +2,13 @@ package cz.vutbr.pis.proj.intialData
 
 import cz.vutbr.pis.proj.ProjApplication
 import cz.vutbr.pis.proj.data.*
-import cz.vutbr.pis.proj.repo.AuthInfoRepo
-import cz.vutbr.pis.proj.repo.BrandRepo
-import cz.vutbr.pis.proj.repo.CustomerRepo
-import cz.vutbr.pis.proj.repo.EmployeeRepo
+import cz.vutbr.pis.proj.repo.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.ApplicationListener
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
+import java.util.*
 
 @Component
 class Seeder : ApplicationListener<ApplicationReadyEvent> {
@@ -26,10 +25,14 @@ class Seeder : ApplicationListener<ApplicationReadyEvent> {
     @Autowired
     lateinit var customerRepo: CustomerRepo
 
+    @Autowired
+    lateinit var meetingRepo: MeetingRepo
+
     override fun onApplicationEvent(event: ApplicationReadyEvent) {
         setEmployee()
         setBrand()
         setCustomers()
+        setMeetings()
     }
 
     private fun setEmployee() {
@@ -97,6 +100,18 @@ class Seeder : ApplicationListener<ApplicationReadyEvent> {
         val test = employyeRepo.getOne(1)
         test.customers = listOf(customer1)
         employyeRepo.save(test)
+
+    }
+
+    private fun setMeetings(){
+
+        val customer = customerRepo.getOne(20)
+
+        meetingRepo.save(Meeting(report = "test test report", customerId = 20, customer = customer ))
+        meetingRepo.save(Meeting(report = "test chbwufchuw fwefeqwfgwerg", customerId = 20, customer = customer ))
+        meetingRepo.save(Meeting(report = "test chbfwerfqef c knerjgeklfjnelk ", customerId = 20, customer = customer ))
+        meetingRepo.save(Meeting(report = "Loren ipsum", customerId = 20, customer = customer ))
+
 
     }
 

@@ -14,7 +14,7 @@ class Meeting(
         @Column(name = "customer_id")
         var customerId: Int? = null,
 
-        @ManyToOne(cascade = [CascadeType.MERGE, CascadeType.PERSIST])
+        @ManyToOne(cascade = [CascadeType.MERGE])
         @JoinColumn(name = "customer_id", insertable = false, updatable = false)
         @JsonIgnore
         var customer: Customer? = null
