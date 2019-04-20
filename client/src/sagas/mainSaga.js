@@ -1,15 +1,17 @@
-import {all, call, put, takeEvery, select} from "redux-saga/effects";
+import {all, call, put, takeEvery, select, takeLatest} from "redux-saga/effects";
 import {LOGIN} from "../actions/LoginActions";
 import {REGISTER} from "../actions/RegisterActions";
 import * as superagent from "superagent/dist/superagent";
 import {getAuthToken} from "../selectors/AuthSelector";
-import {getUsersUrl, LOGIN_URL, ME_URL, REGISTER_URL} from "../restapi/ServerApi";
+import {CUSTOMERS_URL, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL, ME_URL, REGISTER_URL} from "../restapi/ServerApi";
 import {setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
+import {INIT_DATA, initData, setMeetings} from "../actions/MeetingActions";
 
 export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
-  yield takeEvery(REGISTER, registerSaga)
+  yield takeEvery(REGISTER, registerSaga);
+  yield takeLatest(INIT_DATA, meetingsSaga)
 }
 
 function* registerSaga(action) {
@@ -43,11 +45,33 @@ function* loginSaga(action) {
 
   try {
     const data = yield call(callAuthPostJSON, LOGIN_URL, body);
-    yield  put(setAuth(data.token));
+    yield put(setAuth(data.token));
     const userId = yield call(callAuthGetJSON, ME_URL);
     const user = yield call(callAuthGetJSON, getUsersUrl(userId.id));
-    yield  put(setUser(user));
+    const meetings = yield call(callAuthGetJSON, getUsersMeetingsUrl(userId.id));
+    yield put(setUser(user));
+    yield put(initData(userId.id));
     yield call(history.push, '/meeting')
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* initSaga(action) {
+  try {
+    const allCustomers = yield call(callAuthGetJSON, CUSTOMERS_URL);
+    console.log(allCustomers);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* meetingsSaga(action) {
+  try {
+    const allCustomers = yield call(callAuthGetJSON, CUSTOMERS_URL);
+    console.log(allCustomers);
+    const meetings = yield call(callAuthGetJSON, getUsersMeetingsUrl(action.payload));
+    yield put(setMeetings(meetings));
   } catch (e) {
     console.log(e);
   }
