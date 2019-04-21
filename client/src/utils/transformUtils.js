@@ -52,3 +52,20 @@ export const transformBrands = (rawData) =>  {
     }});
 
 };
+
+export const transformConnectedEmployees = (rawData, brands, employees) =>  {
+
+  return rawData.map((customer) => {
+
+    const employee = employees.find(o => o.id === customer.assocEmployeeId);
+    const brand = brands.find(o => o.id === customer.brandId);
+
+    return {
+      id: customer.id,
+      name: customer.name,
+      surname: customer.surname,
+      assigned: employee.name + " " + employee.surname,
+      brand: brand.name
+    }});
+
+};

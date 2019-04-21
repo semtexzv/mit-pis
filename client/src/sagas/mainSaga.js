@@ -5,15 +5,22 @@ import * as superagent from "superagent/dist/superagent";
 import {getAuthToken, getLoggedUserId, getMyCustomers} from "../selectors/AuthSelector";
 import {
   BRANDS_URL,
-  CREATE_MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL, ME_URL, REGISTER_URL
+  CREATE_MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateCustomerUrl, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL,
+  ME_URL, REGISTER_URL,
+  SPECIALIZATION_URL
 } from "../restapi/ServerApi";
 import {setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
 import { DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} from "../actions/MeetingActions";
-import {transformBrands, transformCustomers, transformEmployees, transformMeetings} from "../utils/transformUtils";
+import {
+  transformBrands, transformConnectedEmployees, transformCustomers, transformEmployees, transformMeetings
+} from "../utils/transformUtils";
 import {getCreateStatus, getMeetingId, getRow} from "../selectors/MeetingSelector";
 import {INIT_SPECIALIZATION_DATA, setSpecializationData} from "../actions/SpecializationActions";
-import {INIT_CONNECT_EMPLOYEE_DATA} from "../actions/ConnectEmployeeActions";
+import {INIT_CONNECT_EMPLOYEE_DATA, initConnectEmployeeData, setDataTable, setEmployyesData} from "../actions/ConnectEmployeeActions";
+
+import * as CEA from "../actions/ConnectEmployeeActions";
+import {getCustomerId, getEditedCustomer, getEmployeeId} from "../selectors/ConnectEmployeeSelector";
 
 export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
@@ -24,6 +31,7 @@ export default function* mainSaga() {
   yield takeLatest(INIT_SPECIALIZATION_DATA, initSpecializations);
   yield takeLatest(INIT_CONNECT_EMPLOYEE_DATA, initConnectedEmployeeData);
   yield takeLatest(INIT_DATA, meetingsSaga);
+  yield takeEvery(CEA.SAVE_ROW, updateAssociatedEmployeeSaga);
 }
 
 function* registerSaga(action) {
@@ -119,10 +127,29 @@ export function* initConnectedEmployeeData(action) {
   try {
     const customers = yield call(callAuthGetJSON, CUSTOMERS_URL);
     const employees = yield call(callAuthGetJSON, EMPLOYEES_URL);
+    const brands = yield call(callAuthGetJSON, BRANDS_URL);
+
+    yield put(setEmployyesData(transformEmployees(employees)));
+    yield put(setDataTable(transformConnectedEmployees(customers, brands, employees)));
+
   } catch (e) {
     console.log(e);
   }
 }
+
+export function* updateAssociatedEmployeeSaga(action) {
+  try {
+
+    const id = yield select(getCustomerId);
+    const customer = yield select(getEditedCustomer);
+    yield call(callAuthPostJSON,getUpdateCustomerUrl(id), customer);
+    yield put(initConnectEmployeeData());
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 
 
 export function* deleteMeetingSaga(){

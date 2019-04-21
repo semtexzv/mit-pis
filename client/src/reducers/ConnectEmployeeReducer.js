@@ -2,22 +2,17 @@ import {fromJS} from "immutable";
 import * as A from "../actions/ConnectEmployeeActions";
 
 const initialState = fromJS({
-  customerData: [
-    {id: "1", name: "Abraham", surname: "Lincoln", brand: "Ford", assigned: "yes"},
-    {id: "2", name: "Thomas", surname: "Jefferson", brand: "Fiat", assigned: "no"},
-  ],
+  customerData: [],
   displayDialog: false,
   customerId: "",
   customerName: "",
   customerSurname: "",
   customerBrand: "",
+  editedCustomer: null,
 
   // employee with specialization to brand "customerBrand"
   // value represents id of employee
-  potentialEmployee: [
-    {label: "Amadeus Mozart", value: "1"},
-    {label: "Johann Bach", value: "2"},
-  ],
+  potentialEmployee: [],
   employeeId: "",
 });
 
@@ -43,9 +38,22 @@ const ConnectEmployeeReducer = (state = initialState, action) => {
     }
     case A.SAVE_ROW: {
       let newState = state;
+
+      const customer = {
+        assocEmployeeId: state.get("employeeId"),
+      };
+
+      newState = newState.set("editedCustomer", customer);
+
       newState = newState.set("displayDialog", false);
       return newState;
       //TODO: after this return, it must be reload customerData variable with corresponding Assigned column (probably yes value)
+    }
+    case A.SET_CONNECT_EMPLOYEE_DATA: {
+      return state.set("potentialEmployee", fromJS(action.employees));
+    }
+    case A.SET_DATATABLE: {
+      return state.set("customerData", fromJS(action.rows));
     }
     default:
       return state;
