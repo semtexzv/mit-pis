@@ -1,6 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {InputText} from 'primereact/inputtext';
+import {Password} from 'primereact/password';
 import {Button} from 'primereact/button';
 import {getLogin, getPassword} from "../selectors/RegisterSelector";
 import {registerToSystem, updateLogin, updatePassword} from "../actions/RegisterActions";
@@ -19,7 +20,7 @@ const Register = ({
         <h3 className="first">Username</h3>
         <InputText value={loginValue} onChange={(e) => updateLogin(e.target.value)}/>
         <h3 className="first">Password</h3>
-        <InputText value={passwordValue} onChange={(e) => updatePassword(e.target.value)} type="password"/>
+        <Password value={passwordValue} onChange={(e) => updatePassword(e.target.value)}/>
         <div className="Register-Button">
           <Button label="Register" onClick={e => register(loginValue, passwordValue)}/>
         </div>
