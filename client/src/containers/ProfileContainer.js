@@ -8,6 +8,7 @@ import {updateName, updateSurname, updateRole, saveProfile} from "../actions/Pro
 import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
 import * as R from "../constants/Regex"
+import * as snippet from "../components/smallSnippets"
 
 const Profile =
 ({
@@ -48,17 +49,20 @@ const Profile =
     <div>
       <Growl ref={(el) => {setGrowl(el)}}> </Growl>
       <div>
-        <h3>Name</h3>
-        <InputText value={name} onChange={(e) => updateName(e.target.value)} />
+        <h3> </h3>
+        <InputText value={name} onChange={(e) => updateName(e.target.value)} placeholder="Name"/>
+        {snippet.required}
       </div>
       <div>
-        <h3>Surname</h3>
-        <InputText value={surname} onChange={(e) => updateSurname(e.target.value)} />
+        <h3> </h3>
+        <InputText value={surname} onChange={(e) => updateSurname(e.target.value)} placeholder="Surname"/>
+        {snippet.required}
       </div>
       <div>
-        <h3>Role</h3>
+        <h3> </h3>
         <Dropdown value={role} options={roleList.toJS()}
           onChange={(e) => updateRole(e.value)} placeholder="Select a role"/>
+        {snippet.required}
       </div>
       <div className="Login-Button">
         <h3> </h3>

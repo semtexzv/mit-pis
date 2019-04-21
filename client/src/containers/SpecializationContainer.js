@@ -8,6 +8,7 @@ import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
 import * as S from "../selectors/SpecializationSelector";
 import * as A from "../actions/SpecializationActions";
+import * as snippet from "../components/smallSnippets"
 
 
 const Specialization =
@@ -93,24 +94,29 @@ const Specialization =
     <div>
       <Growl ref={(el) => {setGrowl(el)}}> </Growl>
       <div>
+        <h3> </h3>
         <Dropdown value={employeeId}
                   options={allEmployees.toJS()}
                   onChange={(e) => onChangeDropDown(e.value)}
                   filter={true} filterPlaceholder="employee filter"
                   filterBy="label,value" placeholder="Chose employee"
         />
+        {snippet.required}
       </div>
 
       <div>
+      <h3> </h3>
       <MultiSelect
         value={chosenBrands.toJS()} options={allBrands.toJS()}
         onChange={(e) => updateSpec(e.value)}
         style={{minWidth:'40em'}} filter={true} placeholder="Choose specializations"
       />
+      {snippet.required}
       </div>
 
       <div>
-        <Button label="Save" icon="pi pi-check"
+        <h3> </h3>
+        <Button label="Save" icon="pi pi-check" style={{right: "25px"}}
                 onClick={e => {saveButtonValidator(employeeId, chosenBrands, mygrowl)}}/>
       </div>
 

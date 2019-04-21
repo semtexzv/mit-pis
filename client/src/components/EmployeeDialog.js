@@ -9,6 +9,7 @@ import {Button} from 'primereact/button';
 import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
 import * as R from "../constants/Regex"
+import * as snippet from "./smallSnippets"
 
 
 const EmployeeDialog =
@@ -80,15 +81,18 @@ const EmployeeDialog =
         >
           <div>
             <InputText value={name} onChange={(e) => updateName(e.target.value)} placeholder="name"/>
+            {snippet.required}
           </div>
 
           <div>
             <InputText value={surname} onChange={(e) => updateSurname(e.target.value)} placeholder="surname"/>
+            {snippet.required}
           </div>
 
           <div>
             <Dropdown value={role} options={roleList.toJS()}
                       onChange={(e) => updateRole(e.value)} placeholder="Select a role"/>
+            {snippet.required}
           </div>
 
           <div>
