@@ -58,9 +58,16 @@ class SpecializationController: BaseSpecializationController<Specialization, Spe
             val brand = brandRepo.getOne(data.brandId)
             val specialization = Specialization(SpecializationId(data.employeeId, data.brandId), employee, brand )
 
-            repo.save(specialization)
+            try {
+                repo.getOne(specialization.id)
+                return ErrorResponse("Specialization already exists")
+            } catch (ex: Exception){
+                repo.save(specialization)
+                return repo.getOne(specialization.id)
 
-            return repo.getOne(specialization.id)
+            }
+
+
         } ?: return ErrorResponse("No data")
 
 
