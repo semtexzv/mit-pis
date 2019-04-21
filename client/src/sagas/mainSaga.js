@@ -4,13 +4,16 @@ import {REGISTER} from "../actions/RegisterActions";
 import * as superagent from "superagent/dist/superagent";
 import {getAuthToken, getLoggedUserId, getMyCustomers} from "../selectors/AuthSelector";
 import {
-  CREATE_MEETING_URL, CUSTOMERS_URL, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL, ME_URL, REGISTER_URL
+  BRANDS_URL,
+  CREATE_MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL, ME_URL, REGISTER_URL
 } from "../restapi/ServerApi";
 import {setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
 import { DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} from "../actions/MeetingActions";
-import {transformCustomers, transformMeetings} from "../utils/meetingsUtil";
+import {transformBrands, transformCustomers, transformEmployees, transformMeetings} from "../utils/transformUtils";
 import {getCreateStatus, getMeetingId, getRow} from "../selectors/MeetingSelector";
+import {INIT_SPECIALIZATION_DATA, setSpecializationData} from "../actions/SpecializationActions";
+import {INIT_CONNECT_EMPLOYEE_DATA} from "../actions/ConnectEmployeeActions";
 
 export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
@@ -18,6 +21,8 @@ export default function* mainSaga() {
   yield takeEvery(SAVE_ROW, meetingSaga);
   yield takeEvery(REGISTER, registerSaga);
   yield takeEvery(DELETE_ROW, deleteMeetingSaga);
+  yield takeLatest(INIT_SPECIALIZATION_DATA, initSpecializations);
+  yield takeLatest(INIT_CONNECT_EMPLOYEE_DATA, initConnectedEmployeeData);
   yield takeLatest(INIT_DATA, meetingsSaga);
 }
 
@@ -99,6 +104,26 @@ export function* meetingSaga(action) {
     console.log(e);
   }
 }
+
+export function* initSpecializations(action) {
+  try {
+    const employees = yield call(callAuthGetJSON, EMPLOYEES_URL);
+    const brands = yield call(callAuthGetJSON, BRANDS_URL);
+    yield put(setSpecializationData(transformEmployees(employees), transformBrands(brands)));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* initConnectedEmployeeData(action) {
+  try {
+    const customers = yield call(callAuthGetJSON, CUSTOMERS_URL);
+    const employees = yield call(callAuthGetJSON, EMPLOYEES_URL);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 
 export function* deleteMeetingSaga(){
   try {

@@ -14,24 +14,28 @@ import EmployeeContainer from "../containers/EmployeeContainer";
 import * as TM from "../constants/TopMenuConstants"
 import "babel-polyfill";
 import RegisterContainer from "../containers/RegisterContainer";
+import {AuthRoute} from "../components/AuthRoute";
+import {initCustomerData} from "../actions/CustomerActions";
+import {initSpecializationData} from "../actions/SpecializationActions";
+import {initConnectEmployeeData} from "../actions/ConnectEmployeeActions";
 
 const Container = styled.div`
   text-align: center;
 `
 
-function Routes() {
+function Routes({store}) {
   return (
     <Router history={history}>
       <Container>
         <TopMenu menu_items={TM.SITE1}/>
         <Switch>
-          <Route exact path="/" component={LoginContainer}/>
+          <Route exact path="/" component={LoginContainer} />
           <Route path="/meeting" component={MeetingContainer}/>
-          <Route path="/specialization" component={SpecializationContainer}/>
-          <Route path="/connectEmployee" component={ConnectEmployeeContainer}/>
+          <Route path="/specialization"render={() => (AuthRoute(store , "", SpecializationContainer, initSpecializationData()))}/>
+          <Route path="/connectEmployee" render={() => (AuthRoute(store , "", ConnectEmployeeContainer, initConnectEmployeeData()))}/>
           <Route path="/register" component={RegisterContainer}/>
           <Route path="/overview" component={OverviewContainer}/>
-          <Route path="/customer" component={CustomerContainer}/>
+          <Route path="/customer" render={() => (AuthRoute(store , "", CustomerContainer, initCustomerData()))}/>
           <Route path="/profile" component={ProfileContainer}/>
           <Route path="/employee" component={EmployeeContainer}/>
         </Switch>

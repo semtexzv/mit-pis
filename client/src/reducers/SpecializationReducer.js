@@ -7,17 +7,9 @@ const initialState = fromJS({
   employeeId: "", // chosen employee
   chosenBrands: [], // aka specializations
   // value represent brand id
-  allBrands:[
-    {label: "Audi", value: "1"},
-    {label: "Lamborghini", value: "2"},
-    {label: "Viper", value: "3"},
-  ],
+  allBrands:[],
   // value represent employee id
-  allEmployees:[
-    {label: "Dezo Dorant", value: "10"},
-    {label: "Rani Srani", value: "11"},
-    {label: "Frank Enstein", value: "12"},
-  ],
+  allEmployees:[],
   warning: false, // show warning
 });
 
@@ -51,6 +43,11 @@ const SpecializationReducer = (state = initialState, action) => {
       chosenBrands = chosenBrands.push(brand.get("value"));
       newState = newState.set("chosenBrands", chosenBrands);
       return newState;
+    }
+    case A.SET_SPECIALIZATION_DATA: {
+      return state
+        .set("allBrands", fromJS(action.brands))
+        .set("allEmployees", fromJS(action.employees));
     }
     case A.SPEC_CHANGE: {
       return state.set("chosenBrands", List(action.value));

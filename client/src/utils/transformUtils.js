@@ -30,3 +30,25 @@ export const transformCustomers = (rawData) =>  {
     }});
 
 };
+
+export const transformEmployees = (rawData) =>  {
+
+  return rawData.map((employee) => {
+
+    return {
+      label: employee.name + " " + employee.surname,
+      value: employee.id,
+    }});
+
+};
+
+export const transformBrands = (rawData) =>  {
+
+  return rawData.map((brand) => {
+
+    return {
+      label: brand.name,
+      value: brand.id,
+    }});
+
+};

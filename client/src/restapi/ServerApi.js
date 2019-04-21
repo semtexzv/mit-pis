@@ -2,6 +2,7 @@ const BASE_URL = "http://localhost:8080/api"
 
 export const LOGIN_URL = BASE_URL + "/login";
 export const EMPLOYEES_URL = BASE_URL + "/employee";
+export const BRANDS_URL = BASE_URL + "/brand";
 export const CUSTOMERS_URL = BASE_URL + "/customer";
 export const ME_URL = BASE_URL + "/me";
 
