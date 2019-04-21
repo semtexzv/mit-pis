@@ -4,8 +4,10 @@ import * as S from "../selectors/EmployeeSelector";
 import * as A from "../actions/EmployeeActions";
 import {Dialog} from 'primereact/dialog';
 import {InputText} from 'primereact/inputtext';
+import {Password} from 'primereact/password';
 import {Dropdown} from 'primereact/dropdown';
 import {Button} from 'primereact/button';
+import {Fieldset} from 'primereact/fieldset';
 import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
 import * as R from "../constants/Regex"
@@ -28,7 +30,11 @@ const EmployeeDialog =
      updateName,
      updateSurname,
      updateRole,
+     changePassword,
+     setChangePassword,
+     unsetChangePassword,
      updatePasswordOld,
+     passwordOld_fromBE,
      updatePasswordNew,
      updatePasswordCheck,
    }) => {
@@ -55,13 +61,48 @@ const EmployeeDialog =
     //---------------------------------------
     // Validations
 
+    function passwordValidator(errorHandler){
+      if(!changePassword)
+        return true;
+
+      //TODO: comparing string(passwordOld) with some hash(passwordOld_fromBE)?
+      // We must add some hash function like MD5(passwordOld)
+      if(passwordOld === passwordOld_fromBE){
+        if((passwordNew !== "") && (passwordCheck !== "")){
+          if(passwordNew === passwordCheck){
+            return true;
+          }
+          else{
+            raiseGrowl("The new password and its check do not match", errorHandler);
+            updatePasswordNew("");
+            updatePasswordCheck("");
+            return false;
+          }
+        }
+        else{
+          raiseGrowl("The new password must not be empty string", errorHandler);
+          updatePasswordNew("");
+          updatePasswordCheck("");
+          return false;
+        }
+      }
+      else{
+        raiseGrowl("Old password is not valid", errorHandler);
+        updatePasswordOld("");
+        return false;
+      }
+    }
+
     function saveButtonValidator(errorHandler){
-      //TODO: add password validation
-      //TODO: what if old password is wrong
       if(R.name.test(name) && R.name.test(surname)){
         if(role !== "") {
-          saveRow();
-          raiseGrowl("Data was edited", errorHandler, "success");
+          if(passwordValidator(errorHandler)) {
+            saveRow();
+            updatePasswordOld("");
+            updatePasswordNew("");
+            updatePasswordCheck("");
+            raiseGrowl("Data was edited", errorHandler, "success");
+          }
         }
         else
           raiseGrowl("Please enter a role", errorHandler);
@@ -77,7 +118,7 @@ const EmployeeDialog =
         <Growl ref={(el) => {setGrowl(el)}}> </Growl>
         <Dialog header="Employee data"
                 visible={displayDialog} modal={true} footer={dialogFooter}
-                onHide={() => toggleDisplayDialog()}
+                onHide={() => {toggleDisplayDialog(); unsetChangePassword()}}
         >
           <div>
             <InputText value={name} onChange={(e) => updateName(e.target.value)} placeholder="name"/>
@@ -96,21 +137,27 @@ const EmployeeDialog =
           </div>
 
           <div>
-            <InputText value={passwordOld} placeholder="Type your old password here if you want to change it"
-              style={{width: "400px"}}
-              onChange={(e) => updatePasswordOld(e.target.value)} type="password" />
-          </div>
+            <h3> </h3>
+            <Fieldset legend="Change password" toggleable={!changePassword} collapsed={true}
+              onToggle={(e) => {setChangePassword()}}>
+              <div>
+                <InputText value={passwordOld} placeholder="Type your old password here if you want to change it"
+                  style={{width: "400px"}}
+                  onChange={(e) => updatePasswordOld(e.target.value)} type="password" />
+              </div>
 
-          <div>
-            <InputText value={passwordNew} placeholder="Type your new password here if you want to change it"
-              style={{width: "400px"}}
-              onChange={(e) => updatePasswordNew(e.target.value)} type="password" />
-          </div>
+              <div>
+                <Password value={passwordNew} placeholder="Type your new password here if you want to change it"
+                  style={{width: "400px"}}
+                  onChange={(e) => updatePasswordNew(e.target.value)}/>
+              </div>
 
-          <div>
-            <InputText value={passwordCheck} placeholder="Type your new password again"
-              style={{width: "400px"}}
-              onChange={(e) => updatePasswordCheck(e.target.value)} type="password" />
+              <div>
+                <Password value={passwordCheck} placeholder="Type your new password again"
+                  style={{width: "400px"}}
+                  onChange={(e) => updatePasswordCheck(e.target.value)}/>
+              </div>
+            </Fieldset>
           </div>
 
         </Dialog>
@@ -124,7 +171,9 @@ const mapStateToProps = (state) => ({
   surname: S.getSurname(state),
   role: S.getRole(state),
   roleList: S.getRoleList(state),
+  changePassword: S.getChangePassword(state),
   passwordOld: S.getPasswordOld(state),
+  passwordOld_fromBE: S.getPasswordOld_fromBE(state),
   passwordNew: S.getPasswordNew(state),
   passwordCheck: S.getPasswordCheck(state),
 });
@@ -136,6 +185,8 @@ const mapDispatchToProps = (dispatch) => ({
   updateName: (value) => dispatch(A.updateName(value)),
   updateSurname: (value) => dispatch(A.updateSurname(value)),
   updateRole: (value) => dispatch(A.updateRole(value)),
+  setChangePassword: () => dispatch(A.setChangePassword()),
+  unsetChangePassword: () => dispatch(A.unsetChangePassword()),
   updatePasswordOld: (value) => dispatch(A.updatePasswordOld(value)),
   updatePasswordNew: (value) => dispatch(A.updatePasswordNew(value)),
   updatePasswordCheck: (value) => dispatch(A.updatePasswordCheck(value)),

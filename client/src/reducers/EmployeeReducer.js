@@ -15,9 +15,11 @@ const initialState = fromJS({
   name: "",
   surname: "",
   role: "", //id of role => 1,2,3,4
-  passwordOld: "",
-  passwordNew: "",
-  passwordCheck: "",
+  changePassword: false, // true if user want to change password
+  passwordOld: "", // old user password
+  passwordOld_fromBE: "admin", // old password from loaded database TODO: security back door, at final version change it!
+  passwordNew: "", // new user password
+  passwordCheck: "", // new user password once more for check
   displayDialog: false,
 });
 
@@ -36,11 +38,10 @@ const EmployeeReducer = (state = initialState, action) => {
     case A.SAVE_ROW: {
       let newState = state;
       newState =  newState.set("displayDialog", false);
-      newState =  newState.set("addButton", false);
+      newState =  newState.set("changePassword", false);
       return newState;
       //TODO: after this return, save properties and reload "employeeData"
       //  Warning: "role" is a number -> id
-      //  Warning: don't save new "password" if it is empty string
     }
     case A.UPDATE_SELECTED_ROW: {
       let data = action.value;
@@ -64,8 +65,17 @@ const EmployeeReducer = (state = initialState, action) => {
     case A.UPDATE_ROLE: {
       return state.set("role", action.value)
     }
+    case A.SET_CHANGE_PASSWORD: {
+      return state.set("changePassword", true);
+    }
+    case A.UNSET_CHANGE_PASSWORD: {
+      return state.set("changePassword", false);
+    }
     case A.UPDATE_PASSWORD_OLD: {
       return state.set("passwordOld", action.value)
+    }
+    case A.UPDATE_PASSWORD_OLD_FROM_BE: {
+      return state.set("passwordOld_fromBE", action.value)
     }
     case A.UPDATE_PASSWORD_NEW: {
       return state.set("passwordNew", action.value)

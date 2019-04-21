@@ -6,7 +6,10 @@ export const SAVE_ROW = `${NAME}/SAVE_ROW`;
 export const UPDATE_NAME = `${NAME}/UPDATE_NAME`;
 export const UPDATE_SURNAME = `${NAME}/UPDATE_SURNAME`;
 export const UPDATE_ROLE = `${NAME}/UPDATE_ROLE`;
+export const SET_CHANGE_PASSWORD = `${NAME}/SET_CHANGE_PASSWORD`;
+export const UNSET_CHANGE_PASSWORD = `${NAME}/UNSET_CHANGE_PASSWORD`;
 export const UPDATE_PASSWORD_OLD = `${NAME}/UPDATE_PASSWORD_OLD`;
+export const UPDATE_PASSWORD_OLD_FROM_BE = `${NAME}/CHECK_PASSWORD_OLD_FROM_BE`;
 export const UPDATE_PASSWORD_NEW = `${NAME}/UPDATE_PASSWORD_NEW`;
 export const UPDATE_PASSWORD_CHECK = `${NAME}/UPDATE_PASSWORD_CHECK`;
 export const UPDATE_SELECTED_ROW = `${NAME}/UPDATE_SELECTED_ROW`;
@@ -26,8 +29,21 @@ export const updateRole = (value) => ({
   value: value
 });
 
+export const setChangePassword = () => ({
+  type: SET_CHANGE_PASSWORD,
+});
+
+export const unsetChangePassword = () => ({
+  type: UNSET_CHANGE_PASSWORD,
+});
+
 export const updatePasswordOld = (value) => ({
   type: UPDATE_PASSWORD_OLD,
+  value: value
+});
+
+export const updatePasswordOld_fromBE = (value) => ({
+  type: UPDATE_PASSWORD_OLD_FROM_BE,
   value: value
 });
 
