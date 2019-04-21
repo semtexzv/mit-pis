@@ -8,6 +8,8 @@ import {InputText} from 'primereact/inputtext';
 import {Button} from 'primereact/button';
 import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
+import * as R from "../constants/Regex"
+import * as snippet from "./smallSnippets"
 
 
 const CustomerDialog =
@@ -56,8 +58,23 @@ const CustomerDialog =
         showDeleteButton(addButton)
       }
       <Button label="Save" icon="pi pi-check"
-        onClick={e => {saveRow(); raiseGrowl("Data was saved", mygrowl, "success")}}/>
+        onClick={e => saveButtonValidator(mygrowl)}/>
     </div>;
+
+  //---------------------------------------
+  // Validations
+  function saveButtonValidator(errorHandler) {
+    if (R.name.test(name) && R.name.test(surname)) {
+      if(brand !== "") {
+        saveRow();
+        raiseGrowl("Data was saved", errorHandler, "success")
+      }
+      else
+        raiseGrowl("Please enter brand", errorHandler);
+    }
+    else
+      raiseGrowl("Please enter name and surname", errorHandler);
+  }
 
   //---------------------------------------
   // Return
@@ -70,18 +87,22 @@ const CustomerDialog =
       >
         <div>
           <InputText value={name} onChange={(e) => updateName(e.target.value)} placeholder="name"/>
+          {snippet.required}
         </div>
 
         <div>
           <InputText value={surname} onChange={(e) => updateSurname(e.target.value)} placeholder="surname"/>
+          {snippet.required}
         </div>
 
         <div>
           <InputText value={title} onChange={(e) => updateTitle(e.target.value)} placeholder="title"/>
+          {snippet.emptyRequired}
         </div>
 
         <div>
           <InputText value={brand} onChange={(e) => updateBrand(e.target.value)} placeholder="brand"/>
+          {snippet.required}
         </div>
 
         <div>

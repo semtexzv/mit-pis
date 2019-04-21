@@ -10,6 +10,7 @@ import ConnectEmployeeContainer from "../containers/ConnectEmployeeContainer";
 import OverviewContainer from "../containers/OverviewContainer";
 import CustomerContainer from "../containers/CustomerContainer";
 import ProfileContainer from "../containers/ProfileContainer";
+import EmployeeContainer from "../containers/EmployeeContainer";
 import * as TM from "../constants/TopMenuConstants"
 import "babel-polyfill";
 import RegisterContainer from "../containers/RegisterContainer";
@@ -32,6 +33,7 @@ function Routes() {
           <Route path="/overview" component={OverviewContainer}/>
           <Route path="/customer" component={CustomerContainer}/>
           <Route path="/profile" component={ProfileContainer}/>
+          <Route path="/employee" component={EmployeeContainer}/>
         </Switch>
       </Container>
     </Router>

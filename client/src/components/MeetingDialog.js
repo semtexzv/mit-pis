@@ -12,6 +12,7 @@ import {Calendar} from 'primereact/calendar';
 import {convert_FE_date, convert_ISO_date,
   todayDate, checkMinutes} from "../utils/dateTimeConvert"
 import "../styles/MeetingDialog.css"
+import * as snippet from "./smallSnippets"
 
 
 const MeetingDialog =
@@ -104,6 +105,7 @@ const MeetingDialog =
                   value={customerId} options={allCustomers.toJS()}
                   onChange={(e) => updateDropdown(e.value)}
         />
+        {snippet.required}
         </div>
 
         <div>
@@ -122,6 +124,7 @@ const MeetingDialog =
                     readOnlyInput={true} showTime={true} className="Calendar" hideOnDateTimeSelect={true}
                     stepMinute={15} dateFormat={"mm/dd/y"}
           />
+          {snippet.required}
         </div>
 
       </Dialog>
