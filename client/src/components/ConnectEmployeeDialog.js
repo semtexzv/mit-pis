@@ -7,6 +7,7 @@ import {Dialog} from 'primereact/dialog';
 import {Dropdown} from "primereact/dropdown";
 import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
+import * as snippet from "./smallSnippets"
 
 const ConnectEmployeeDialog =
 ({
@@ -74,6 +75,7 @@ const ConnectEmployeeDialog =
                     value={employeeId} options={potentialEmployee.toJS()}
                     onChange={(e) => {updateDropdown(e.value)}}
           />
+          {snippet.required}
         </div>
 
       </Dialog>

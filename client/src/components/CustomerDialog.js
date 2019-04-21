@@ -8,6 +8,7 @@ import {InputText} from 'primereact/inputtext';
 import {Button} from 'primereact/button';
 import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
+import * as snippet from "./smallSnippets"
 
 
 const CustomerDialog =
@@ -70,18 +71,22 @@ const CustomerDialog =
       >
         <div>
           <InputText value={name} onChange={(e) => updateName(e.target.value)} placeholder="name"/>
+          {snippet.required}
         </div>
 
         <div>
           <InputText value={surname} onChange={(e) => updateSurname(e.target.value)} placeholder="surname"/>
+          {snippet.required}
         </div>
 
         <div>
           <InputText value={title} onChange={(e) => updateTitle(e.target.value)} placeholder="title"/>
+          {snippet.emptyRequired}
         </div>
 
         <div>
           <InputText value={brand} onChange={(e) => updateBrand(e.target.value)} placeholder="brand"/>
+          {snippet.emptyRequired}
         </div>
 
         <div>
