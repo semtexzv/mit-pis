@@ -7,7 +7,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "meeting")
 class Meeting(
-        @JsonIgnore
+
         var date: LocalDateTime? = LocalDateTime.now(),
         var report: String = "",
 
