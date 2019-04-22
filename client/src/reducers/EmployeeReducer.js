@@ -2,9 +2,10 @@ import {fromJS} from "immutable";
 import * as A from "../actions/EmployeeActions";
 
 const initialState = fromJS({
-  employeeData:[
-    {id: "1", name: "Vaclav", surname: "Nesnidal", role: "USER"},
-  ],
+  //employeeData:[
+  //  {id: "1", name: "Vaclav", surname: "Nesnidal", role: "USER"},
+  //],
+  employeeData:[{}],
   roleList: [
     {label: "USER", value: "1"},
     {label: "MANAGER", value: "2"},
@@ -14,6 +15,7 @@ const initialState = fromJS({
   id: "",
   name: "",
   surname: "",
+  username: "",
   role: "", //id of role => 1,2,3,4
   changePassword: false, // true if user want to change password
   passwordOld: "", // old user password
@@ -29,6 +31,12 @@ function getRoleId(state, name){
   return row.get("value");
 }
 
+function getRoleName(state, id){
+  let roleList = state.get("roleList");
+  let row = roleList.find(function(obj){return obj.get('value') === id;});
+  return row.get("label");
+}
+
 const EmployeeReducer = (state = initialState, action) => {
   switch (action.type) {
     case A.DELETE_ROW: {
@@ -37,6 +45,13 @@ const EmployeeReducer = (state = initialState, action) => {
     }
     case A.SAVE_ROW: {
       let newState = state;
+      const row = {
+        name: state.get("name"),
+        surname: state.get("surname"),
+        username: state.get("username"),
+        sysRole: getRoleName(state, state.get("role")),
+      };
+      newState =  newState.set("row", row);
       newState =  newState.set("displayDialog", false);
       newState =  newState.set("changePassword", false);
       return newState;
@@ -49,6 +64,7 @@ const EmployeeReducer = (state = initialState, action) => {
       newState = newState.set("id", data.id);
       newState = newState.set("name", data.name);
       newState = newState.set("surname", data.surname);
+      newState = newState.set("username", data.username);
       newState = newState.set("role", getRoleId(state, data.role));
       newState = newState.set("displayDialog", true);
       return newState;
@@ -82,6 +98,10 @@ const EmployeeReducer = (state = initialState, action) => {
     }
     case A.UPDATE_PASSWORD_CHECK: {
       return state.set("passwordCheck", action.value)
+    }
+    case A.SET_EMPLOYEE_DATA: {
+      return state
+        .set("employeeData", fromJS(action.employees));
     }
     default:
       return state;

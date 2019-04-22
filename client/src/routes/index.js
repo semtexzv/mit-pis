@@ -19,9 +19,11 @@ import {initCustomerData} from "../actions/CustomerActions";
 import {initSpecializationData} from "../actions/SpecializationActions";
 import {initConnectEmployeeData} from "../actions/ConnectEmployeeActions";
 import {initData} from "../actions/MeetingActions";
+import {initEmployeeData} from "../actions/EmployeeActions";
 import {initOverview} from "../actions/OverviewActions";
 import {doNothing} from "../actions/RegisterActions";
 import {doNothingProfile} from "../actions/ProfileActions";
+
 
 const Container = styled.div`
   text-align: center;
@@ -41,7 +43,7 @@ function Routes({store}) {
           <Route path="/overview" render={() => (AuthRoute(store , "", OverviewContainer, initOverview()))}/>
           <Route path="/customer" render={() => (AuthRoute(store , "", CustomerContainer, initCustomerData()))}/>
           <Route path="/profile"render={() => (AuthRoute(store , "", ProfileContainer, doNothingProfile()))}/>
-          <Route path="/employee" component={EmployeeContainer}/>
+          <Route path="/employee" render={() => (AuthRoute(store, "", EmployeeContainer, initEmployeeData()))}/>
         </Switch>
       </Container>
     </Router>

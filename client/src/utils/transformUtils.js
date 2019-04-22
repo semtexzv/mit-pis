@@ -42,6 +42,19 @@ export const transformEmployees = (rawData) =>  {
 
 };
 
+export const transformEmployees2 = (rawData) =>  {
+
+  return rawData.map((employee) => {
+    return {
+      id: employee.id,
+      name: employee.name,
+      surname: employee.surname,
+      username: employee.username,
+      role: employee.sysRole,
+    }});
+
+};
+
 export const transformBrands = (rawData) =>  {
 
   return rawData.map((brand) => {
