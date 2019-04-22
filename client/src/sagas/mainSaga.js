@@ -5,16 +5,18 @@ import * as superagent from "superagent/dist/superagent";
 import {getAuthToken, getLoggedUserId, getMyCustomers} from "../selectors/AuthSelector";
 import {
   BRANDS_URL,
-  CREATE_MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateCustomerUrl, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL,
+  MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateCustomerUrl, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL,
   ME_URL, REGISTER_URL, SPECIALIZATION_LIST_URL,
   SPECIALIZATION_URL,
   getUpdateEmployeeUrl, getPasswordAdminUrl,
 } from "../restapi/ServerApi";
 import {setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
-import { DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} from "../actions/MeetingActions";
+import {DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} from "../actions/MeetingActions";
 import {
-  transformBrands, transformConnectedEmployees, transformCustomers, transformEmployees, transformEmployees2, transformMeetings, transformUsersSpecializations,
+  transformBrands, transformConnectedEmployees, transformCustomers, transformEmployees, transformEmployees2, transformMeetings, transformToOverViewRows,
+  transformUserProfileToJSON,
+  transformUsersSpecializations,
   transformUsersSpecializationsToJSON
 } from "../utils/transformUtils";
 import {getCreateStatus, getMeetingId, getRow} from "../selectors/MeetingSelector";
@@ -24,6 +26,9 @@ import {INIT_CONNECT_EMPLOYEE_DATA, initConnectEmployeeData, setDataTable, setEm
 import * as CEA from "../actions/ConnectEmployeeActions";
 import {getCustomerId, getEditedCustomer, getEmployeeId} from "../selectors/ConnectEmployeeSelector";
 import * as SS from "../selectors/SpecializationSelector";
+import * as PS from "../selectors/ProfileSelector"
+import {INIT_OVERVIEW, updateOverviewData} from "../actions/OverviewActions";
+import {SAVE_PROFILE, updateName, updateRole, updateSurname, updateUserId, updateUserName} from "../actions/ProfileActions";
 
 // EmployeeContainer
 import * as ECA from "../actions/EmployeeActions"
@@ -32,8 +37,8 @@ import * as ECS from "../selectors/EmployeeSelector"
 export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
   yield takeEvery(REGISTER, registerSaga);
+  yield takeEvery(SAVE_PROFILE, updateProfileSaga);
   yield takeEvery(SAVE_ROW, meetingSaga);
-  yield takeEvery(REGISTER, registerSaga);
   yield takeEvery(DELETE_ROW, deleteMeetingSaga);
   yield takeLatest(INIT_SPECIALIZATION_DATA, initSpecializations);
   yield takeLatest(INIT_CONNECT_EMPLOYEE_DATA, initConnectedEmployeeData);
@@ -41,7 +46,7 @@ export default function* mainSaga() {
   yield takeLatest(UPDATE_DROPDOWN, selectedSpecializationsSaga);
   yield takeEvery(CEA.SAVE_ROW, updateAssociatedEmployeeSaga);
   yield takeEvery(SAVE_SPEC, updateSpecializationSaga);
-
+  yield takeLatest(INIT_OVERVIEW, initOverViewSaga);
   // EmployeeContainer
   yield takeLatest(ECA.INIT_EMPLOYEE_DATA, initEmployeeData);
   yield takeEvery(ECA.SAVE_ROW, saveEmployeeRow);
@@ -102,8 +107,13 @@ function* registerSaga(action) {
 
   try {
     const data = yield call(callRegisterPostJSON, REGISTER_URL, body);
+    yield put(updateUserId(data.id));
+    yield put(updateRole(data.sysRole));
+    yield put(updateUserName(data.username));
+    yield put(updateName(data.name));
+    yield put(updateSurname(data.surname))
 
-
+    yield call(history.push, '/profile')
     console.log(data)
   } catch (e) {
     console.log(e);
@@ -132,11 +142,32 @@ function* loginSaga(action) {
   }
 }
 
+function* updateProfileSaga() {
+  try {
+    const username = yield select(PS.getUsername);
+    const userId = yield select(PS.getUserId);
+    const name = yield select(PS.getName);
+    const surname = yield select(PS.getSurname);
+    const role = yield select(PS.getRole);
+
+    const url = EMPLOYEES_URL + "/" + userId.toString()
+
+    console.log(url);
+
+    yield call(callAuthPostJSON, url, transformUserProfileToJSON(username, name, surname, role));
+    yield call(history.push, '/register')
+
+  } catch (e) {
+    alert("Problem with server. Try again later")
+    console.log(e);
+  }
+}
+
 export function* updateSpecializationSaga() {
   try {
     const ids = yield select(SS.getChosenBrands);
     const employeeId = yield select(SS.getEmployeeId);
-    yield call(callAuthPostJSON,SPECIALIZATION_LIST_URL,transformUsersSpecializationsToJSON(ids.toJS(), employeeId));
+    yield call(callAuthPostJSON, SPECIALIZATION_LIST_URL, transformUsersSpecializationsToJSON(ids.toJS(), employeeId));
   } catch (e) {
     console.log(e);
   }
@@ -146,6 +177,19 @@ export function* selectedSpecializationsSaga(action) {
   try {
     const specializations = yield call(callAuthGetJSON, SPECIALIZATION_URL);
     yield put(fillSpec(transformUsersSpecializations(specializations, action.value)));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* initOverViewSaga() {
+  try {
+    const allCustomers = yield call(callAuthGetJSON, CUSTOMERS_URL);
+    const meetings = yield call(callAuthGetJSON, MEETING_URL);
+    const brands = yield call(callAuthGetJSON, BRANDS_URL);
+    const employees = yield call(callAuthGetJSON, EMPLOYEES_URL);
+
+    yield put(updateOverviewData(transformToOverViewRows(meetings, employees, brands, allCustomers)));
   } catch (e) {
     console.log(e);
   }
@@ -179,11 +223,11 @@ export function* meetingSaga(action) {
   try {
     const row = yield select(getRow);
     const create = yield select(getCreateStatus);
-    if(create){
-      yield call(callAuthPostJSON,CREATE_MEETING_URL, row);
-    }else{
+    if (create) {
+      yield call(callAuthPostJSON, MEETING_URL, row);
+    } else {
       const id = yield select(getMeetingId);
-      yield call(callAuthPostJSON,getUpdateMeetingUrl(id), row);
+      yield call(callAuthPostJSON, getUpdateMeetingUrl(id), row);
     }
     const userId = yield select(getLoggedUserId);
     yield put(initData(userId));
@@ -221,7 +265,7 @@ export function* updateAssociatedEmployeeSaga(action) {
 
     const id = yield select(getCustomerId);
     const customer = yield select(getEditedCustomer);
-    yield call(callAuthPostJSON,getUpdateCustomerUrl(id), customer);
+    yield call(callAuthPostJSON, getUpdateCustomerUrl(id), customer);
     yield put(initConnectEmployeeData());
 
   } catch (e) {
@@ -229,12 +273,10 @@ export function* updateAssociatedEmployeeSaga(action) {
   }
 }
 
-
-
-export function* deleteMeetingSaga(){
+export function* deleteMeetingSaga() {
   try {
     const id = yield select(getMeetingId);
-    yield call(callAuthDel,getUpdateMeetingUrl(id), {});
+    yield call(callAuthDel, getUpdateMeetingUrl(id), {});
 
     const userId = yield select(getLoggedUserId);
     yield put(initData(userId));

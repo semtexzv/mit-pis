@@ -1,16 +1,19 @@
 import {fromJS} from "immutable";
+import {UPDATE_OVERVIEW_DATA} from "../actions/OverviewActions";
 
 const initialState = fromJS({
-  overviewData:[
-    {customerName: "A", customerSurname: "B",
-     employeeName: "C", employeeSurname: "D",
-     brand: "E", date: "2019-04-17T18:45:00.000Z"}
-  ]
+  overviewData:[]
 });
 
 
 const OverviewReducer = (state = initialState, action) => {
-  return state;
+  switch (action.type) {
+    case UPDATE_OVERVIEW_DATA: {
+      return state.set("overviewData", fromJS(action.payload));
+    }
+    default:
+      return state;
+  }
 };
 
 export default OverviewReducer;

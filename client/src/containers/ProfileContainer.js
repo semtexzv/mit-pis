@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {InputText} from 'primereact/inputtext';
 import {Button} from 'primereact/button';
 import {Dropdown} from 'primereact/dropdown';
-import {getName, getSurname, getRole, getRoleList} from "../selectors/ProfileSelector";
+import {getName, getSurname, getRole, getRoleList, getUsername, getUserId} from "../selectors/ProfileSelector";
 import {updateName, updateSurname, updateRole, saveProfile} from "../actions/ProfileActions";
 import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
@@ -77,6 +77,8 @@ const mapStateToProps = (state) => ({
   surname: getSurname(state),
   role: getRole(state),
   roleList: getRoleList(state),
+  userName: getUsername(state),
+  userId: getUserId(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({

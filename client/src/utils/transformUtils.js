@@ -98,11 +98,39 @@ export const transformUsersSpecializations = (specializations, userId) =>  {
 };
 
 export const transformUsersSpecializationsToJSON = (selectedBrands, userId) =>  {
-
-  return selectedBrands.map((brand) => {
     return {
       employeeId: userId,
-      brandId: brand
+      brandId: selectedBrands
+    };
+
+};
+
+export const transformUserProfileToJSON = (username, name, surname, role) =>  {
+  return{
+    username: username,
+    name: name,
+    surname: surname,
+    sysRole: role
+  }
+
+};
+
+
+export const transformToOverViewRows = (meetings, users, brands, customers) =>  {
+
+  return meetings.map((meeting) => {
+
+    const customer = customers.find(o => o.id === meeting.customerId);
+    const employee = users.find(o => o.id === customer.assocEmployeeId);
+    const brand = brands.find(o => o.id === customer.brandId);
+
+    return {
+      customerName: customer.name,
+      customerSurname: customer.surname,
+      employeeName: employee.name,
+      employeeSurname: employee.surname,
+      brand: brand.name,
+      date: "cekam na ISO format",
     }});
 
 };
