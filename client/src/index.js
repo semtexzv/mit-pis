@@ -12,6 +12,8 @@ import configureStore from './store/store';
 
 const store = configureStore();
 
+console.log("Running")
+
 render(
   <Provider store={store}>
     <Routes store={store}/>
