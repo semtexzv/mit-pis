@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
+@Table(name="employee")
 class Employee(
         @Column
         var username: String = "",
@@ -27,12 +28,8 @@ class Employee(
         @OneToOne(mappedBy = "employee")
         var authInfo: AuthInfo? = null,
 
-
-        @JsonIgnore
-        @OneToMany(mappedBy = "assoc_employee_id")
+        @OneToMany(targetEntity=Customer::class, mappedBy = "employee", fetch = FetchType.EAGER)
         var customers : List<Customer>? = null
 
 
-) : BaseEntity() {
-
-}
+) : BaseEntity()

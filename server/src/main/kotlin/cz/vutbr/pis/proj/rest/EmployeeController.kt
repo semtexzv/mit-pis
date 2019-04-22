@@ -5,11 +5,13 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import cz.vutbr.pis.proj.ProjApplication
 import cz.vutbr.pis.proj.auth.CustomSecurityService
 import cz.vutbr.pis.proj.data.AuthInfo
+import cz.vutbr.pis.proj.data.Brand
 import cz.vutbr.pis.proj.data.Employee
 import cz.vutbr.pis.proj.data.Meeting
 import cz.vutbr.pis.proj.repo.AuthInfoRepo
 import cz.vutbr.pis.proj.repo.EmployeeRepo
 import cz.vutbr.pis.proj.repo.MeetingRepo
+import cz.vutbr.pis.proj.repo.SpecializationRepo
 import cz.vutbr.pis.proj.rest.base.BaseController
 import cz.vutbr.pis.proj.unauthorized
 import cz.vutbr.pis.proj.util.BadReqException
@@ -24,7 +26,7 @@ class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
 
 
     @Autowired
-    lateinit var secService : CustomSecurityService
+    lateinit var secService: CustomSecurityService
 
     @Autowired
     lateinit var objectMapper: ObjectMapper
@@ -33,7 +35,10 @@ class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
     lateinit var authRepo: AuthInfoRepo
 
     @Autowired
-    lateinit var meetingRepo : MeetingRepo
+    lateinit var meetingRepo: MeetingRepo
+
+    @Autowired
+    lateinit var specializationRepo: SpecializationRepo
 
     @PostMapping("/")
     override fun createOne(@RequestBody data: Employee): Employee {
@@ -65,9 +70,14 @@ class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
     @GetMapping("/{id}")
     override fun getOne(@PathVariable id: Int?): Employee? {
         val x = super.getOne(id)
-
         return x;
     }
+
+    @GetMapping("/{id}/brands")
+    fun getBrands(@PathVariable id: Int?): List<Brand?> = specializationRepo.findAll()
+            .filter { specialization -> specialization.id.employeeId == id }
+            .map { specialization -> specialization.brand }
+
 
     @PostMapping("/{id}")
     @PreAuthorize("@secService.canModifyUser(#id)")
@@ -77,7 +87,7 @@ class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
         val changed = super.modifyOne(id, data)
         val new = repo.getOne(id!!)
 
-        if(new.sysRole.ordinal > currentRole.ordinal) {
+        if (new.sysRole.ordinal > currentRole.ordinal) {
 
             throw BadReqException("Cant change role to higher than current user")
         }
@@ -86,8 +96,8 @@ class EmployeeController : BaseController<Employee, Employee, EmployeeRepo>() {
 
     @GetMapping("/{id}/meetings")
     fun getMeetings(@PathVariable id: Int?): List<Meeting>? {
-        val user = getOne(id);
-        return user!!.customers?.map{ it?.meetings ?: listOf() }?.flatten() ?: listOf()
+        val user = getOne(id)
+        return user!!.customers?.map { it?.meetings ?: listOf() }?.flatten() ?: listOf()
     }
 
 }

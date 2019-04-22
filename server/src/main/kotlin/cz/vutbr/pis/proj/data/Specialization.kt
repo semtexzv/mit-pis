@@ -21,12 +21,12 @@ class Specialization(
         var id: SpecializationId = SpecializationId(0, 0),
 
 
-        @ManyToOne(cascade = arrayOf(CascadeType.MERGE, CascadeType.PERSIST))
+        @ManyToOne(cascade = [CascadeType.MERGE])
         @JoinColumn(name = "employee_id", insertable = false, updatable = false)
         @JsonIgnore
         var employee: Employee? = null,
 
-        @ManyToOne(cascade = arrayOf(CascadeType.PERSIST, CascadeType.MERGE))
+        @ManyToOne(cascade = [CascadeType.MERGE])
         @JoinColumn(name = "brand_id", insertable = false, updatable = false)
         @JsonIgnore
         var brand: Brand? = null

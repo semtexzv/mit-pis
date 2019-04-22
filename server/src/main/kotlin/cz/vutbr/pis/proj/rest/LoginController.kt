@@ -27,7 +27,7 @@ class LoginController {
     @Autowired
     lateinit var authRepo: AuthInfoRepo
 
-    @RequestMapping("/login", method = arrayOf(RequestMethod.POST))
+    @RequestMapping("/login", method = [RequestMethod.POST])
     fun login(@RequestBody data: LoginData?): Any {
 
         if (data == null) {
@@ -42,27 +42,25 @@ class LoginController {
             return badReq("Not password provided")
         }
 
-        val person = employeeRepo.findByUsername(data.username);
-        if (person == null) {
-            return badReq("Login not found")
-        }
-        var auth = person.authInfo;
-        if (auth == null) {
-            auth = AuthInfo(person.id)
-            auth = authRepo.saveAndFlush(auth)!!
-        }
+        val person = employeeRepo.findByUsername(data.username) ?: return badReq("Login not found");
 
-        auth.lastLogin = LocalDateTime.now();
-        val token = ProjApplication.genToken()
-        auth.lastToken = token;
+        val auth: AuthInfo? = person.authInfo ?: return badReq("Problem with auth")
 
-        if (data.remember) {
-            auth.validUntil = LocalDateTime.now().plusDays(14);
-        } else {
-            auth.validUntil = LocalDateTime.now().plusHours(4)
-        }
-        authRepo.save(auth)
-        return LoginResponse(token);
+        auth!!.passHash?.let {
+            it.takeIf { pass -> data.password == pass }?.let {
+                auth.lastLogin = LocalDateTime.now()
+                val token = ProjApplication.genToken()
+                auth.lastToken = token
+
+                if (data.remember) {
+                    auth.validUntil = LocalDateTime.now().plusDays(14)
+                } else {
+                    auth.validUntil = LocalDateTime.now().plusHours(4)
+                }
+                authRepo.save(auth)
+                return LoginResponse(token)
+            } ?: return badReq("Bad password!")
+        } ?: return badReq("Problem with auth")
     }
 
     @RequestMapping("/logout", method = arrayOf(RequestMethod.GET))
@@ -87,7 +85,7 @@ class LoginController {
     @RequestMapping("/register", method = arrayOf(RequestMethod.POST))
     fun register(@RequestBody data: RegisterData?): Any {
         if (data == null) {
-            return badReq("Missing body");
+            return badReq("Missing body")
         }
 
         var old = employeeRepo.findByUsername(data.username)
@@ -104,9 +102,13 @@ class LoginController {
         }
 
         var a = AuthInfo();
-        a.passHash = ProjApplication.hash(data.password);
+        a.passHash = ProjApplication.hash(data.password)
+        a.employeeId = p.id
         a.employee = p;
         p = employeeRepo.getOne(p.id)
+        authRepo.save(a)
+        employeeRepo.save(p)
+
 
         return ResponseEntity(employeeRepo.findById(p.id), HttpStatus.CREATED)
     }
