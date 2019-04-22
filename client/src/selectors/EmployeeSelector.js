@@ -4,6 +4,9 @@ const getModel = (state) => state.get(NAME);
 
 export const getEmployeeData = (state) => getModel(state).get("employeeData");
 export const getDisplayDialog = (state) => getModel(state).get("displayDialog");
+export const getDialogHeader = (state) => getModel(state).get("dialogHeader");
+export const getFieldsetLegend = (state) => getModel(state).get("fieldsetLegend");
+export const getAddButton = (state) => getModel(state).get("addButton");
 export const getName = (state) => getModel(state).get("name");
 export const getSurname = (state) => getModel(state).get("surname");
 export const getRole = (state) => getModel(state).get("role");

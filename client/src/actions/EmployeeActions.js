@@ -3,6 +3,8 @@ import {NAME} from "../constants/EmployeeConstants";
 export const TOGGLE_DISPLAY_DIALOG = `${NAME}/TOGGLE_DISPLAY_DIALOG`;
 export const DELETE_ROW = `${NAME}/DELETE_ROW`;
 export const SAVE_ROW = `${NAME}/SAVE_ROW`;
+export const SET_ADD_BUTTON = `${NAME}/SET_ADD_BUTTON`;
+export const UNSET_ADD_BUTTON = `${NAME}/UNSET_ADD_BUTTON`;
 export const UPDATE_NAME = `${NAME}/UPDATE_NAME`;
 export const UPDATE_SURNAME = `${NAME}/UPDATE_SURNAME`;
 export const UPDATE_ROLE = `${NAME}/UPDATE_ROLE`;
@@ -79,6 +81,14 @@ export const deleteRow = () => ({
 
 export const saveRow = () => ({
   type: SAVE_ROW,
+});
+
+export const setAddButton = () => ({
+  type: SET_ADD_BUTTON,
+});
+
+export const unsetAddButton = () => ({
+  type: UNSET_ADD_BUTTON,
 });
 
 export const updateSelectedRow = (data) => ({

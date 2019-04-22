@@ -17,13 +17,17 @@ import * as snippet from "./smallSnippets"
 const EmployeeDialog =
   ({
      displayDialog,
+     dialogHeader,
+     fieldsetLegend,
      deleteRow,
      saveRow,
      toggleDisplayDialog,
+     addButton,
+     unsetAddButton,
      name,
      surname,
      role,
-     passwordOld,
+     //passwordOld,
      passwordNew,
      passwordCheck,
      roleList,
@@ -48,47 +52,65 @@ const EmployeeDialog =
       }
     }
 
+    function fieldsetCollapsed(legend){
+      if(legend === "Add password")
+        return false;
+      else
+        return true;
+    }
+
+    function fieldsetToggleable(legend, changePassword){
+      if(legend === "Add password")
+        return false;
+      else {
+        return !changePassword;
+      }
+    }
+
     //---------------------------------------
     // JSX snippets
+    function showDeleteButton(condition) {
+      if(condition)
+        return(<span> </span>);
+      else
+        return(
+          <Button label="Delete" icon="pi pi-times"
+            onClick={e => {deleteRow(); raiseGrowl("Data was deleted", mygrowl, "success");}}/>
+        );
+    }
     const dialogFooter =
       <div className="ui-dialog-buttonpane p-clearfix">
-        <Button label="Delete" icon="pi pi-times"
-                onClick={e => {deleteRow(); raiseGrowl("Data was deleted", mygrowl, "success")}}/>
+        {  /*it depends - don't show Delete Button if user adding new row*/
+          showDeleteButton(addButton)
+        }
         <Button label="Save" icon="pi pi-check"
-                onClick={e => saveButtonValidator(mygrowl)}/>
+                onClick={e => {saveButtonValidator(mygrowl)}}/>
       </div>;
 
     //---------------------------------------
     // Validations
 
     function passwordValidator(errorHandler){
-      if(!changePassword)
-        return true;
+      if(!changePassword) {
+        if(fieldsetLegend !== "Add password")
+          return true;
+      }
 
-      //TODO: comparing string(passwordOld) with some hash(passwordOld_fromBE)?
-      // We must add some hash function like MD5(passwordOld)
-      if(passwordOld === passwordOld_fromBE){
-        if((passwordNew !== "") && (passwordCheck !== "")){
-          if(passwordNew === passwordCheck){
-            return true;
-          }
-          else{
-            raiseGrowl("The new password and its check do not match", errorHandler);
-            updatePasswordNew("");
-            updatePasswordCheck("");
-            return false;
-          }
+      if((passwordNew !== "") && (passwordCheck !== "")){
+        if(passwordNew === passwordCheck){
+          return true;
         }
         else{
-          raiseGrowl("The new password must not be empty string", errorHandler);
+          raiseGrowl("The new password and its check do not match", errorHandler);
           updatePasswordNew("");
           updatePasswordCheck("");
           return false;
         }
       }
       else{
-        raiseGrowl("Old password is not valid", errorHandler);
-        updatePasswordOld("");
+        raiseGrowl("The new password must not be empty string", errorHandler);
+        updatePasswordNew("");
+        updatePasswordCheck("");
         return false;
       }
     }
@@ -98,7 +120,7 @@ const EmployeeDialog =
         if(role !== "") {
           if(passwordValidator(errorHandler)) {
             saveRow();
-            updatePasswordOld("");
+            //updatePasswordOld("");
             updatePasswordNew("");
             updatePasswordCheck("");
             raiseGrowl("Data was edited", errorHandler, "success");
@@ -116,9 +138,9 @@ const EmployeeDialog =
     return(
       <div>
         <Growl ref={(el) => {setGrowl(el)}}> </Growl>
-        <Dialog header="Employee data"
+        <Dialog header="Employee data"  header={dialogHeader}
                 visible={displayDialog} modal={true} footer={dialogFooter}
-                onHide={() => {toggleDisplayDialog(); unsetChangePassword()}}
+                onHide={() => {toggleDisplayDialog(); unsetChangePassword(); unsetAddButton()}}
         >
           <div>
             <InputText value={name} onChange={(e) => updateName(e.target.value)} placeholder="name"/>
@@ -138,16 +160,12 @@ const EmployeeDialog =
 
           <div>
             <h3> </h3>
-            <Fieldset legend="Change password" toggleable={!changePassword} collapsed={true}
+            <Fieldset legend={fieldsetLegend}
+              toggleable={fieldsetToggleable(fieldsetLegend, changePassword)}
+              collapsed={fieldsetCollapsed(fieldsetLegend)}
               onToggle={(e) => {setChangePassword()}}>
               <div>
-                <InputText value={passwordOld} placeholder="Type your old password here if you want to change it"
-                  style={{width: "400px"}}
-                  onChange={(e) => updatePasswordOld(e.target.value)} type="password" />
-              </div>
-
-              <div>
-                <Password value={passwordNew} placeholder="Type your new password here if you want to change it"
+                <Password value={passwordNew} placeholder="Type your new password here"
                   style={{width: "400px"}}
                   onChange={(e) => updatePasswordNew(e.target.value)}/>
               </div>
@@ -167,13 +185,16 @@ const EmployeeDialog =
 
 const mapStateToProps = (state) => ({
   displayDialog: S.getDisplayDialog(state),
+  dialogHeader: S.getDialogHeader(state),
+  fieldsetLegend: S.getFieldsetLegend(state),
+  addButton: S.getAddButton(state),
   name: S.getName(state),
   surname: S.getSurname(state),
   role: S.getRole(state),
   roleList: S.getRoleList(state),
   changePassword: S.getChangePassword(state),
-  passwordOld: S.getPasswordOld(state),
-  passwordOld_fromBE: S.getPasswordOld_fromBE(state),
+  //passwordOld: S.getPasswordOld(state),
+  //passwordOld_fromBE: S.getPasswordOld_fromBE(state),
   passwordNew: S.getPasswordNew(state),
   passwordCheck: S.getPasswordCheck(state),
 });
@@ -182,12 +203,13 @@ const mapDispatchToProps = (dispatch) => ({
   deleteRow: () => dispatch(A.deleteRow()),
   saveRow: () => dispatch(A.saveRow()),
   toggleDisplayDialog: () => dispatch(A.toggleDisplayDialog()),
+  unsetAddButton: () => dispatch(A.unsetAddButton()),
   updateName: (value) => dispatch(A.updateName(value)),
   updateSurname: (value) => dispatch(A.updateSurname(value)),
   updateRole: (value) => dispatch(A.updateRole(value)),
   setChangePassword: () => dispatch(A.setChangePassword()),
   unsetChangePassword: () => dispatch(A.unsetChangePassword()),
-  updatePasswordOld: (value) => dispatch(A.updatePasswordOld(value)),
+  //updatePasswordOld: (value) => dispatch(A.updatePasswordOld(value)),
   updatePasswordNew: (value) => dispatch(A.updatePasswordNew(value)),
   updatePasswordCheck: (value) => dispatch(A.updatePasswordCheck(value)),
 });
