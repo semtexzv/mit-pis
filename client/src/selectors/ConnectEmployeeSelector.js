@@ -10,3 +10,5 @@ export const getCustomerBrand = (state) => getModel(state).get("customerBrand");
 
 export const getPotentialEmployee = (state) => getModel(state).get("potentialEmployee");
 export const getEmployeeId = (state) => getModel(state).get("employeeId");
+export const getEditedCustomer = (state) => getModel(state).get("editedCustomer");
+export const getCustomerId = (state) => getModel(state).get("customerId");

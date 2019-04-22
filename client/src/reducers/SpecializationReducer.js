@@ -7,17 +7,9 @@ const initialState = fromJS({
   employeeId: "", // chosen employee
   chosenBrands: [], // aka specializations
   // value represent brand id
-  allBrands:[
-    {label: "Audi", value: "1"},
-    {label: "Lamborghini", value: "2"},
-    {label: "Viper", value: "3"},
-  ],
+  allBrands:[],
   // value represent employee id
-  allEmployees:[
-    {label: "Dezo Dorant", value: "10"},
-    {label: "Rani Srani", value: "11"},
-    {label: "Frank Enstein", value: "12"},
-  ],
+  allEmployees:[],
   warning: false, // show warning
 });
 
@@ -34,35 +26,30 @@ const SpecializationReducer = (state = initialState, action) => {
       // User choose new employee, so remove all in chosenBrands
       newState = newState.set("chosenBrands", List([]));
 
-      // this is only example. It doesn't truly reflect database
-      //TODO: edit after saga will be added
-      // simulate that employee has some specializations
-      let randomID = getRandomInt(0, 3).toString();
-      // simulate that employee haven't any specialization
-      if(randomID === "0")
-        return newState;
-      //!!!
 
       let allBrands = newState.get("allBrands");
-      // find brand with id === randomID
-      let brand = allBrands.find(function(obj){return obj.get('value') === randomID;});
-      // update chosenBrands
       let chosenBrands = newState.get("chosenBrands");
-      chosenBrands = chosenBrands.push(brand.get("value"));
+      // find brand with id === randomID
+      action.payload.forEach(
+        (brand) => {
+          let brandToPush = allBrands.find(function(obj){return obj.get('value') === brand.id;});
+          chosenBrands = chosenBrands.push(brandToPush.get("value"));
+        }
+      );
+      // update chosenBrands
       newState = newState.set("chosenBrands", chosenBrands);
       return newState;
+    }
+    case A.SET_SPECIALIZATION_DATA: {
+      return state
+        .set("allBrands", fromJS(action.brands))
+        .set("allEmployees", fromJS(action.employees));
     }
     case A.SPEC_CHANGE: {
       return state.set("chosenBrands", List(action.value));
     }
     case A.UPDATE_DROPDOWN: {
       return state.set("employeeId", action.value);
-    }
-    case A.SAVE_SPEC: {
-      let newState = state;
-      newState = newState.set("chosenBrands", List([]));
-      newState = newState.set("employeeId", "");
-      return newState;
     }
     case A.SHOW_WARNING: {
       return state.set("warning", true);

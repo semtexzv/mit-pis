@@ -10,6 +10,7 @@ export const UPDATE_SURNAME = `${NAME}/UPDATE_SURNAME`;
 export const UPDATE_TITLE = `${NAME}/UPDATE_TITLE`;
 export const UPDATE_BRAND = `${NAME}/UPDATE_BRAND`;
 export const UPDATE_INFO = `${NAME}/UPDATE_INFO`;
+export const INIT_CUSTOMER_DATA = `${NAME}/INIT_CUSTOMER_DATA`;
 
 export const DELETE_ROW = `${NAME}/DELETE_ROW`;
 export const SAVE_ROW = `${NAME}/SAVE_ROW`;
@@ -62,4 +63,8 @@ export const deleteRow = () => ({
 
 export const saveRow = () => ({
   type: SAVE_ROW,
+});
+
+export const initCustomerData = () => ({
+  type: INIT_CUSTOMER_DATA,
 });

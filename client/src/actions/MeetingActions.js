@@ -12,6 +12,11 @@ export const UPDATE_TITLE = `${NAME}/UPDATE_TITLE`;
 export const UPDATE_BRAND = `${NAME}/UPDATE_BRAND`;
 export const UPDATE_CUSTOMER_INFO = `${NAME}/UPDATE_CUSTOMER_INFO`;
 export const UPDATE_MEETING_INFO = `${NAME}/UPDATE_MEETING_INFO`;
+export const INIT_DATA = `${NAME}/INIT_DATA`;
+export const SET_MEETINGS = `${NAME}/SET_MEETINGS`;
+export const CREATE_MEETING = `${NAME}/CREATE_MEETING`;
+export const UPDATE_MEETING = `${NAME}/UPDATE_MEETING`;
+export const SET_CUSTOMERS = `${NAME}/SET_CUSTOMERS`;
 
 export const deleteRow = () => ({
   type: DELETE_ROW,
@@ -56,4 +61,29 @@ export const updateCustomerInfo = (data) => ({
 export const updateMeetingInfo = (data) => ({
   type: UPDATE_MEETING_INFO,
   value: data,
+});
+
+export const initData = (id) => ({
+  type: INIT_DATA,
+  payload: id,
+});
+
+export const setMeetings = (meetings) => ({
+  type: SET_MEETINGS,
+  payload: meetings,
+});
+
+export const setCustomers = (customers) => ({
+  type: SET_CUSTOMERS,
+  payload: customers,
+});
+
+export const createMeeting = (data) => ({
+  type: CREATE_MEETING,
+  payload: data,
+});
+
+export const updateMeeting = (meeting) => ({
+  type: UPDATE_MEETING,
+  payload: meeting,
 });

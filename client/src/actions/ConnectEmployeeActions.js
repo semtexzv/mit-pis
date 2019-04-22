@@ -2,6 +2,9 @@ import {NAME} from "../constants/ConnectEmployeeConstants";
 
 export const TOGGLE_DISPLAY_DIALOG = `${NAME}/TOGGLE_DISPLAY_DIALOG`;
 export const UPDATE_SELECTED_ROW = `${NAME}/UPDATE_SELECTED_ROW`;
+export const INIT_CONNECT_EMPLOYEE_DATA = `${NAME}/INIT_CONNECT_EMPLOYEE_DATA`;
+export const SET_CONNECT_EMPLOYEE_DATA = `${NAME}/SET_CONNECT_EMPLOYEE_DATA`;
+export const SET_DATATABLE = `${NAME}/SET_DATATABLE`;
 export const UPDATE_DROPDOWN = `${NAME}/UPDATE_DROPDOWN`;
 export const SAVE_ROW = `${NAME}/SAVE_ROW`;
 
@@ -21,4 +24,18 @@ export const updateDropdown = (value) => ({
 
 export const saveRow = () => ({
   type: SAVE_ROW,
+});
+
+export const initConnectEmployeeData = () => ({
+  type: INIT_CONNECT_EMPLOYEE_DATA
+});
+
+export const setEmployyesData = (employees) => ({
+  type: SET_CONNECT_EMPLOYEE_DATA,
+  employees: employees
+});
+
+export const setDataTable = (rows) => ({
+  type: SET_DATATABLE,
+  rows: rows,
 });

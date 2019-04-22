@@ -6,9 +6,12 @@ export const UPDATE_DROPDOWN = `${NAME}/UPDATE_DROPDOWN`;
 export const SAVE_SPEC = `${NAME}/SAVE_SPEC`;
 export const SHOW_WARNING = `${NAME}/SHOW_WARNING`;
 export const HIDE_WARNING = `${NAME}/HIDE_WARNING`;
+export const INIT_SPECIALIZATION_DATA = `${NAME}/INIT_SPECIALIZATION_DATA`;
+export const SET_SPECIALIZATION_DATA = `${NAME}/SET_SPECIALIZATION_DATA`;
 
-export const fillSpec = (value) => ({
+export const fillSpec = (specializations) => ({
   type: FILL_SPEC,
+  payload: specializations
 });
 
 export const updateSpec = (value) => ({
@@ -32,3 +35,13 @@ export const showWarning = (value) => ({
 export const hideWarning = (value) => ({
   type: HIDE_WARNING,
 });
+
+export const initSpecializationData = () => ({
+  type: INIT_SPECIALIZATION_DATA,
+})
+
+export const setSpecializationData = (employees, brands) => ({
+  type: SET_SPECIALIZATION_DATA,
+  employees: employees,
+  brands: brands,
+})
