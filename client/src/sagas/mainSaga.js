@@ -7,14 +7,16 @@ import {
   BRANDS_URL,
   MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateCustomerUrl, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL,
   ME_URL, REGISTER_URL, SPECIALIZATION_LIST_URL,
-  SPECIALIZATION_URL
+  SPECIALIZATION_URL,
+  getUpdateEmployeeUrl, getPasswordAdminUrl,
 } from "../restapi/ServerApi";
 import {setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
-import { DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} from "../actions/MeetingActions";
+import {DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} from "../actions/MeetingActions";
 import {
-  transformBrands, transformConnectedEmployees, transformCustomers, transformCustomersToRows, transformEmployees, transformMeetings,
+  transformBrands, transformConnectedEmployees, transformCustomers, transformCustomersToRows, transformEmployees, transformEmployees2, transformMeetings,
   transformToOverViewRows,
+  transformUserProfileToJSON,
   transformUsersSpecializations,
   transformUsersSpecializationsToJSON
 } from "../utils/transformUtils";
@@ -26,17 +28,23 @@ import * as CEA from "../actions/ConnectEmployeeActions";
 import * as CA from "../actions/CustomerActions";
 import {getCustomerId, getEditedCustomer, getEmployeeId} from "../selectors/ConnectEmployeeSelector";
 import * as SS from "../selectors/SpecializationSelector";
+import * as PS from "../selectors/ProfileSelector"
 import * as CS from "../selectors/CustomerSelector";
 import {INIT_OVERVIEW, updateOverviewData} from "../actions/OverviewActions";
 import {INIT_CUSTOMER_DATA} from "../actions/CustomerActions";
 import {getCustomer, getCustomerCreated} from "../selectors/CustomerSelector";
 import {initCustomerData} from "../actions/CustomerActions";
+import {SAVE_PROFILE, updateName, updateRole, updateSurname, updateUserId, updateUserName} from "../actions/ProfileActions";
+
+// EmployeeContainer
+import * as ECA from "../actions/EmployeeActions"
+import * as ECS from "../selectors/EmployeeSelector"
 
 export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
   yield takeEvery(REGISTER, registerSaga);
+  yield takeEvery(SAVE_PROFILE, updateProfileSaga);
   yield takeEvery(SAVE_ROW, meetingSaga);
-  yield takeEvery(REGISTER, registerSaga);
   yield takeEvery(DELETE_ROW, deleteMeetingSaga);
   yield takeEvery(CA.DELETE_ROW, deleteCustomerSaga);
   yield takeLatest(INIT_SPECIALIZATION_DATA, initSpecializations);
@@ -48,7 +56,54 @@ export default function* mainSaga() {
   yield takeEvery(SAVE_SPEC, updateSpecializationSaga);
   yield takeLatest(INIT_OVERVIEW, initOverViewSaga);
   yield takeLatest(INIT_CUSTOMER_DATA, initCustomerDataSaga);
+  // EmployeeContainer
+  yield takeLatest(ECA.INIT_EMPLOYEE_DATA, initEmployeeData);
+  yield takeEvery(ECA.SAVE_ROW, saveEmployeeRow);
+  //yield takeEvery(ECA.UPDATE_SELECTED_ROW, updateEmployeePassword);
 }
+
+//----------------------------
+//>>>start Employee Sagas (keyword prefix ECA)
+
+export function* initEmployeeData(action) {
+  try {
+    const employees = yield call(callAuthGetJSON, EMPLOYEES_URL);
+    yield put(ECA.setEmployeeData(transformEmployees2(employees)));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+//export function* updateEmployeePassword(action) {
+//  try {
+//    const id = yield select(ECS.getEmployeeId);
+//    const password = yield call(callAuthGetJSON, getPasswordAdminUrl(id));
+//  } catch (e) {
+//    console.log(e);
+//  }
+//}
+
+export function* saveEmployeeRow(action) {
+  try {
+    const id = yield select(ECS.getEmployeeId);
+    const data = yield select(ECS.getEmployeeRow);
+    yield call(callAuthPostJSON,getUpdateEmployeeUrl(id), data);
+    yield put(ECA.initEmployeeData());
+  } catch (e) {
+    console.log(e);
+  }
+  //let changePassword = yield select(ECS.getChangePassword);
+  //if(changePassword){
+  //  try{
+  //    ; //set new password
+  //  } catch(e){
+  //    console.log(e);
+  //  }
+  //}
+}
+
+//----------------------------
+//<<<end Employee Sagas
 
 function* registerSaga(action) {
   const login = action.login;
@@ -61,8 +116,13 @@ function* registerSaga(action) {
 
   try {
     const data = yield call(callRegisterPostJSON, REGISTER_URL, body);
+    yield put(updateUserId(data.id));
+    yield put(updateRole(data.sysRole));
+    yield put(updateUserName(data.username));
+    yield put(updateName(data.name));
+    yield put(updateSurname(data.surname))
 
-
+    yield call(history.push, '/profile')
     console.log(data)
   } catch (e) {
     console.log(e);
@@ -91,11 +151,32 @@ function* loginSaga(action) {
   }
 }
 
+function* updateProfileSaga() {
+  try {
+    const username = yield select(PS.getUsername);
+    const userId = yield select(PS.getUserId);
+    const name = yield select(PS.getName);
+    const surname = yield select(PS.getSurname);
+    const role = yield select(PS.getRole);
+
+    const url = EMPLOYEES_URL + "/" + userId.toString()
+
+    console.log(url);
+
+    yield call(callAuthPostJSON, url, transformUserProfileToJSON(username, name, surname, role));
+    yield call(history.push, '/register')
+
+  } catch (e) {
+    alert("Problem with server. Try again later")
+    console.log(e);
+  }
+}
+
 export function* updateSpecializationSaga() {
   try {
     const ids = yield select(SS.getChosenBrands);
     const employeeId = yield select(SS.getEmployeeId);
-    yield call(callAuthPostJSON,SPECIALIZATION_LIST_URL,transformUsersSpecializationsToJSON(ids.toJS(), employeeId));
+    yield call(callAuthPostJSON, SPECIALIZATION_LIST_URL, transformUsersSpecializationsToJSON(ids.toJS(), employeeId));
   } catch (e) {
     console.log(e);
   }
@@ -205,11 +286,11 @@ export function* meetingSaga(action) {
   try {
     const row = yield select(getRow);
     const create = yield select(getCreateStatus);
-    if(create){
-      yield call(callAuthPostJSON,MEETING_URL, row);
-    }else{
+    if (create) {
+      yield call(callAuthPostJSON, MEETING_URL, row);
+    } else {
       const id = yield select(getMeetingId);
-      yield call(callAuthPostJSON,getUpdateMeetingUrl(id), row);
+      yield call(callAuthPostJSON, getUpdateMeetingUrl(id), row);
     }
     const userId = yield select(getLoggedUserId);
     yield put(initData(userId));
@@ -247,7 +328,7 @@ export function* updateAssociatedEmployeeSaga(action) {
 
     const id = yield select(getCustomerId);
     const customer = yield select(getEditedCustomer);
-    yield call(callAuthPostJSON,getUpdateCustomerUrl(id), customer);
+    yield call(callAuthPostJSON, getUpdateCustomerUrl(id), customer);
     yield put(initConnectEmployeeData());
 
   } catch (e) {
@@ -255,12 +336,10 @@ export function* updateAssociatedEmployeeSaga(action) {
   }
 }
 
-
-
-export function* deleteMeetingSaga(){
+export function* deleteMeetingSaga() {
   try {
     const id = yield select(getMeetingId);
-    yield call(callAuthDel,getUpdateMeetingUrl(id), {});
+    yield call(callAuthDel, getUpdateMeetingUrl(id), {});
 
     const userId = yield select(getLoggedUserId);
     yield put(initData(userId));

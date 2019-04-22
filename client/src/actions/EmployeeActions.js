@@ -13,6 +13,18 @@ export const UPDATE_PASSWORD_OLD_FROM_BE = `${NAME}/CHECK_PASSWORD_OLD_FROM_BE`;
 export const UPDATE_PASSWORD_NEW = `${NAME}/UPDATE_PASSWORD_NEW`;
 export const UPDATE_PASSWORD_CHECK = `${NAME}/UPDATE_PASSWORD_CHECK`;
 export const UPDATE_SELECTED_ROW = `${NAME}/UPDATE_SELECTED_ROW`;
+//SAGA
+export const INIT_EMPLOYEE_DATA = `${NAME}/INIT_EMPLOYEE_DATA`;
+export const SET_EMPLOYEE_DATA = `${NAME}/SET_EMPLOYEE_DATA`;
+
+export const initEmployeeData = () => ({
+  type: INIT_EMPLOYEE_DATA,
+});
+
+export const setEmployeeData = (employees) => ({
+  type: SET_EMPLOYEE_DATA,
+  employees: employees,
+});
 
 export const updateName = (value) => ({
   type: UPDATE_NAME,

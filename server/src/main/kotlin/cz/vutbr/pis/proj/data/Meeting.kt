@@ -8,7 +8,7 @@ import javax.persistence.*
 @Table(name = "meeting")
 class Meeting(
 
-        var date: LocalDateTime? = LocalDateTime.now(),
+        var date: String? = LocalDateTime.now().toString(),
         var report: String = "",
 
         @Column(name = "customer_id")

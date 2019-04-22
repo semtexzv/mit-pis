@@ -42,6 +42,19 @@ export const transformEmployees = (rawData) =>  {
 
 };
 
+export const transformEmployees2 = (rawData) =>  {
+
+  return rawData.map((employee) => {
+    return {
+      id: employee.id,
+      name: employee.name,
+      surname: employee.surname,
+      username: employee.username,
+      role: employee.sysRole,
+    }});
+
+};
+
 export const transformBrands = (rawData) =>  {
 
   return rawData.map((brand) => {
@@ -91,6 +104,17 @@ export const transformUsersSpecializationsToJSON = (selectedBrands, userId) =>  
     };
 
 };
+
+export const transformUserProfileToJSON = (username, name, surname, role) =>  {
+  return{
+    username: username,
+    name: name,
+    surname: surname,
+    sysRole: role
+  }
+
+};
+
 
 export const transformToOverViewRows = (meetings, users, brands, customers) =>  {
 
