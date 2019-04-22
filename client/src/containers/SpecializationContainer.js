@@ -54,7 +54,6 @@ const Specialization =
   function onChangeDropDown(value) {
     if (value !== null) {
       updateDropdown(value);
-      fillSpec();
     }
   }
 

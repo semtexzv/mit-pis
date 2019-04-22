@@ -9,8 +9,9 @@ export const HIDE_WARNING = `${NAME}/HIDE_WARNING`;
 export const INIT_SPECIALIZATION_DATA = `${NAME}/INIT_SPECIALIZATION_DATA`;
 export const SET_SPECIALIZATION_DATA = `${NAME}/SET_SPECIALIZATION_DATA`;
 
-export const fillSpec = (value) => ({
+export const fillSpec = (specializations) => ({
   type: FILL_SPEC,
+  payload: specializations
 });
 
 export const updateSpec = (value) => ({

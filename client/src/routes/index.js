@@ -18,6 +18,7 @@ import {AuthRoute} from "../components/AuthRoute";
 import {initCustomerData} from "../actions/CustomerActions";
 import {initSpecializationData} from "../actions/SpecializationActions";
 import {initConnectEmployeeData} from "../actions/ConnectEmployeeActions";
+import {initData} from "../actions/MeetingActions";
 
 const Container = styled.div`
   text-align: center;
@@ -30,7 +31,7 @@ function Routes({store}) {
         <TopMenu menu_items={TM.SITE1}/>
         <Switch>
           <Route exact path="/" component={LoginContainer} />
-          <Route path="/meeting" component={MeetingContainer}/>
+          <Route path="/meeting" render={() => (AuthRoute(store , "", MeetingContainer, initData()))} />
           <Route path="/specialization"render={() => (AuthRoute(store , "", SpecializationContainer, initSpecializationData()))}/>
           <Route path="/connectEmployee" render={() => (AuthRoute(store , "", ConnectEmployeeContainer, initConnectEmployeeData()))}/>
           <Route path="/register" component={RegisterContainer}/>

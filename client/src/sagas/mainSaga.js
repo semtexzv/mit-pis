@@ -6,21 +6,23 @@ import {getAuthToken, getLoggedUserId, getMyCustomers} from "../selectors/AuthSe
 import {
   BRANDS_URL,
   CREATE_MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateCustomerUrl, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL,
-  ME_URL, REGISTER_URL,
+  ME_URL, REGISTER_URL, SPECIALIZATION_LIST_URL,
   SPECIALIZATION_URL
 } from "../restapi/ServerApi";
 import {setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
 import { DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} from "../actions/MeetingActions";
 import {
-  transformBrands, transformConnectedEmployees, transformCustomers, transformEmployees, transformMeetings
+  transformBrands, transformConnectedEmployees, transformCustomers, transformEmployees, transformMeetings, transformUsersSpecializations,
+  transformUsersSpecializationsToJSON
 } from "../utils/transformUtils";
 import {getCreateStatus, getMeetingId, getRow} from "../selectors/MeetingSelector";
-import {INIT_SPECIALIZATION_DATA, setSpecializationData} from "../actions/SpecializationActions";
+import {fillSpec, INIT_SPECIALIZATION_DATA, SAVE_SPEC, setSpecializationData, UPDATE_DROPDOWN} from "../actions/SpecializationActions";
 import {INIT_CONNECT_EMPLOYEE_DATA, initConnectEmployeeData, setDataTable, setEmployyesData} from "../actions/ConnectEmployeeActions";
 
 import * as CEA from "../actions/ConnectEmployeeActions";
 import {getCustomerId, getEditedCustomer, getEmployeeId} from "../selectors/ConnectEmployeeSelector";
+import * as SS from "../selectors/SpecializationSelector";
 
 export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
@@ -31,7 +33,9 @@ export default function* mainSaga() {
   yield takeLatest(INIT_SPECIALIZATION_DATA, initSpecializations);
   yield takeLatest(INIT_CONNECT_EMPLOYEE_DATA, initConnectedEmployeeData);
   yield takeLatest(INIT_DATA, meetingsSaga);
+  yield takeLatest(UPDATE_DROPDOWN, selectedSpecializationsSaga);
   yield takeEvery(CEA.SAVE_ROW, updateAssociatedEmployeeSaga);
+  yield takeEvery(SAVE_SPEC, updateSpecializationSaga);
 }
 
 function* registerSaga(action) {
@@ -69,8 +73,26 @@ function* loginSaga(action) {
     const userId = yield call(callAuthGetJSON, ME_URL);
     const user = yield call(callAuthGetJSON, getUsersUrl(userId.id));
     yield put(setUser(user));
-    yield put(initData(userId.id));
     yield call(history.push, '/meeting')
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* updateSpecializationSaga() {
+  try {
+    const ids = yield select(SS.getChosenBrands);
+    const employeeId = yield select(SS.getEmployeeId);
+    yield call(callAuthPostJSON,SPECIALIZATION_LIST_URL,transformUsersSpecializationsToJSON(ids.toJS(), employeeId));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* selectedSpecializationsSaga(action) {
+  try {
+    const specializations = yield call(callAuthGetJSON, SPECIALIZATION_URL);
+    yield put(fillSpec(transformUsersSpecializations(specializations, action.value)));
   } catch (e) {
     console.log(e);
   }
@@ -87,7 +109,11 @@ export function* initSaga(action) {
 
 export function* meetingsSaga(action) {
   try {
-    const meetings = yield call(callAuthGetJSON, getUsersMeetingsUrl(action.payload));
+    let userId = yield select(getLoggedUserId);
+    userId = userId !== undefined ? userId : action.payload;
+    const user = yield call(callAuthGetJSON, getUsersUrl(userId));
+    yield put(setUser(user));
+    const meetings = yield call(callAuthGetJSON, getUsersMeetingsUrl(userId));
     const customers = yield select(getMyCustomers);
     yield put(setMeetings(transformMeetings(meetings, customers)));
     yield put(setCustomers(transformCustomers(customers)));

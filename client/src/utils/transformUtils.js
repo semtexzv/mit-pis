@@ -69,3 +69,27 @@ export const transformConnectedEmployees = (rawData, brands, employees) =>  {
     }});
 
 };
+
+export const transformUsersSpecializations = (specializations, userId) =>  {
+
+  const usersSpecialization = specializations.filter(function (specialization) {
+    return specialization.id.employeeId === userId;
+  });
+
+  return usersSpecialization.map((specialization) => {
+
+    return {
+      id: specialization.id.brandId,
+    }});
+
+};
+
+export const transformUsersSpecializationsToJSON = (selectedBrands, userId) =>  {
+
+  return selectedBrands.map((brand) => {
+    return {
+      employeeId: userId,
+      brandId: brand
+    }});
+
+};
