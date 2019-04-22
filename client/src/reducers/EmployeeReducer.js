@@ -65,7 +65,6 @@ const EmployeeReducer = (state = initialState, action) => {
       newState = newState.set("dialogHeader", "Edit an employee");
       newState = newState.set("fieldsetLegend", "Edit password");
       newState = newState.set("addButton", false);
-      newState = newState.set("changePassword", false);
       return newState;
       //TODO: after this return, save properties and reload "employeeData"
       //  Warning: "role" is a number -> id
@@ -98,6 +97,7 @@ const EmployeeReducer = (state = initialState, action) => {
       newState = newState.set("username", data.username);
       newState = newState.set("role", getRoleId(state, data.role));
       newState = newState.set("displayDialog", true);
+      newState = newState.set("changePassword", false);
       return newState;
     }
     case A.TOGGLE_DISPLAY_DIALOG: {
