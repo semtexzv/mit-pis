@@ -35,7 +35,6 @@ function Routes({store}) {
       <Container>
         <TopMenu menu_items={TM.SITE1}/>
         <Switch>
-          <Route exact path="/" component={LoginContainer} />
           <Route path="/meeting" render={() => (AuthRoute(store , "", MeetingContainer, initData()))} />
           <Route path="/specialization"render={() => (AuthRoute(store , "", SpecializationContainer, initSpecializationData()))}/>
           <Route path="/connectEmployee" render={() => (AuthRoute(store , "", ConnectEmployeeContainer, initConnectEmployeeData()))}/>
@@ -44,6 +43,7 @@ function Routes({store}) {
           <Route path="/customer" render={() => (AuthRoute(store , "", CustomerContainer, initCustomerData()))}/>
           <Route path="/profile"render={() => (AuthRoute(store , "", ProfileContainer, doNothingProfile()))}/>
           <Route path="/employee" render={() => (AuthRoute(store, "", EmployeeContainer, initEmployeeData()))}/>
+          <Route path="/" component={LoginContainer} />
         </Switch>
       </Container>
     </Router>

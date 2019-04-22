@@ -1,9 +1,11 @@
 package cz.vutbr.pis.proj
 
+import org.apache.catalina.webresources.FileResource
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
 import org.springframework.web.servlet.config.annotation.*
 import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.FileSystemResource
 import org.springframework.web.servlet.resource.PathResourceResolver
 
 
@@ -25,6 +27,7 @@ class WebConfig : WebMvcConfigurerAdapter() {
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         super.addResourceHandlers(registry)
         registry.addResourceHandler("/**")
+                .addResourceLocations("file:../client/build/")
                 .addResourceLocations(*CLASSPATH_RESOURCE_LOCATIONS)
                 .resourceChain(false)
                 .addResolver(object : PathResourceResolver() {
@@ -36,7 +39,7 @@ class WebConfig : WebMvcConfigurerAdapter() {
                                 || resourcePath.startsWith("api")) {
                             requestedResource
                         } else {
-                            ClassPathResource("/static/index.html")
+                            FileSystemResource("../client/build/index.html")
                         }
                     }
                 });
