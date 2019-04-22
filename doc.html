@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Projekt PIS</title>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            border: 1px solid black;
+            padding: 0.3em 0.5em;
+            text-align: left;
+        }
+
+        dt {
+            font-weight: bold;
+            margin-top: 0.5em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Zkontrolujte prosím nastavení kódování v hlavičce dokumentu 
+     podle použitého editoru -->
+
+    <!-- Nahraďte prosím názvem tématu -->
+    <h1>Téma projektu: CRM Systém</h1>
+
+    <!-- Editujte jména a maily autorů a jejich činnost -->
+    <dl>
+        <dt>Autoři</dt>
+        <dd>První autor
+            <a href="mailto:xhorni14@stud.fit.vutbr.cz">xhorni14@stud.fit.vutbr.cz</a> -
+            Backend, autentizácia používaťeľov, databázový subsystém
+        </dd>
+        <dd>Druhý autor
+            <a href="mailto:xpavli78@stud.fit.vutbr.cz">xpavli78@stud.fit.vutbr.cz</a> -
+            TODO: Doplnit
+        </dd>
+        <dd>Třetí autor
+            <a href="mailto:xpiece00@stud.fit.vutbr.cz">xpiece00@stud.fit.vutbr.cz</a> -
+            TODO: Doplnit
+        </dd>
+        <dd>Čtvrtý autor
+            <a href="mailto:xvican02@stud.fit.vutbr.cz">xvican02@stud.fit.vutbr.cz</a> -
+            TODO: Doplnit
+        </dd>
+    </dl>
+
+    <!-- uživatelské účty -->
+    <h2>Uživatelé systému pro testování</h2>
+    <p>Uveďte prosím existující zástupce <strong>všech rolí uživatelů</strong>.</p>
+    <table>
+        <tr>
+            <th>Login</th>
+            <th>Heslo</th>
+            <th>Role</th>
+        </tr>
+        <tr>
+            <td>user</td>
+            <td>user</td>
+            <td>Zamestnanec, Používateľ</td>
+        </tr>
+        <tr>
+            <td>manager</td>
+            <td>manager</td>
+            <td>Management</td>
+        </tr>
+        <tr>
+            <td>admin</td>
+            <td>admin</td>
+            <td>Administrátor</td>
+        </tr>
+        <tr>
+            <td>owner</td>
+            <td>owner</td>
+            <td>Vlastník projektu</td>
+        </tr>
+    </table>
+
+    <h2>Postup instalace</h2>
+    <p>Aplikácácia vyžaduje Node.js, podporný nástroj npm pre kompiláciu frontendu, a Javu vo verzii 8 pre spustenie
+        backendu</p>
+    <h4>Inštalácia a spustenie:</h4>
+    <ul>
+        <li>Nainštalovanie knižníc potrebných pre frontend:
+            <pre name="code" class="xml">
+                cd client && npm install
+            </pre>
+        </li>
+        <li>Kompilácia kódu frontendu:
+            <pre name="code" class="xml">
+                npm run-script build
+            </pre>
+        </li>
+        <li>Kompilácia a spustenie servru:
+            <pre name="code" class="xml">
+                cd server
+                ./gradlew bootRun
+            </pre>
+        </li>
+    </ul>
+
+    <p>Pre zjednodušenie sú tieto kroy implementované v Makefile súbore, takže pre kompiláciu a spustenie projektu je
+        nutný len príkaz:
+
+        <pre name="code" class="xml">
+            make
+        </pre>
+    </p>
+
+    <p>Serverová aplikácia vykoná všetky potrebné kroky pre inicializáciu lokálnej sqlite databázy</p>
+
+    <!-- vyžadované knihovny třetích stran i s verzemi, které byly použity pro testování -->
+    <h2>Vyžadované knihovny</h2>
+    <p>Aplikácia nevyžaduje žiadne lokálne knižnice, všetky knižnice sú stahované nástrojmi npm a gradle, 
+        pre ich kompletný zoznam je potrebné prezrieť si súbory <pre name="code">client/package.json</pre> a
+        <pre name="code">server/gradle.build</pre>
+    </p>
+
+</body>
+
+</html>
