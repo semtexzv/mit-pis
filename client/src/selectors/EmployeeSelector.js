@@ -13,3 +13,6 @@ export const getPasswordOld = (state) => getModel(state).get("passwordOld");
 export const getPasswordOld_fromBE = (state) => getModel(state).get("passwordOld_fromBE");
 export const getPasswordNew = (state) => getModel(state).get("passwordNew");
 export const getPasswordCheck = (state) => getModel(state).get("passwordCheck");
+
+export const getEmployeeId = (state) => getModel(state).get("id");
+export const getEmployeeRow = (state) => getModel(state).get("row");

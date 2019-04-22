@@ -7,13 +7,14 @@ import {
   BRANDS_URL,
   CREATE_MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateCustomerUrl, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL,
   ME_URL, REGISTER_URL, SPECIALIZATION_LIST_URL,
-  SPECIALIZATION_URL
+  SPECIALIZATION_URL,
+  getUpdateEmployeeUrl, getPasswordAdminUrl,
 } from "../restapi/ServerApi";
 import {setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
 import { DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} from "../actions/MeetingActions";
 import {
-  transformBrands, transformConnectedEmployees, transformCustomers, transformEmployees, transformMeetings, transformUsersSpecializations,
+  transformBrands, transformConnectedEmployees, transformCustomers, transformEmployees, transformEmployees2, transformMeetings, transformUsersSpecializations,
   transformUsersSpecializationsToJSON
 } from "../utils/transformUtils";
 import {getCreateStatus, getMeetingId, getRow} from "../selectors/MeetingSelector";
@@ -23,6 +24,10 @@ import {INIT_CONNECT_EMPLOYEE_DATA, initConnectEmployeeData, setDataTable, setEm
 import * as CEA from "../actions/ConnectEmployeeActions";
 import {getCustomerId, getEditedCustomer, getEmployeeId} from "../selectors/ConnectEmployeeSelector";
 import * as SS from "../selectors/SpecializationSelector";
+
+// EmployeeContainer
+import * as ECA from "../actions/EmployeeActions"
+import * as ECS from "../selectors/EmployeeSelector"
 
 export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
@@ -36,7 +41,55 @@ export default function* mainSaga() {
   yield takeLatest(UPDATE_DROPDOWN, selectedSpecializationsSaga);
   yield takeEvery(CEA.SAVE_ROW, updateAssociatedEmployeeSaga);
   yield takeEvery(SAVE_SPEC, updateSpecializationSaga);
+
+  // EmployeeContainer
+  yield takeLatest(ECA.INIT_EMPLOYEE_DATA, initEmployeeData);
+  yield takeEvery(ECA.SAVE_ROW, saveEmployeeRow);
+  //yield takeEvery(ECA.UPDATE_SELECTED_ROW, updateEmployeePassword);
 }
+
+//----------------------------
+//>>>start Employee Sagas (keyword prefix ECA)
+
+export function* initEmployeeData(action) {
+  try {
+    const employees = yield call(callAuthGetJSON, EMPLOYEES_URL);
+    yield put(ECA.setEmployeeData(transformEmployees2(employees)));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+//export function* updateEmployeePassword(action) {
+//  try {
+//    const id = yield select(ECS.getEmployeeId);
+//    const password = yield call(callAuthGetJSON, getPasswordAdminUrl(id));
+//  } catch (e) {
+//    console.log(e);
+//  }
+//}
+
+export function* saveEmployeeRow(action) {
+  try {
+    const id = yield select(ECS.getEmployeeId);
+    const data = yield select(ECS.getEmployeeRow);
+    yield call(callAuthPostJSON,getUpdateEmployeeUrl(id), data);
+    yield put(ECA.initEmployeeData());
+  } catch (e) {
+    console.log(e);
+  }
+  //let changePassword = yield select(ECS.getChangePassword);
+  //if(changePassword){
+  //  try{
+  //    ; //set new password
+  //  } catch(e){
+  //    console.log(e);
+  //  }
+  //}
+}
+
+//----------------------------
+//<<<end Employee Sagas
 
 function* registerSaga(action) {
   const login = action.login;
