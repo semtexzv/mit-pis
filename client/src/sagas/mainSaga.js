@@ -5,7 +5,7 @@ import * as superagent from "superagent/dist/superagent";
 import {getAuthToken, getLoggedUserId, getMyCustomers} from "../selectors/AuthSelector";
 import {
   BRANDS_URL,
-  CREATE_MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateCustomerUrl, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL,
+  MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateCustomerUrl, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL,
   ME_URL, REGISTER_URL, SPECIALIZATION_LIST_URL,
   SPECIALIZATION_URL
 } from "../restapi/ServerApi";
@@ -13,7 +13,8 @@ import {setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
 import { DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} from "../actions/MeetingActions";
 import {
-  transformBrands, transformConnectedEmployees, transformCustomers, transformEmployees, transformMeetings, transformUsersSpecializations,
+  transformBrands, transformConnectedEmployees, transformCustomers, transformEmployees, transformMeetings, transformToOverViewRows,
+  transformUsersSpecializations,
   transformUsersSpecializationsToJSON
 } from "../utils/transformUtils";
 import {getCreateStatus, getMeetingId, getRow} from "../selectors/MeetingSelector";
@@ -23,6 +24,7 @@ import {INIT_CONNECT_EMPLOYEE_DATA, initConnectEmployeeData, setDataTable, setEm
 import * as CEA from "../actions/ConnectEmployeeActions";
 import {getCustomerId, getEditedCustomer, getEmployeeId} from "../selectors/ConnectEmployeeSelector";
 import * as SS from "../selectors/SpecializationSelector";
+import {INIT_OVERVIEW, updateOverviewData} from "../actions/OverviewActions";
 
 export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
@@ -36,6 +38,7 @@ export default function* mainSaga() {
   yield takeLatest(UPDATE_DROPDOWN, selectedSpecializationsSaga);
   yield takeEvery(CEA.SAVE_ROW, updateAssociatedEmployeeSaga);
   yield takeEvery(SAVE_SPEC, updateSpecializationSaga);
+  yield takeLatest(INIT_OVERVIEW, initOverViewSaga);
 }
 
 function* registerSaga(action) {
@@ -98,6 +101,19 @@ export function* selectedSpecializationsSaga(action) {
   }
 }
 
+export function* initOverViewSaga() {
+  try {
+    const allCustomers = yield call(callAuthGetJSON, CUSTOMERS_URL);
+    const meetings = yield call(callAuthGetJSON, MEETING_URL);
+    const brands = yield call(callAuthGetJSON, BRANDS_URL);
+    const employees = yield call(callAuthGetJSON, EMPLOYEES_URL);
+
+    yield put(updateOverviewData(transformToOverViewRows(meetings, employees, brands, allCustomers)));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export function* initSaga(action) {
   try {
     const allCustomers = yield call(callAuthGetJSON, CUSTOMERS_URL);
@@ -127,7 +143,7 @@ export function* meetingSaga(action) {
     const row = yield select(getRow);
     const create = yield select(getCreateStatus);
     if(create){
-      yield call(callAuthPostJSON,CREATE_MEETING_URL, row);
+      yield call(callAuthPostJSON,MEETING_URL, row);
     }else{
       const id = yield select(getMeetingId);
       yield call(callAuthPostJSON,getUpdateMeetingUrl(id), row);
