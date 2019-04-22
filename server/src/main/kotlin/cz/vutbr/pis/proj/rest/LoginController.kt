@@ -7,6 +7,7 @@ import cz.vutbr.pis.proj.data.Employee
 import cz.vutbr.pis.proj.repo.AuthInfoRepo
 import cz.vutbr.pis.proj.repo.EmployeeRepo
 import cz.vutbr.pis.proj.rest.types.ErrorResponse
+import cz.vutbr.pis.proj.rest.types.SuccessResponse
 import cz.vutbr.pis.proj.rest.types.LoginData
 import cz.vutbr.pis.proj.rest.types.LoginResponse
 import cz.vutbr.pis.proj.rest.types.RegisterData
@@ -161,7 +162,7 @@ class LoginController {
 
         auth.passHash = ProjApplication.hash(data.password);
         authRepo.save(auth);
-        return SuccessReponse("Password changed");
+        return SuccessResponse("Password changed");
     }
 
     data class MeRes(val id: Int)
