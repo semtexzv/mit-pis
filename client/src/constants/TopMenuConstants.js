@@ -5,6 +5,7 @@ import history from '../utils/history'
 export const USER = [
   ["Meetings", "/meeting", "fa-compass"],
   ["Customers", "/customer", "fa-compass"],
+  ["Profile", "/profile", "fa-compass"]
 ];
 
 export const MANAGER = [
@@ -12,6 +13,7 @@ export const MANAGER = [
   ["Customers", "/customer", "fa-compass"],
   ["Specializations", "/specialization", "fa-compass"],
   ["Assign customer", "/connectEmployee", "fa-compass"],
+  ["Profile", "/profile", "fa-compass"],
 ];
 
 export const ADMIN = [
@@ -19,27 +21,24 @@ export const ADMIN = [
   ["Customers", "/customer", "fa-compass"],
   ["Specializations", "/specialization", "fa-compass"],
   ["Assign customer", "/connectEmployee", "fa-compass"],
-  ["User registration", "/register", "pi pi-fw pi-user"],
-  ["Profile", "/profile", "fa-compass"],
   ["Employees", "/employee", "fa-compass"],
+  ["Profile", "/profile", "fa-compass"],
 ];
 
 export const OWNER = [
   ["Meetings", "/meeting", "fa-compass"],
+  ["Customers", "/customer", "fa-compass"],
   ["Specializations", "/specialization", "fa-compass"],
   ["Assign customer", "/connectEmployee", "fa-compass"],
-  ["User registration", "/register", "pi pi-fw pi-user"],
-  ["Overview", "/overview", "fa-compass"],
-  ["Customers", "/customer", "fa-compass"],
-  ["Profile", "/profile", "fa-compass"],
   ["Employees", "/employee", "fa-compass"],
+  ["Overview", "/overview", "fa-compass"],
+  ["Profile", "/profile", "fa-compass"],
 ];
 
 export const SITE1 = [
   ["Meetings", "/meeting", "fa-compass"],
   ["Specializations", "/specialization", "fa-compass"],
   ["Assign customer", "/connectEmployee", "fa-compass"],
-  ["User registration", "/register", "pi pi-fw pi-user"],
   ["Overview", "/overview", "fa-compass"],
   ["Customers", "/customer", "fa-compass"],
   ["My profile", "/profile", "fa-compass"],

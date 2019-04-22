@@ -131,7 +131,7 @@ export const transformToOverViewRows = (meetings, users, brands, customers) =>  
       employeeName: employee.name,
       employeeSurname: employee.surname,
       brand: brand.name,
-      date: "cekam na ISO format",
+      date: meeting.date,
     }});
 
 };
