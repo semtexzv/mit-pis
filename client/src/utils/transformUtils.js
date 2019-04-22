@@ -92,6 +92,17 @@ export const transformUsersSpecializationsToJSON = (selectedBrands, userId) =>  
 
 };
 
+export const transformUserProfileToJSON = (username, name, surname, role) =>  {
+  return{
+    username: username,
+    name: name,
+    surname: surname,
+    sysRole: role
+  }
+
+};
+
+
 export const transformToOverViewRows = (meetings, users, brands, customers) =>  {
 
   return meetings.map((meeting) => {

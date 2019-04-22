@@ -20,6 +20,8 @@ import {initSpecializationData} from "../actions/SpecializationActions";
 import {initConnectEmployeeData} from "../actions/ConnectEmployeeActions";
 import {initData} from "../actions/MeetingActions";
 import {initOverview} from "../actions/OverviewActions";
+import {doNothing} from "../actions/RegisterActions";
+import {doNothingProfile} from "../actions/ProfileActions";
 
 const Container = styled.div`
   text-align: center;
@@ -35,10 +37,10 @@ function Routes({store}) {
           <Route path="/meeting" render={() => (AuthRoute(store , "", MeetingContainer, initData()))} />
           <Route path="/specialization"render={() => (AuthRoute(store , "", SpecializationContainer, initSpecializationData()))}/>
           <Route path="/connectEmployee" render={() => (AuthRoute(store , "", ConnectEmployeeContainer, initConnectEmployeeData()))}/>
-          <Route path="/register" component={RegisterContainer}/>
+          <Route path="/register" render={() => (AuthRoute(store , "", RegisterContainer, doNothing()))}/>
           <Route path="/overview" render={() => (AuthRoute(store , "", OverviewContainer, initOverview()))}/>
           <Route path="/customer" render={() => (AuthRoute(store , "", CustomerContainer, initCustomerData()))}/>
-          <Route path="/profile" component={ProfileContainer}/>
+          <Route path="/profile"render={() => (AuthRoute(store , "", ProfileContainer, doNothingProfile()))}/>
           <Route path="/employee" component={EmployeeContainer}/>
         </Switch>
       </Container>

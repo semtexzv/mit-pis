@@ -6,3 +6,6 @@ export const getName = (state) => getModel(state).get("name");
 export const getSurname = (state) => getModel(state).get("surname");
 export const getRole = (state) => getModel(state).get("role");
 export const getRoleList = (state) => getModel(state).get("roleList");
+export const getUsername = (state) => getModel(state).get("userName");
+export const getUserId = (state) => getModel(state).get("userId");
+

@@ -1,16 +1,17 @@
 import {fromJS} from "immutable";
 import * as A from "../actions/ProfileActions";
 
-
 const initialState = fromJS({
   name: "",
   surname: "",
   role: "",
+  userId: "",
+  userName:"",
   roleList: [
-    {label: "USER", value: "0"},
-    {label: "MANAGER", value: "1"},
-    {label: "ADMIN", value: "2"},
-    {label: "OWNER", value: "3"},
+    {label: "USER", value: "USER"},
+    {label: "MANAGER", value: "MANAGER"},
+    {label: "ADMIN", value: "ADMIN"},
+    {label: "OWNER", value: "OWNER"},
   ],
 });
 
@@ -24,6 +25,12 @@ const ProfileReducer = (state = initialState, action) => {
     }
     case A.UPDATE_ROLE: {
       return state.set("role", action.value);
+    }
+    case A.UPDATE_USER_ID: {
+      return state.set("userId", action.value);
+    }
+    case A.UPDATE_USER_NAME: {
+      return state.set("userName", action.value);
     }
     case A.SAVE_PROFILE: {
       return state;
