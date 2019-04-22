@@ -144,7 +144,7 @@ const EmployeeDialog =
     return(
       <div>
         <Growl ref={(el) => {setGrowl(el)}}> </Growl>
-        <Dialog header="Employee data"  header={dialogHeader}
+        <Dialog header={dialogHeader}
                 visible={displayDialog} modal={true} footer={dialogFooter}
                 onHide={() => {toggleDisplayDialog(); unsetChangePassword(); unsetAddButton()}}
         >
