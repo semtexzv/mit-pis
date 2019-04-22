@@ -43,7 +43,11 @@ export const transformEmployees = (rawData) =>  {
 
 };
 
-export const transformEmployees2 = (rawData) =>  {
+export const transformEmployees2 = (rawData, userId) =>  {
+
+  rawData = rawData.filter(function (employee) {
+    return employee.id !== userId;
+  });
 
   return rawData.map((employee) => {
     return {

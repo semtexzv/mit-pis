@@ -16,7 +16,6 @@ import {DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} fr
 import {
   transformBrands, transformConnectedEmployees, transformCustomers, transformCustomersToRows, transformEmployees, transformEmployees2, transformMeetings,
   transformToOverViewRows,
-  transformUserProfileToJSON,
   transformUsersSpecializations,
   transformUsersSpecializationsToJSON
 } from "../utils/transformUtils";
@@ -61,6 +60,7 @@ export default function* mainSaga() {
   yield takeEvery(LOGOUT_FROM_SERVER, logoutSaga);
   yield takeLatest(NOTHING, initProfileSaga);
   yield takeLatest(SAVE_PROFILE, saveProfileSaga);
+  yield takeEvery(ECA.DELETE_ROW, deleteEmployeeSaga);
   // EmployeeContainer
   yield takeLatest(ECA.INIT_EMPLOYEE_DATA, initEmployeeData);
   yield takeEvery(ECA.SAVE_ROW, newEmployeeSaga);
@@ -100,13 +100,24 @@ export function* newEmployeeSaga(action){
   }
 }
 
+export function* deleteEmployeeSaga(){
+  try {
+    const id = yield select(ECS.getEmployeeId);
+    yield call(callAuthDel, getUpdateEmployeeUrl(id), {});
+    yield put(ECA.initEmployeeData());
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 //----------------------------
 //>>>start Employee Sagas (keyword prefix ECA)
 
 export function* initEmployeeData(action) {
   try {
+    const userId = yield call(callAuthGetJSON, ME_URL);
     const employees = yield call(callAuthGetJSON, EMPLOYEES_URL);
-    yield put(ECA.setEmployeeData(transformEmployees2(employees)));
+    yield put(ECA.setEmployeeData(transformEmployees2(employees, userId.id)));
   } catch (e) {
     console.log(e);
   }
