@@ -6,6 +6,7 @@ export const BRANDS_URL = BASE_URL + "/brand";
 export const CUSTOMERS_URL = BASE_URL + "/customer";
 export const SPECIALIZATION_URL = BASE_URL + "/specialization";
 export const SPECIALIZATION_LIST_URL = SPECIALIZATION_URL + "/addList";
+export const PASSWORD_CHANGE_URL = BASE_URL + "/passwordchange";
 export const ME_URL = BASE_URL + "/me";
 //export const PASSWORD_ADMIN_URL = BASE_URL + "/auth_password/user";
 
