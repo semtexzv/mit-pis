@@ -106,14 +106,12 @@ export const transformUsersSpecializationsToJSON = (selectedBrands, userId) =>  
 
 };
 
-export const transformUserProfileToJSON = (username, name, surname, role) =>  {
+export const transformUserProfileToJSON = (username, name, surname) =>  {
   return{
     username: username,
     name: name,
     surname: surname,
-    sysRole: role
   }
-
 };
 
 

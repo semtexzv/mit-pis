@@ -4,15 +4,11 @@ import * as A from "../actions/ProfileActions";
 const initialState = fromJS({
   name: "",
   surname: "",
-  role: "",
   userId: "",
   userName:"",
-  roleList: [
-    {label: "USER", value: "USER"},
-    {label: "MANAGER", value: "MANAGER"},
-    {label: "ADMIN", value: "ADMIN"},
-    {label: "OWNER", value: "OWNER"},
-  ],
+  passwordNew: "",
+  passwordCheck: "",
+  changePassword: false,
 });
 
 const ProfileReducer = (state = initialState, action) => {
@@ -23,14 +19,23 @@ const ProfileReducer = (state = initialState, action) => {
     case A.UPDATE_SURNAME: {
       return state.set("surname", action.value);
     }
-    case A.UPDATE_ROLE: {
-      return state.set("role", action.value);
-    }
     case A.UPDATE_USER_ID: {
       return state.set("userId", action.value);
     }
     case A.UPDATE_USER_NAME: {
       return state.set("userName", action.value);
+    }
+    case A.UPDATE_PASSWORD_NEW: {
+      return state.set("passwordNew", action.value);
+    }
+    case A.UPDATE_PASSWORD_CHECK: {
+      return state.set("passwordCheck", action.value);
+    }
+    case A.SET_CHANGE_PASSWORD: {
+      return state.set("changePassword", true);
+    }
+    case A.UNSET_CHANGE_PASSWORD: {
+      return state.set("changePassword", false);
     }
     case A.SAVE_PROFILE: {
       return state;
