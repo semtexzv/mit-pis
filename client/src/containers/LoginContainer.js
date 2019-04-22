@@ -24,7 +24,6 @@ const Login = ({
           <Button label="Login" onClick={e => login(loginValue,passwordValue)}/>
         </div>
       </div>
-
   </div>);
 };
 
