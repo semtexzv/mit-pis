@@ -30,7 +30,6 @@ export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
   yield takeEvery(REGISTER, registerSaga);
   yield takeEvery(SAVE_ROW, meetingSaga);
-  yield takeEvery(REGISTER, registerSaga);
   yield takeEvery(DELETE_ROW, deleteMeetingSaga);
   yield takeLatest(INIT_SPECIALIZATION_DATA, initSpecializations);
   yield takeLatest(INIT_CONNECT_EMPLOYEE_DATA, initConnectedEmployeeData);
