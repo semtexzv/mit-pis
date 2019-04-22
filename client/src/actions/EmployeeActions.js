@@ -8,6 +8,7 @@ export const UNSET_ADD_BUTTON = `${NAME}/UNSET_ADD_BUTTON`;
 export const UPDATE_NAME = `${NAME}/UPDATE_NAME`;
 export const UPDATE_SURNAME = `${NAME}/UPDATE_SURNAME`;
 export const UPDATE_ROLE = `${NAME}/UPDATE_ROLE`;
+export const UPDATE_USERNAME = `${NAME}/UPDATE_USERNAME`;
 export const SET_CHANGE_PASSWORD = `${NAME}/SET_CHANGE_PASSWORD`;
 export const UNSET_CHANGE_PASSWORD = `${NAME}/UNSET_CHANGE_PASSWORD`;
 export const UPDATE_PASSWORD_OLD = `${NAME}/UPDATE_PASSWORD_OLD`;
@@ -40,6 +41,11 @@ export const updateSurname = (value) => ({
 
 export const updateRole = (value) => ({
   type: UPDATE_ROLE,
+  value: value
+});
+
+export const updateUsername = (value) => ({
+  type: UPDATE_USERNAME,
   value: value
 });
 

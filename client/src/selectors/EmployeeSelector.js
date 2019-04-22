@@ -10,6 +10,7 @@ export const getAddButton = (state) => getModel(state).get("addButton");
 export const getName = (state) => getModel(state).get("name");
 export const getSurname = (state) => getModel(state).get("surname");
 export const getRole = (state) => getModel(state).get("role");
+export const getUsername = (state) => getModel(state).get("username");
 export const getRoleList = (state) => getModel(state).get("roleList");
 export const getChangePassword = (state) => getModel(state).get("changePassword");
 export const getPasswordOld = (state) => getModel(state).get("passwordOld");

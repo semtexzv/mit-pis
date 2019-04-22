@@ -75,6 +75,7 @@ const EmployeeReducer = (state = initialState, action) => {
       newState = newState.set("name", "");
       newState = newState.set("surname", "");
       newState = newState.set("role", "1");
+      newState = newState.set("username", "");
       newState = newState.set("displayDialog", true);
       newState = newState.set("addButton", true);
       newState = newState.set("dialogHeader", "Add an employee");
@@ -111,6 +112,9 @@ const EmployeeReducer = (state = initialState, action) => {
     }
     case A.UPDATE_ROLE: {
       return state.set("role", action.value)
+    }
+    case A.UPDATE_USERNAME: {
+      return state.set("username", action.value)
     }
     case A.SET_CHANGE_PASSWORD: {
       return state.set("changePassword", true);

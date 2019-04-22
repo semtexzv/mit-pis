@@ -27,6 +27,7 @@ const EmployeeDialog =
      name,
      surname,
      role,
+     username,
      //passwordOld,
      passwordNew,
      passwordCheck,
@@ -34,6 +35,7 @@ const EmployeeDialog =
      updateName,
      updateSurname,
      updateRole,
+     updateUsername,
      changePassword,
      setChangePassword,
      unsetChangePassword,
@@ -117,17 +119,21 @@ const EmployeeDialog =
 
     function saveButtonValidator(errorHandler){
       if(R.name.test(name) && R.name.test(surname)){
-        if(role !== "") {
-          if(passwordValidator(errorHandler)) {
-            saveRow();
-            //updatePasswordOld("");
-            updatePasswordNew("");
-            updatePasswordCheck("");
-            raiseGrowl("Data was edited", errorHandler, "success");
-          }
+        if(username !== "") {
+          if (role !== "") {
+            if (passwordValidator(errorHandler)) {
+              saveRow();
+              //updatePasswordOld("");
+              updatePasswordNew("");
+              updatePasswordCheck("");
+              raiseGrowl("Data was edited", errorHandler, "success");
+            }
+          } else
+            raiseGrowl("Please enter a role", errorHandler);
         }
-        else
-          raiseGrowl("Please enter a role", errorHandler);
+        else{
+          raiseGrowl("Please enter login username", errorHandler);
+        }
       }
       else
         raiseGrowl("Please enter name and surname", errorHandler);
@@ -155,6 +161,11 @@ const EmployeeDialog =
           <div>
             <Dropdown value={role} options={roleList.toJS()}
                       onChange={(e) => updateRole(e.value)} placeholder="Select a role"/>
+            {snippet.required}
+          </div>
+
+          <div>
+            <InputText value={username} onChange={(e) => updateUsername(e.target.value)} placeholder="login username"/>
             {snippet.required}
           </div>
 
@@ -188,6 +199,7 @@ const mapStateToProps = (state) => ({
   dialogHeader: S.getDialogHeader(state),
   fieldsetLegend: S.getFieldsetLegend(state),
   addButton: S.getAddButton(state),
+  username: S.getUsername(state),
   name: S.getName(state),
   surname: S.getSurname(state),
   role: S.getRole(state),
@@ -207,6 +219,7 @@ const mapDispatchToProps = (dispatch) => ({
   updateName: (value) => dispatch(A.updateName(value)),
   updateSurname: (value) => dispatch(A.updateSurname(value)),
   updateRole: (value) => dispatch(A.updateRole(value)),
+  updateUsername: (value) => dispatch(A.updateUsername(value)),
   setChangePassword: () => dispatch(A.setChangePassword()),
   unsetChangePassword: () => dispatch(A.unsetChangePassword()),
   //updatePasswordOld: (value) => dispatch(A.updatePasswordOld(value)),

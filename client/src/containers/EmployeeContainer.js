@@ -29,6 +29,7 @@ const Employee =
           <Column field="name" header="Name" sortable={true}/>
           <Column field="surname" header="Surname" sortable={true} filter={true}/>
           <Column field="role" header="Role" sortable={true} filter={true}/>
+          <Column field="username" header="Username" sortable={true} filter={true}/>
         </DataTable>
 
         <EmployeeDialog/>
