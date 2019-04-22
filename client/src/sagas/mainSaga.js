@@ -27,7 +27,7 @@ import {getCustomerId, getEditedCustomer, getEmployeeId} from "../selectors/Conn
 import * as SS from "../selectors/SpecializationSelector";
 import * as PS from "../selectors/ProfileSelector"
 import {INIT_OVERVIEW, updateOverviewData} from "../actions/OverviewActions";
-import {SAVE_PROFILE, updateRole, updateUserId, updateUserName} from "../actions/ProfileActions";
+import {SAVE_PROFILE, updateName, updateRole, updateSurname, updateUserId, updateUserName} from "../actions/ProfileActions";
 
 export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
@@ -56,8 +56,11 @@ function* registerSaga(action) {
   try {
     const data = yield call(callRegisterPostJSON, REGISTER_URL, body);
     yield put(updateUserId(data.id));
-    yield put(updateRole(data.sysRole))
-    yield put(updateUserName(data.username))
+    yield put(updateRole(data.sysRole));
+    yield put(updateUserName(data.username));
+    yield put(updateName(data.name));
+    yield put(updateSurname(data.surname))
+
     yield call(history.push, '/profile')
     console.log(data)
   } catch (e) {
