@@ -7,10 +7,10 @@ const initialState = fromJS({
   surname: "",
   role: "",
   roleList: [
-    {label: "USER", value: "1"},
-    {label: "MANAGER", value: "2"},
-    {label: "ADMIN", value: "3"},
-    {label: "OWNER", value: "4"},
+    {label: "USER", value: "0"},
+    {label: "MANAGER", value: "1"},
+    {label: "ADMIN", value: "2"},
+    {label: "OWNER", value: "3"},
   ],
 });
 
