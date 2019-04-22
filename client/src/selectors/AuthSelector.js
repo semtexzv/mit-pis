@@ -7,3 +7,4 @@ export const getMyCustomers = (state) => getModel(state).getIn(["user", "custome
 export const getLoggedUserId = (state) => getModel(state).getIn(["user", "id"]);
 export const getMyRole = (state) => getModel(state).getIn(["user", "sysRole"]);
 export const getLogged = (state) => getModel(state).get("logged");
+export const getLastActiveTime = (state) => getModel(state).get("lastActiveTime");

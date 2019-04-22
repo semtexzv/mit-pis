@@ -1,17 +1,18 @@
-export const transformMeetings = (rawData, customers) => {
+export const transformMeetings = (rawData, customers, brands) => {
 
   return rawData.map((meeting) => {
 
     const customer = customers.find((obj) => obj.id === meeting.customerId);
+    const brand = brands.find((obj) => obj.id === customer.brandId);
 
     return {
     meetingId: meeting.id,
     customerId: meeting.customerId,
-    date: "",
+    date: meeting.date,
       name: customer.name,
       surname: customer.surname,
       title: customer.title,
-      brand: customer.brandId,
+      brand: brand.name,
       customerInfo: customer.info,
       meetingInfo: meeting.report
   }});
@@ -38,6 +39,19 @@ export const transformEmployees = (rawData) =>  {
     return {
       label: employee.name + " " + employee.surname,
       value: employee.id,
+    }});
+
+};
+
+export const transformEmployees2 = (rawData) =>  {
+
+  return rawData.map((employee) => {
+    return {
+      id: employee.id,
+      name: employee.name,
+      surname: employee.surname,
+      username: employee.username,
+      role: employee.sysRole,
     }});
 
 };
@@ -85,11 +99,58 @@ export const transformUsersSpecializations = (specializations, userId) =>  {
 };
 
 export const transformUsersSpecializationsToJSON = (selectedBrands, userId) =>  {
-
-  return selectedBrands.map((brand) => {
     return {
       employeeId: userId,
-      brandId: brand
+      brandId: selectedBrands
+    };
+
+};
+
+export const transformUserProfileToJSON = (username, name, surname) =>  {
+  return{
+    username: username,
+    name: name,
+    surname: surname,
+  }
+};
+
+
+export const transformToOverViewRows = (meetings, users, brands, customers) =>  {
+
+  return meetings.map((meeting) => {
+
+    const customer = customers.find(o => o.id === meeting.customerId);
+    const employee = users.find(o => o.id === customer.assocEmployeeId);
+    const brand = brands.find(o => o.id === customer.brandId);
+
+    return {
+      customerName: customer.name,
+      customerSurname: customer.surname,
+      employeeName: employee.name,
+      employeeSurname: employee.surname,
+      brand: brand.name,
+      date: meeting.date,
     }});
 
+};
+
+
+export const transformCustomersToRows = (customers, brands, userId, role) =>  {
+
+  if(role === "USER"){
+    customers = customers.filter((customer) => customer.assocEmployeeId === userId);
+  }
+
+   return customers.map((customer) => {
+
+    const brand = brands.find(o => o.id === customer.brandId);
+
+    return {
+      id: customer.id,
+      name: customer.name,
+      surname: customer.surname,
+      title: customer.title,
+      brand: brand.name,
+      info: customer.info,
+    }});
 };

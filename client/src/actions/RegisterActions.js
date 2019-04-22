@@ -3,6 +3,7 @@ import {NAME} from "../constants/RegisterConstants";
 export const UPDATE_PASSWORD = `${NAME}/UPDATE_PASSWORD`;
 export const UPDATE_LOGIN = `${NAME}/UPDATE_LOGIN`;
 export const REGISTER = `${NAME}/REGISTER`;
+export const NOTHING = `${NAME}/NOTHING`;
 
 export const updatePassword = (value) => ({
   type: UPDATE_PASSWORD,
@@ -19,3 +20,7 @@ export const registerToSystem = (login, password) => ({
   login: login,
   password: password,
 });
+
+export const doNothing = () => ({
+  type: NOTHING
+})

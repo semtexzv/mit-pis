@@ -2,9 +2,7 @@ import {fromJS} from "immutable";
 import * as A from "../actions/CustomerActions";
 
 const initialState = fromJS({
-  customerData:[
-    {id: "1", name: "Vaclav", surname: "Nejedly", title: "Ing.", brand: "Mustang", info:"info"},
-  ],
+  customerData:[],
   id: "",
   name: "",
   surname: "",
@@ -13,6 +11,8 @@ const initialState = fromJS({
   info: "",
   displayDialog: false,
   addButton: false,
+  customer: null,
+  create: false,
 });
 
 const CustomerReducer = (state = initialState, action) => {
@@ -22,10 +22,23 @@ const CustomerReducer = (state = initialState, action) => {
       //TODO: after this return, delete customer by "id" and reload "cutomerData"
     }
     case A.SAVE_ROW: {
-      let newState = state;
-      newState =  newState.set("displayDialog", false);
-      newState =  newState.set("addButton", false);
-      return newState;
+
+      const customer = {
+        name: state.get("name"),
+        surname: state.get("surname"),
+        title: state.get("title"),
+        brandId: state.get("brand"),
+        info: state.get("info")
+      };
+
+      let created = state.get("addButton");
+
+      return state
+        .set("displayDialog", false)
+        .set("addButton", false)
+        .set("customer", customer)
+        .set("create", created);
+
       //TODO: after this return, save properties and reload "cutomerData"
     }
     case A.UPDATE_SELECTED_ROW: {
@@ -72,6 +85,8 @@ const CustomerReducer = (state = initialState, action) => {
     }
     case A.UPDATE_INFO: {
       return state.set("info", action.value)
+    }case A.SET_CUSTOMERS: {
+      return state.set("customerData", fromJS(action.payload));
     }
     default:
       return state;

@@ -1,5 +1,6 @@
 import {fromJS} from "immutable";
 import {UPDATE_LOGIN, UPDATE_PASSWORD} from "../actions/LoginActions";
+import {LOGOUT} from "../actions/AuthActions";
 
 const initialState = fromJS({
   password: "",
@@ -13,6 +14,9 @@ const LoginReducer = (state = initialState, action) => {
     }
     case UPDATE_LOGIN: {
       return state.set("login", action.value)
+    }
+    case LOGOUT: {
+      return initialState;
     }
     default:
       return state;

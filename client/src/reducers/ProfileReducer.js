@@ -1,17 +1,15 @@
 import {fromJS} from "immutable";
 import * as A from "../actions/ProfileActions";
 
-
 const initialState = fromJS({
   name: "",
   surname: "",
-  role: "",
-  roleList: [
-    {label: "USER", value: "1"},
-    {label: "MANAGER", value: "2"},
-    {label: "ADMIN", value: "3"},
-    {label: "OWNER", value: "4"},
-  ],
+  userId: "",
+  userName:"",
+  passwordNew: "",
+  passwordCheck: "",
+  employee: null,
+  changePassword: false,
 });
 
 const ProfileReducer = (state = initialState, action) => {
@@ -22,12 +20,39 @@ const ProfileReducer = (state = initialState, action) => {
     case A.UPDATE_SURNAME: {
       return state.set("surname", action.value);
     }
-    case A.UPDATE_ROLE: {
-      return state.set("role", action.value);
+    case A.UPDATE_USER_ID: {
+      return state.set("userId", action.value);
+    }
+    case A.UPDATE_USER_NAME: {
+      return state.set("userName", action.value);
+    }
+    case A.UPDATE_PASSWORD_NEW: {
+      return state.set("passwordNew", action.value);
+    }
+    case A.UPDATE_PASSWORD_CHECK: {
+      return state.set("passwordCheck", action.value);
+    }
+    case A.SET_CHANGE_PASSWORD: {
+      return state.set("changePassword", true);
+    }
+    case A.INIT_PROFILE: {
+      const user = action.payload;
+
+      return state.set("name", user.name)
+        .set("changePassword", false)
+        .set("surname", user.surname)
+        .set("userId", user.id)
+        .set("userName", user.username);
     }
     case A.SAVE_PROFILE: {
-      return state;
-      //TODO: after this return, save name, surname and role. Also redirect to new site
+      const employee = {
+        name: state.get("name"),
+        surname: state.get("surname"),
+        username: state.get("userName"),
+        password: state.get("passwordNew")
+      };
+
+      return state.set("employee", employee);
     }
     default:
       return state;
