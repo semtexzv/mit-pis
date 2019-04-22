@@ -8,7 +8,7 @@ import {
   MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateCustomerUrl, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL,
   ME_URL, REGISTER_URL, SPECIALIZATION_LIST_URL,
   SPECIALIZATION_URL,
-  getUpdateEmployeeUrl, getPasswordAdminUrl,
+  getUpdateEmployeeUrl, getPasswordAdminUrl, PASSWORD_CHANGE_URL,
 } from "../restapi/ServerApi";
 import {setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
@@ -39,6 +39,7 @@ import {SAVE_PROFILE, updateName, updateRole, updateSurname, updateUserId, updat
 // EmployeeContainer
 import * as ECA from "../actions/EmployeeActions"
 import * as ECS from "../selectors/EmployeeSelector"
+import {getEmployeeCreateStatus} from "../selectors/EmployeeSelector";
 
 export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
@@ -58,8 +59,41 @@ export default function* mainSaga() {
   yield takeLatest(INIT_CUSTOMER_DATA, initCustomerDataSaga);
   // EmployeeContainer
   yield takeLatest(ECA.INIT_EMPLOYEE_DATA, initEmployeeData);
-  yield takeEvery(ECA.SAVE_ROW, saveEmployeeRow);
+  yield takeEvery(ECA.SAVE_ROW, newEmployeeSaga);
   //yield takeEvery(ECA.UPDATE_SELECTED_ROW, updateEmployeePassword);
+}
+
+export function* newEmployeeSaga(action){
+  try {
+
+    const create = yield select(getEmployeeCreateStatus);
+    const newEmployee = yield select(ECS.getCompleteEmployee);
+
+    if (create) {
+      const body = {
+        username: newEmployee.username,
+        password: newEmployee.password
+      };
+      const employee = yield call(callRegisterPostJSON, REGISTER_URL, body);
+      yield call(callAuthPostJSON, getUpdateEmployeeUrl(employee.id), newEmployee);
+    } else {
+      const id = yield select(ECS.getEmployeeId);
+      yield call(callAuthPostJSON, getUpdateEmployeeUrl(id), newEmployee);
+      const changedPassword = yield select(ECS.getChangePassword);
+      if(changedPassword){
+        const body = {
+          password: newEmployee.password,
+          userId: id
+        }
+        yield call(callAuthPostJSON, PASSWORD_CHANGE_URL, body);
+      }
+    }
+
+    yield put(ECA.initEmployeeData());
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 //----------------------------
@@ -275,7 +309,8 @@ export function* meetingsSaga(action) {
     yield put(setUser(user));
     const meetings = yield call(callAuthGetJSON, getUsersMeetingsUrl(userId));
     const customers = yield select(getMyCustomers);
-    yield put(setMeetings(transformMeetings(meetings, customers)));
+    const brands = yield call(callAuthGetJSON, BRANDS_URL);
+    yield put(setMeetings(transformMeetings(meetings, customers, brands)));
     yield put(setCustomers(transformCustomers(customers)));
   } catch (e) {
     console.log(e);

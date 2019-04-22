@@ -1,17 +1,18 @@
-export const transformMeetings = (rawData, customers) => {
+export const transformMeetings = (rawData, customers, brands) => {
 
   return rawData.map((meeting) => {
 
     const customer = customers.find((obj) => obj.id === meeting.customerId);
+    const brand = brands.find((obj) => obj.id === customer.brandId);
 
     return {
     meetingId: meeting.id,
     customerId: meeting.customerId,
-    date: "",
+    date: meeting.date,
       name: customer.name,
       surname: customer.surname,
       title: customer.title,
-      brand: customer.brandId,
+      brand: brand.name,
       customerInfo: customer.info,
       meetingInfo: meeting.report
   }});

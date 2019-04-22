@@ -22,6 +22,7 @@ const initialState = fromJS({
   displayDialog: false,
   dialogHeader: "Edit an employee",
   fieldsetLegend: "Edit password",
+  employee: null,
   addButton: false,
   create: false,
 });
@@ -46,20 +47,24 @@ const EmployeeReducer = (state = initialState, action) => {
     }
     case A.SAVE_ROW: {
       let newState = state;
-      const row = {
+
+      const employee = {
         name: state.get("name"),
         surname: state.get("surname"),
         username: state.get("username"),
         sysRole: getRoleName(state, state.get("role")),
+        password: state.get("passwordNew"),
       };
+
       let created = false;
+
       if(state.get("addButton") === false) {
         created = false;
       }
       else{
         created = true;
       }
-      newState = newState.set("row", row);
+      newState = newState.set("employee", employee);
       newState = newState.set("create", created);
       newState = newState.set("displayDialog", false);
       newState = newState.set("dialogHeader", "Edit an employee");

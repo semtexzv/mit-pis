@@ -139,6 +139,31 @@ class LoginController {
         return ErrorResponse("Password changed")
     }
 
+    data class PassDataWithId(var password: String? = null,
+                              var userId: Int? = null)
+
+    @PostMapping("/passwordchange")
+    fun changePassword(@RequestBody data: PassDataWithId?): Any {
+        if (data == null) {
+            return badReq("Invalid data provided")
+        }
+        val token2 = SecurityContextHolder.getContext().authentication;
+        val token = token2 as? AuthToken
+
+        if (token?.user?.id == null) {
+            return unauthorized("User not found")
+        }
+        val auth = authRepo.findById(data.userId).orElseGet { null }
+
+        if (auth == null) {
+            return badReq("Auth info not found");
+        }
+
+        auth.passHash = ProjApplication.hash(data.password);
+        authRepo.save(auth);
+        return SuccessReponse("Password changed");
+    }
+
     data class MeRes(val id: Int)
 
     @GetMapping("/me")

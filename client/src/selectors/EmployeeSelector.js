@@ -20,3 +20,5 @@ export const getPasswordCheck = (state) => getModel(state).get("passwordCheck");
 
 export const getEmployeeId = (state) => getModel(state).get("id");
 export const getEmployeeRow = (state) => getModel(state).get("row");
+export const getCompleteEmployee = (state) => getModel(state).get("employee");
+export const getEmployeeCreateStatus = (state) => getModel(state).get("create");
