@@ -26,5 +26,5 @@ export const AuthRoute = (store, allowedRoles, Component, action) => {
     )
   } else {
     return ( <Redirect to={{pathname: '/'}}/> )
-      }
+  }
 }

@@ -8,9 +8,9 @@ import {
   MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateCustomerUrl, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL,
   ME_URL, REGISTER_URL, SPECIALIZATION_LIST_URL,
   SPECIALIZATION_URL,
-  getUpdateEmployeeUrl, getPasswordAdminUrl, PASSWORD_CHANGE_URL,
+  getUpdateEmployeeUrl, PASSWORD_CHANGE_URL, LOGOUT_URL,
 } from "../restapi/ServerApi";
-import {setAuth, setUser} from "../actions/AuthActions";
+import {logout, LOGOUT_FROM_SERVER, setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
 import {DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} from "../actions/MeetingActions";
 import {
@@ -26,7 +26,7 @@ import {INIT_CONNECT_EMPLOYEE_DATA, initConnectEmployeeData, setDataTable, setEm
 
 import * as CEA from "../actions/ConnectEmployeeActions";
 import * as CA from "../actions/CustomerActions";
-import {getCustomerId, getEditedCustomer, getEmployeeId} from "../selectors/ConnectEmployeeSelector";
+import {getCustomerId, getEditedCustomer} from "../selectors/ConnectEmployeeSelector";
 import * as SS from "../selectors/SpecializationSelector";
 import * as PS from "../selectors/ProfileSelector"
 import * as CS from "../selectors/CustomerSelector";
@@ -57,6 +57,7 @@ export default function* mainSaga() {
   yield takeEvery(SAVE_SPEC, updateSpecializationSaga);
   yield takeLatest(INIT_OVERVIEW, initOverViewSaga);
   yield takeLatest(INIT_CUSTOMER_DATA, initCustomerDataSaga);
+  yield takeEvery(LOGOUT_FROM_SERVER, logoutSaga)
   // EmployeeContainer
   yield takeLatest(ECA.INIT_EMPLOYEE_DATA, initEmployeeData);
   yield takeEvery(ECA.SAVE_ROW, newEmployeeSaga);
@@ -290,10 +291,13 @@ export function* deleteCustomerSaga(){
   }
 }
 
-export function* initSaga(action) {
+export function* logoutSaga(action) {
   try {
-    const allCustomers = yield call(callAuthGetJSON, CUSTOMERS_URL);
-    console.log(allCustomers);
+    const token = yield select(getAuthToken);
+    if(token !== ""){
+      yield call(callAuthGetJSON, LOGOUT_URL);
+    }
+    yield put(logout());
   } catch (e) {
     console.log(e);
   }

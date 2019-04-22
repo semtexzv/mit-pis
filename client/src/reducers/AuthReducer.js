@@ -1,5 +1,5 @@
 import {fromJS} from "immutable";
-import {SET_AUTH, SET_LAST_ROUTE_TIME, SET_USER} from "../actions/AuthActions";
+import {LOGOUT, SET_AUTH, SET_LAST_ROUTE_TIME, SET_USER} from "../actions/AuthActions";
 
 const initialState = fromJS({
   token: "",
@@ -22,9 +22,8 @@ export const authReducer = (state = initialState, action) => {
     case SET_LAST_ROUTE_TIME:
       return state
         .set("lastActiveTime", action.payload);
-    case SET_USER:
-      return state
-        .set("user", action.payload);
+    case LOGOUT:
+      return initialState;
     default:
       return state;
   }

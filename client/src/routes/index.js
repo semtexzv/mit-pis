@@ -2,7 +2,6 @@ import React from 'react'
 import {Router, Route, Switch} from 'react-router-dom'
 import history from '../utils/history'
 import styled from '@emotion/styled'
-import LoginContainer from "../containers/LoginContainer";
 import TopMenu from "../containers/TopMenu"
 import MeetingContainer from "../containers/MeetingContainer"
 import SpecializationContainer from "../containers/SpecializationContainer"
@@ -20,6 +19,7 @@ import {initData} from "../actions/MeetingActions";
 import {initEmployeeData} from "../actions/EmployeeActions";
 import {initOverview} from "../actions/OverviewActions";
 import {doNothingProfile} from "../actions/ProfileActions";
+import {Logout} from "../components/Logout";
 
 
 const Container = styled.div`
@@ -32,7 +32,7 @@ function Routes({store}) {
       <Container>
         <TopMenu />
         <Switch>
-          <Route exact path="/" component={LoginContainer} />
+          <Route exact path="/" render={() => (Logout(store))} />
           <Route path="/meeting" render={() => (AuthRoute(store , ["ADMIN","USER","OWNER","MANAGER"], MeetingContainer, initData()))} />
           <Route path="/specialization"render={() => (AuthRoute(store , ["ADMIN","OWNER","MANAGER"], SpecializationContainer, initSpecializationData()))}/>
           <Route path="/connectEmployee" render={() => (AuthRoute(store , ["ADMIN","OWNER","MANAGER"], ConnectEmployeeContainer, initConnectEmployeeData()))}/>

@@ -86,8 +86,8 @@ export function getItemList(role){
   }
 
   itemList.push({
-    label: 'Logout', icon: "pi pi-power-off", style: {left: 40}, command: () => {
-      ; // TODO: no action for logout-click not implemented yet
+    label: 'Logout', icon: "pi pi-power-off", command: () => {
+      history.push("/")
     }
   });
 
