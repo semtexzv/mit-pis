@@ -2,7 +2,7 @@ import {call, put, takeEvery, select, takeLatest} from "redux-saga/effects";
 import {LOGIN} from "../actions/LoginActions";
 import {REGISTER} from "../actions/RegisterActions";
 import * as superagent from "superagent/dist/superagent";
-import {getAuthToken, getLoggedUserId, getMyCustomers} from "../selectors/AuthSelector";
+import {getAuthToken, getLoggedUserId, getMyCustomers, getMyRole} from "../selectors/AuthSelector";
 import {
   BRANDS_URL,
   MEETING_URL, CUSTOMERS_URL, EMPLOYEES_URL, getUpdateCustomerUrl, getUpdateMeetingUrl, getUsersMeetingsUrl, getUsersUrl, LOGIN_URL,
@@ -14,7 +14,8 @@ import {setAuth, setUser} from "../actions/AuthActions";
 import history from '../utils/history'
 import {DELETE_ROW, INIT_DATA, initData, SAVE_ROW, setCustomers, setMeetings} from "../actions/MeetingActions";
 import {
-  transformBrands, transformConnectedEmployees, transformCustomers, transformEmployees, transformEmployees2, transformMeetings, transformToOverViewRows,
+  transformBrands, transformConnectedEmployees, transformCustomers, transformCustomersToRows, transformEmployees, transformEmployees2, transformMeetings,
+  transformToOverViewRows,
   transformUserProfileToJSON,
   transformUsersSpecializations,
   transformUsersSpecializationsToJSON
@@ -24,10 +25,15 @@ import {fillSpec, INIT_SPECIALIZATION_DATA, SAVE_SPEC, setSpecializationData, UP
 import {INIT_CONNECT_EMPLOYEE_DATA, initConnectEmployeeData, setDataTable, setEmployyesData} from "../actions/ConnectEmployeeActions";
 
 import * as CEA from "../actions/ConnectEmployeeActions";
+import * as CA from "../actions/CustomerActions";
 import {getCustomerId, getEditedCustomer, getEmployeeId} from "../selectors/ConnectEmployeeSelector";
 import * as SS from "../selectors/SpecializationSelector";
 import * as PS from "../selectors/ProfileSelector"
+import * as CS from "../selectors/CustomerSelector";
 import {INIT_OVERVIEW, updateOverviewData} from "../actions/OverviewActions";
+import {INIT_CUSTOMER_DATA} from "../actions/CustomerActions";
+import {getCustomer, getCustomerCreated} from "../selectors/CustomerSelector";
+import {initCustomerData} from "../actions/CustomerActions";
 import {SAVE_PROFILE, updateName, updateRole, updateSurname, updateUserId, updateUserName} from "../actions/ProfileActions";
 
 // EmployeeContainer
@@ -40,13 +46,16 @@ export default function* mainSaga() {
   yield takeEvery(SAVE_PROFILE, updateProfileSaga);
   yield takeEvery(SAVE_ROW, meetingSaga);
   yield takeEvery(DELETE_ROW, deleteMeetingSaga);
+  yield takeEvery(CA.DELETE_ROW, deleteCustomerSaga);
   yield takeLatest(INIT_SPECIALIZATION_DATA, initSpecializations);
   yield takeLatest(INIT_CONNECT_EMPLOYEE_DATA, initConnectedEmployeeData);
   yield takeLatest(INIT_DATA, meetingsSaga);
   yield takeLatest(UPDATE_DROPDOWN, selectedSpecializationsSaga);
   yield takeEvery(CEA.SAVE_ROW, updateAssociatedEmployeeSaga);
+  yield takeEvery(CA.SAVE_ROW, customerSaga);
   yield takeEvery(SAVE_SPEC, updateSpecializationSaga);
   yield takeLatest(INIT_OVERVIEW, initOverViewSaga);
+  yield takeLatest(INIT_CUSTOMER_DATA, initCustomerDataSaga);
   // EmployeeContainer
   yield takeLatest(ECA.INIT_EMPLOYEE_DATA, initEmployeeData);
   yield takeEvery(ECA.SAVE_ROW, saveEmployeeRow);
@@ -190,6 +199,60 @@ export function* initOverViewSaga() {
     const employees = yield call(callAuthGetJSON, EMPLOYEES_URL);
 
     yield put(updateOverviewData(transformToOverViewRows(meetings, employees, brands, allCustomers)));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* initCustomerDataSaga(action) {
+  try {
+    const allCustomers = yield call(callAuthGetJSON, CUSTOMERS_URL);
+    const brands = yield call(callAuthGetJSON, BRANDS_URL);
+    const userId = yield select(getLoggedUserId);
+    const role = yield select(getMyRole);
+    yield put(CA.setCustomers(transformCustomersToRows(allCustomers, brands, userId, role)));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* customerSaga(action) {
+  try {
+    const userId = yield select(getLoggedUserId);
+    const customer = yield select(getCustomer);
+    const brands = yield call(callAuthGetJSON, BRANDS_URL);
+
+    let brand = brands.find(o => o.name === customer.brandId);
+
+    if(typeof brand !== 'undefined'){
+      customer.brandId = brand.id;
+    }else{
+      brand = yield call(callAuthPostJSON, BRANDS_URL, {name: customer.brandId});
+      customer.brandId = brand.id;
+    }
+
+    customer.assocEmployeeId = userId;
+
+    const create = yield select(getCustomerCreated);
+    if(create){
+      yield call(callAuthPostJSON,CUSTOMERS_URL, customer);
+    }else{
+      const id = yield select(CS.getCustomerId);
+      yield call(callAuthPostJSON,getUpdateCustomerUrl(id), customer);
+    }
+
+    yield put(initCustomerData());
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* deleteCustomerSaga(){
+  try {
+    const id = yield select(CS.getCustomerId);
+    yield call(callAuthDel,getUpdateCustomerUrl(id), {});
+    yield put(initCustomerData());
   } catch (e) {
     console.log(e);
   }

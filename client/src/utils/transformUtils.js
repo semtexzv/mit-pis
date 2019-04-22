@@ -134,3 +134,24 @@ export const transformToOverViewRows = (meetings, users, brands, customers) =>  
     }});
 
 };
+
+
+export const transformCustomersToRows = (customers, brands, userId, role) =>  {
+
+  if(role === "USER"){
+    customers = customers.filter((customer) => customer.assocEmployeeId === userId);
+  }
+
+   return customers.map((customer) => {
+
+    const brand = brands.find(o => o.id === customer.brandId);
+
+    return {
+      id: customer.id,
+      name: customer.name,
+      surname: customer.surname,
+      title: customer.title,
+      brand: brand.name,
+      info: customer.info,
+    }});
+};

@@ -14,6 +14,7 @@ export const INIT_CUSTOMER_DATA = `${NAME}/INIT_CUSTOMER_DATA`;
 
 export const DELETE_ROW = `${NAME}/DELETE_ROW`;
 export const SAVE_ROW = `${NAME}/SAVE_ROW`;
+export const SET_CUSTOMERS = `${NAME}/SET_CUSTOMERS`;
 
 export const toggleDisplayDialog = () => ({
   type: TOGGLE_DISPLAY_DIALOG,
@@ -67,4 +68,9 @@ export const saveRow = () => ({
 
 export const initCustomerData = () => ({
   type: INIT_CUSTOMER_DATA,
+});
+
+export const setCustomers = (customers) => ({
+  type: SET_CUSTOMERS,
+  payload: customers,
 });
