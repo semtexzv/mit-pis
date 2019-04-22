@@ -127,7 +127,7 @@ const mapStateToProps = (state) => ({
   passwordNew: S.getPasswordNew(state),
   passwordCheck: S.getPasswordCheck(state),
   changePassword: S.getChangePassword(state),
-  userId: S.getUserId(state)
+  userId: S.getProfileUserId(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({

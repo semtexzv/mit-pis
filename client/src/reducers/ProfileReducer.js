@@ -8,6 +8,7 @@ const initialState = fromJS({
   userName:"",
   passwordNew: "",
   passwordCheck: "",
+  employee: null,
   changePassword: false,
 });
 
@@ -34,12 +35,24 @@ const ProfileReducer = (state = initialState, action) => {
     case A.SET_CHANGE_PASSWORD: {
       return state.set("changePassword", true);
     }
-    case A.UNSET_CHANGE_PASSWORD: {
-      return state.set("changePassword", false);
+    case A.INIT_PROFILE: {
+      const user = action.payload;
+
+      return state.set("name", user.name)
+        .set("changePassword", false)
+        .set("surname", user.surname)
+        .set("userId", user.id)
+        .set("userName", user.username);
     }
     case A.SAVE_PROFILE: {
-      return state;
-      //TODO: after this return, save name, surname and role. Also redirect to new site
+      const employee = {
+        name: state.get("name"),
+        surname: state.get("surname"),
+        username: state.get("userName"),
+        password: state.get("passwordNew")
+      };
+
+      return state.set("employee", employee);
     }
     default:
       return state;

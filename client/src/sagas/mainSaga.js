@@ -34,17 +34,18 @@ import {INIT_OVERVIEW, updateOverviewData} from "../actions/OverviewActions";
 import {INIT_CUSTOMER_DATA} from "../actions/CustomerActions";
 import {getCustomer, getCustomerCreated} from "../selectors/CustomerSelector";
 import {initCustomerData} from "../actions/CustomerActions";
-import {SAVE_PROFILE, updateName, updateSurname, updateUserId, updateUserName} from "../actions/ProfileActions";
+import {initProfile, NOTHING, SAVE_PROFILE, updateName, updateSurname, updateUserId, updateUserName} from "../actions/ProfileActions";
 
 // EmployeeContainer
 import * as ECA from "../actions/EmployeeActions"
 import * as ECS from "../selectors/EmployeeSelector"
 import {getEmployeeCreateStatus} from "../selectors/EmployeeSelector";
+import {getProfileUserId} from "../selectors/ProfileSelector";
+import {getProfileUpdated} from "../selectors/ProfileSelector";
 
 export default function* mainSaga() {
   yield takeEvery(LOGIN, loginSaga);
   yield takeEvery(REGISTER, registerSaga);
-  yield takeEvery(SAVE_PROFILE, updateProfileSaga);
   yield takeEvery(SAVE_ROW, meetingSaga);
   yield takeEvery(DELETE_ROW, deleteMeetingSaga);
   yield takeEvery(CA.DELETE_ROW, deleteCustomerSaga);
@@ -57,7 +58,9 @@ export default function* mainSaga() {
   yield takeEvery(SAVE_SPEC, updateSpecializationSaga);
   yield takeLatest(INIT_OVERVIEW, initOverViewSaga);
   yield takeLatest(INIT_CUSTOMER_DATA, initCustomerDataSaga);
-  yield takeEvery(LOGOUT_FROM_SERVER, logoutSaga)
+  yield takeEvery(LOGOUT_FROM_SERVER, logoutSaga);
+  yield takeLatest(NOTHING, initProfileSaga);
+  yield takeLatest(SAVE_PROFILE, saveProfileSaga);
   // EmployeeContainer
   yield takeLatest(ECA.INIT_EMPLOYEE_DATA, initEmployeeData);
   yield takeEvery(ECA.SAVE_ROW, newEmployeeSaga);
@@ -109,36 +112,38 @@ export function* initEmployeeData(action) {
   }
 }
 
-//export function* updateEmployeePassword(action) {
-//  try {
-//    const id = yield select(ECS.getEmployeeId);
-//    const password = yield call(callAuthGetJSON, getPasswordAdminUrl(id));
-//  } catch (e) {
-//    console.log(e);
-//  }
-//}
-
-export function* saveEmployeeRow(action) {
+export function* initProfileSaga(action) {
   try {
-    const id = yield select(ECS.getEmployeeId);
-    const data = yield select(ECS.getEmployeeRow);
-    yield call(callAuthPostJSON,getUpdateEmployeeUrl(id), data);
-    yield put(ECA.initEmployeeData());
+    const userId = yield call(callAuthGetJSON, ME_URL);
+    const user = yield call(callAuthGetJSON, getUsersUrl(userId.id));
+    yield put(initProfile(user));
   } catch (e) {
     console.log(e);
   }
-  //let changePassword = yield select(ECS.getChangePassword);
-  //if(changePassword){
-  //  try{
-  //    ; //set new password
-  //  } catch(e){
-  //    console.log(e);
-  //  }
-  //}
 }
 
-//----------------------------
-//<<<end Employee Sagas
+export function* saveProfileSaga() {
+  try {
+    const userId = yield select(getProfileUserId);
+    const employee = yield select(getProfileUpdated);
+    const user = yield call(callAuthPostJSON, getUsersUrl(userId), employee);
+
+    const changedPassword = yield select(PS.getChangePassword);
+    console.log(changedPassword);
+    if(changedPassword){
+      const body = {
+        password: employee.password,
+        userId: userId
+      };
+      yield call(callAuthPostJSON, PASSWORD_CHANGE_URL, body);
+    }
+
+    yield put(initProfile(user));
+
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 function* registerSaga(action) {
   const login = action.login;
@@ -181,26 +186,6 @@ function* loginSaga(action) {
     yield put(setUser(user));
     yield call(history.push, '/meeting')
   } catch (e) {
-    console.log(e);
-  }
-}
-
-function* updateProfileSaga() {
-  try {
-    const username = yield select(PS.getUsername);
-    const userId = yield select(PS.getUserId);
-    const name = yield select(PS.getName);
-    const surname = yield select(PS.getSurname);
-
-    const url = EMPLOYEES_URL + "/" + userId.toString()
-
-    console.log(url);
-
-    yield call(callAuthPostJSON, url, transformUserProfileToJSON(username, name, surname));
-    yield call(history.push, '/register')
-
-  } catch (e) {
-    alert("Problem with server. Try again later")
     console.log(e);
   }
 }
