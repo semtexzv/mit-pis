@@ -2,9 +2,6 @@ import {fromJS} from "immutable";
 import * as A from "../actions/EmployeeActions";
 
 const initialState = fromJS({
-  //employeeData:[
-  //  {id: "1", name: "Vaclav", surname: "Nesnidal", role: "USER"},
-  //],
   employeeData:[{}],
   roleList: [
     {label: "USER", value: "1"},
@@ -23,6 +20,10 @@ const initialState = fromJS({
   passwordNew: "", // new user password
   passwordCheck: "", // new user password once more for check
   displayDialog: false,
+  dialogHeader: "Edit an employee",
+  fieldsetLegend: "Edit password",
+  addButton: false,
+  create: false,
 });
 
 function getRoleId(state, name){
@@ -51,12 +52,42 @@ const EmployeeReducer = (state = initialState, action) => {
         username: state.get("username"),
         sysRole: getRoleName(state, state.get("role")),
       };
-      newState =  newState.set("row", row);
-      newState =  newState.set("displayDialog", false);
-      newState =  newState.set("changePassword", false);
+      let created = false;
+      if(state.get("addButton") === false) {
+        created = false;
+      }
+      else{
+        created = true;
+      }
+      newState = newState.set("row", row);
+      newState = newState.set("create", created);
+      newState = newState.set("displayDialog", false);
+      newState = newState.set("dialogHeader", "Edit an employee");
+      newState = newState.set("fieldsetLegend", "Edit password");
+      newState = newState.set("addButton", false);
+      newState = newState.set("changePassword", false);
       return newState;
       //TODO: after this return, save properties and reload "employeeData"
       //  Warning: "role" is a number -> id
+    }
+    case A.SET_ADD_BUTTON: {
+      let newState = state;
+      newState = newState.set("id", "");
+      newState = newState.set("name", "");
+      newState = newState.set("surname", "");
+      newState = newState.set("role", "1");
+      newState = newState.set("displayDialog", true);
+      newState = newState.set("addButton", true);
+      newState = newState.set("dialogHeader", "Add an employee");
+      newState = newState.set("fieldsetLegend", "Add password");
+      return newState;
+    }
+    case A.UNSET_ADD_BUTTON:{
+      let newState = state;
+      newState = newState.set("dialogHeader", "Edit an employee");
+      newState = newState.set("fieldsetLegend", "Edit password");
+      newState = newState.set("addButton", false);
+      return newState;
     }
     case A.UPDATE_SELECTED_ROW: {
       let data = action.value;
