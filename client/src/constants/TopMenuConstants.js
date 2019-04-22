@@ -15,6 +15,10 @@ export const MANAGER = [
 ];
 
 export const ADMIN = [
+  ["Meetings", "/meeting", "fa-compass"],
+  ["Customers", "/customer", "fa-compass"],
+  ["Specializations", "/specialization", "fa-compass"],
+  ["Assign customer", "/connectEmployee", "fa-compass"],
   ["User registration", "/register", "pi pi-fw pi-user"],
   ["Profile", "/profile", "fa-compass"],
   ["Employees", "/employee", "fa-compass"],
