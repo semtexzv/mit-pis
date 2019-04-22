@@ -34,7 +34,7 @@ import {INIT_OVERVIEW, updateOverviewData} from "../actions/OverviewActions";
 import {INIT_CUSTOMER_DATA} from "../actions/CustomerActions";
 import {getCustomer, getCustomerCreated} from "../selectors/CustomerSelector";
 import {initCustomerData} from "../actions/CustomerActions";
-import {SAVE_PROFILE, updateName, updateRole, updateSurname, updateUserId, updateUserName} from "../actions/ProfileActions";
+import {SAVE_PROFILE, updateName, updateSurname, updateUserId, updateUserName} from "../actions/ProfileActions";
 
 // EmployeeContainer
 import * as ECA from "../actions/EmployeeActions"
@@ -151,13 +151,12 @@ function* registerSaga(action) {
   try {
     const data = yield call(callRegisterPostJSON, REGISTER_URL, body);
     yield put(updateUserId(data.id));
-    yield put(updateRole(data.sysRole));
+    //yield put(updateRole(data.sysRole));
     yield put(updateUserName(data.username));
     yield put(updateName(data.name));
     yield put(updateSurname(data.surname))
 
-    yield call(history.push, '/profile')
-    console.log(data)
+    //console.log(data)
   } catch (e) {
     console.log(e);
   }
@@ -191,13 +190,12 @@ function* updateProfileSaga() {
     const userId = yield select(PS.getUserId);
     const name = yield select(PS.getName);
     const surname = yield select(PS.getSurname);
-    const role = yield select(PS.getRole);
 
     const url = EMPLOYEES_URL + "/" + userId.toString()
 
     console.log(url);
 
-    yield call(callAuthPostJSON, url, transformUserProfileToJSON(username, name, surname, role));
+    yield call(callAuthPostJSON, url, transformUserProfileToJSON(username, name, surname));
     yield call(history.push, '/register')
 
   } catch (e) {

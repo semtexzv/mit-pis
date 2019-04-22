@@ -1,10 +1,11 @@
 import React from "react";
 import {connect} from "react-redux";
 import {InputText} from 'primereact/inputtext';
+import {Password} from 'primereact/password';
+import {Fieldset} from 'primereact/fieldset';
 import {Button} from 'primereact/button';
-import {Dropdown} from 'primereact/dropdown';
-import {getName, getSurname, getRole, getRoleList, getUsername, getUserId} from "../selectors/ProfileSelector";
-import {updateName, updateSurname, updateRole, saveProfile} from "../actions/ProfileActions";
+import * as S from "../selectors/ProfileSelector";
+import * as A from "../actions/ProfileActions";
 import {Growl} from 'primereact/growl';
 import raiseGrowl from "../utils/growl"
 import * as R from "../constants/Regex"
@@ -14,11 +15,17 @@ const Profile =
 ({
   name,
   surname,
-  role,
-  roleList,
+  userName,
+  passwordNew,
+  passwordCheck,
+  changePassword,
   updateName,
   updateSurname,
-  updateRole,
+  updateUserName,
+  updatePasswordNew,
+  updatePasswordCheck,
+  setChangePassword,
+  unsetChangePassword,
   saveProfile
 }) => {
 
@@ -34,12 +41,36 @@ const Profile =
   //---------------------------------------
   // Validations
 
+  function passwordValidations(errorHandler){
+    if(!changePassword){
+      return true;
+    }
+    if(passwordNew !== ""){
+      if(passwordNew === passwordCheck){
+        return true;
+      }
+      else
+        raiseGrowl("The new password and its check do not match", errorHandler);
+    }
+    else
+      raiseGrowl("Please enter new password", errorHandler);
+  }
+
   function saveButtonValidator(errorHandler){
     if(R.name.test(name) && R.name.test(surname)){
-      if(role !== "")
-        saveProfile();
-      else
-        raiseGrowl("Please enter a role", errorHandler);
+      if(userName !== "") {
+        //TODO: more password validations
+        if(passwordValidations(errorHandler)) {
+          saveProfile();
+          unsetChangePassword();
+          updatePasswordNew("");
+          updatePasswordCheck("");
+          raiseGrowl("Data was updated", errorHandler, "success");
+        }
+      }
+      else {
+        raiseGrowl("Please enter login username", errorHandler);
+      }
     }
     else
       raiseGrowl("Please enter name and surname", errorHandler);
@@ -60,9 +91,26 @@ const Profile =
       </div>
       <div>
         <h3> </h3>
-        <Dropdown value={role} options={roleList.toJS()}
-          onChange={(e) => updateRole(e.value)} placeholder="Select a role"/>
+        <InputText value={userName} onChange={(e) => updateUserName(e.target.value)} placeholder="Login username"/>
         {snippet.required}
+      </div>
+      <div>
+        <h3> </h3>
+        <Fieldset legend="Change password" toggleable={!changePassword} collapsed={true}
+                  onToggle={(e) => {setChangePassword()}}>
+          <div>
+            <h3> </h3>
+            <Password value={passwordNew} onChange={(e) => updatePasswordNew(e.target.value)}
+              placeholder="Type new password here"/>
+            {snippet.required}
+          </div>
+          <div>
+            <h3> </h3>
+            <Password value={passwordCheck} onChange={(e) => updatePasswordCheck(e.target.value)}
+                       placeholder="Type new password again"/>
+            {snippet.required}
+          </div>
+        </Fieldset>
       </div>
       <div className="Login-Button">
         <h3> </h3>
@@ -73,19 +121,24 @@ const Profile =
 };
 
 const mapStateToProps = (state) => ({
-  name: getName(state),
-  surname: getSurname(state),
-  role: getRole(state),
-  roleList: getRoleList(state),
-  userName: getUsername(state),
-  userId: getUserId(state)
+  name: S.getName(state),
+  surname: S.getSurname(state),
+  userName: S.getUsername(state),
+  passwordNew: S.getPasswordNew(state),
+  passwordCheck: S.getPasswordCheck(state),
+  changePassword: S.getChangePassword(state),
+  userId: S.getUserId(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  updateName: (value) => dispatch(updateName(value)),
-  updateSurname: (value) => dispatch(updateSurname(value)),
-  updateRole: (value) => dispatch(updateRole(value)),
-  saveProfile: () => dispatch(saveProfile()),
+  updateName: (value) => dispatch(A.updateName(value)),
+  updateSurname: (value) => dispatch(A.updateSurname(value)),
+  updateUserName: (value) => dispatch(A.updateUserName(value)),
+  updatePasswordNew: (value) => dispatch(A.updatePasswordNew(value)),
+  updatePasswordCheck: (value) => dispatch(A.updatePasswordCheck(value)),
+  setChangePassword: () => dispatch(A.setChangePassword()),
+  unsetChangePassword: () => dispatch(A.unsetChangePassword()),
+  saveProfile: () => dispatch(A.saveProfile()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
