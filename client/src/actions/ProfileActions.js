@@ -10,6 +10,7 @@ export const UPDATE_USER_ID = `${NAME}/UPDATE_USER_ID`;
 export const UPDATE_USER_NAME = `${NAME}/UPDATE_USER_NAME`;
 export const NOTHING = `${NAME}/NOTHING`;
 export const SAVE_PROFILE = `${NAME}/SAVE_PROFILE`;
+export const INIT_PROFILE = `${NAME}/INIT_PROFILE`;
 
 
 export const updateName = (value) => ({
@@ -56,4 +57,9 @@ export const doNothingProfile = () => ({
 
 export const saveProfile = () => ({
   type: SAVE_PROFILE,
+});
+
+export const initProfile = (user) => ({
+  type: INIT_PROFILE,
+  payload: user
 });
